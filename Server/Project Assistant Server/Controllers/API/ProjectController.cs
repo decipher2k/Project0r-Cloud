@@ -19,13 +19,7 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 			String newSession=new Session().verifySession(session);
-			if (context.users.Where(a => a.CurrentSession == session)
-				.Include(a => a.Projects).ThenInclude(a => a.Calendars)
-				.Include(a => a.Projects).ThenInclude(a => a.Files)
-				.Include(a => a.Projects).ThenInclude(a => a.Logs)
-				.Include(a => a.Projects).ThenInclude(a => a.Notes)
-				.Include(a => a.Projects).ThenInclude(a => a.Programs)
-				.Include(a => a.Projects).ThenInclude(a => a.ToDo).Count() > 0)
+			if (context.users.Where(a => a.CurrentSession == session).Count() > 0)
 			{
 				User user = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Calendars)
