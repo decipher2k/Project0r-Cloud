@@ -1,7 +1,10 @@
-﻿namespace Project_Assistant_Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Project_Assistant_Server.Models
 {
 	public class Project
 	{
+		[Key]
 		public int Id { get; set; }
 		public string Name { get; set; }
 

@@ -2,9 +2,8 @@
 
 namespace Project_Assistant_Server.Dto
 {
-	public class UserDto
+	public class UserDto:SessionData
 	{
-		public String session { get; set; }
 		public List <Project> projects { get; set; }
 	}
 }

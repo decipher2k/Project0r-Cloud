@@ -4,7 +4,12 @@ namespace Project_Assistant_Server
 {
 	public class Session
 	{
-		public String verifySession(String session, DatabaseContext context)
+		private DatabaseContext context;
+		public Session(DatabaseContext _context) 
+		{
+			context = _context;
+		}
+		public String newSession(String session)
 		{
 			if (context.users.Where(a => a.CurrentSession == session).Count() > 0)
 			{
