@@ -90,24 +90,27 @@ namespace ProjectOrganizer
 
                 for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
                 {
-                    var file = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
-
-                    Icon result = (Icon)null;
-                    ImageSource img;
-
                     try
                     {
-                        result = Icon.ExtractAssociatedIcon(file.fileName);
-                        img = ToImageSource(result);
+                        var file = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
+
+                        Icon result = (Icon)null;
+                        ImageSource img;
+
+                        try
+                        {
+                            result = Icon.ExtractAssociatedIcon(file.fileName);
+                            img = ToImageSource(result);
+                        }
+                        catch
+                        {
+                            img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        }
+
+                        file.picture = img;
+                        ProjectOrganizer.Projects.Instance.Project[project].Files[i] = file;
                     }
-                    catch
-                    {
-                        img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    }
-                                                        
-                    file.picture = img;
-                    ProjectOrganizer.Projects.Instance.Project[project].Files[i] = file;
-                    
+                    catch (Exception ex) { }
                 }
             }
         }
@@ -139,23 +142,19 @@ namespace ProjectOrganizer
                     {
                         for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
                         {
+                            var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
+                            String file = app.executaleFile;
+
+                            Icon result = (Icon)null;
                             try
                             {
-                                var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
-                                String file = app.executaleFile;
-
-                                Icon result = (Icon)null;
-                                try
+                                result = Icon.ExtractAssociatedIcon(file);
+                                if (result != null)
                                 {
-                                    result = Icon.ExtractAssociatedIcon(file);
-                                    if (result != null)
-                                    {
-                                        ImageSource img = ToImageSource(result);
-                                        app.picture = img;
-                                        ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
-                                    }
+                                    ImageSource img = ToImageSource(result);
+                                    app.picture = img;
+                                    ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
                                 }
-                                catch (Exception ex) { }
                             }
                             catch (Exception ex) { }
                         }
@@ -181,10 +180,9 @@ namespace ProjectOrganizer
                                 }
 
                                 app.picture = img;
+
                                 ProjectOrganizer.Projects.Instance.Project[project].Files[i] = app;
-                            }
-                            catch (Exception ex)
-                            { }
+                            }catch(Exception ex) { }
                         }
                     }
 
