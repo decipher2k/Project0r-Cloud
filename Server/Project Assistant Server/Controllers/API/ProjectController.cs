@@ -33,14 +33,11 @@ namespace Project_Assistant_Server.Controllers.API
 				userDto.projects = new List<Project>();
 				foreach(Project p in user.Projects)
 					userDto.projects.Add(p);
-			}
-			else
-			{
-				User user = context.users.Where(a => a.CurrentSession == session).First();
+				
 				user.CurrentSession = newSession;
 				context.users.Update(user);
-			}			
-			context.SaveChanges();
+				context.SaveChanges();
+			}
 
 			return Ok(userDto);
 		}
