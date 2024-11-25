@@ -20,5 +20,7 @@ namespace Project_Assistant_Server
 		public DbSet<Note> notes { get; set; }
 		public DbSet<Program> program { get; set; }
 		public DbSet<ToDo> toDo { get; set; }
+		public DbSet<User> users { get; set; }
+		public DbSet<Project> projects { get; set; }
 	}
 }

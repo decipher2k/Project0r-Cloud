@@ -3,8 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project_Assistant_Server.Controllers.API
 {
-	public class FileController : Controller
+	public class FileController : ControllerBase
 	{
+
+
+		DatabaseContext context;
+		public FileController(DatabaseContext _context)
+		{
+			context = _context;
+		}
+
 		// GET: FileController
 		public ActionResult Index()
 		{

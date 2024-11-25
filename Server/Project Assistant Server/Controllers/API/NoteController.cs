@@ -3,8 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project_Assistant_Server.Controllers.API
 {
-	public class NoteController : Controller
+	public class NoteController : ControllerBase
 	{
+
+		DatabaseContext context;
+		public NoteController(DatabaseContext _context)
+		{
+			context = _context;
+		}
 		// GET: NoteController
 		public ActionResult Index()
 		{

@@ -3,8 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project_Assistant_Server.Controllers.API
 {
-	public class ToDoController : Controller
+	public class ToDoController : ControllerBase
 	{
+
+		DatabaseContext context;
+		public ToDoController(DatabaseContext _context)
+		{
+			context = _context;
+		}
+
 		// GET: ToDoController
 		public ActionResult Index()
 		{

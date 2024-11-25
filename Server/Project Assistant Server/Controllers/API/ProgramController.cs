@@ -3,8 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project_Assistant_Server.Controllers.API
 {
-	public class ProgramController : Controller
+	public class ProgramController : ControllerBase
 	{
+		
+		DatabaseContext context;
+		public ProgramController(DatabaseContext _context)
+		{
+			context = _context;
+		}
+
 		// GET: ProgramController
 		public ActionResult Index()
 		{

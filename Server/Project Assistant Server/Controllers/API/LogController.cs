@@ -3,8 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project_Assistant_Server.Controllers.API
 {
-	public class LogController : Controller
+	public class LogController : ControllerBase
 	{
+
+		DatabaseContext context;
+		public LogController(DatabaseContext _context)
+		{
+			context = _context;
+		}
 		// GET: LogController
 		public ActionResult Index()
 		{
