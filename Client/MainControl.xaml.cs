@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Project_Assistant;
+using Project_Assistant.API;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -147,10 +148,19 @@ namespace ProjectOrganizer
                     p.executaleFile = wnd.file;
                     p.description = wnd.description;
                     p.name = wnd.name;
-                    if(Projects.Instance.Project[project].Apps.Count == 0)
-                        p.id = 0;
+
+                    if (!Globals.isMultiuser)
+                    {
+                        if (Projects.Instance.Project[project].Apps.Count == 0)
+                            p.id = 0;
+                        else
+                            p.id = Projects.Instance.Project[project].Apps.Max(a => a.id) + 1;
+                    }
                     else
-                        p.id=Projects.Instance.Project[project].Apps.Max(a => a.id)+1;
+                    {
+                        long id=new ProgramAPI().Create(p,project);
+                        p.id= id;
+                    }
 
                     p.startOnce = wnd.startOnce;                   
                     System.Drawing.Icon result = (System.Drawing.Icon)null;
@@ -174,13 +184,24 @@ namespace ProjectOrganizer
             wnd.isExe = false;
             if (wnd.ShowDialog() == true)
             {
-                File p = new File();                
-                p.id = Projects.Instance.Project[project].Files.Count==0?0:Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+                File p = new File();
+                
                 p.fileName = wnd.file;
                 p.description = wnd.description;
                 p.name = wnd.name;
                 p.startOnce = wnd.startOnce;
-                System.Drawing.Icon result = (System.Drawing.Icon)null;
+
+				if (!Globals.isMultiuser)
+				{
+					p.id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+				}
+                else
+                {
+                    long id=new FileAPI().Create(p, project);
+                    p.id = id;
+                }
+
+				System.Drawing.Icon result = (System.Drawing.Icon)null;
                 ImageSource img;
 
                 try
@@ -242,13 +263,23 @@ namespace ProjectOrganizer
             {
                 Note note = new Note();
                 note.text = wnd.note;
-                if(Projects.Instance.Project[project].Notes.Count==0)
-                    note.id = 0;
-                else
-                    note.id = Projects.Instance.Project[project].Notes.Max(a => a.id) + 1;
                 note.description = wnd.description;
                 note.name = wnd.caption;
-                Projects.Instance.Project[project].Notes.Add(note);
+
+                if (!Globals.isMultiuser)
+                {
+                    if (Projects.Instance.Project[project].Notes.Count == 0)
+                        note.id = 0;
+                    else
+                        note.id = Projects.Instance.Project[project].Notes.Max(a => a.id) + 1;
+                }
+                else
+                {
+                    long id=new NoteAPI().Create(note, project);
+                    note.id = id;
+                }
+
+				Projects.Instance.Project[project].Notes.Add(note);
                 Projects.Save();
             }
            
@@ -260,10 +291,20 @@ namespace ProjectOrganizer
             if (wnd.ShowDialog() == true)
             {
                 ToDo toDo = new ToDo();
-                toDo.caption = wnd.caption;
-                toDo.id = Projects.Instance.Project[project].ToDo.Count == 0 ? 0 : Projects.Instance.Project[project].ToDo.Max(a => a.id) + 1;
+                toDo.caption = wnd.caption;                
                 toDo.description = wnd.note;
-                Projects.Instance.Project[project].ToDo.Add(toDo);
+
+                if (!Globals.isMultiuser)
+                {
+                    toDo.id = Projects.Instance.Project[project].ToDo.Count == 0 ? 0 : Projects.Instance.Project[project].ToDo.Max(a => a.id) + 1;
+                }
+                else
+                {
+                    long id=new ToDoAPI().Create(toDo, project);
+                    toDo.id = id;
+                }
+
+				Projects.Instance.Project[project].ToDo.Add(toDo);
                 Projects.Save();
                 lbTodo.ItemsSource = Projects.Instance.Project[project].ToDo;
             }
@@ -276,10 +317,20 @@ namespace ProjectOrganizer
             if (wnd.ShowDialog() == true)
             {
                 Log log = new Log();
-                log.caption = wnd.caption;
-                log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+                log.caption = wnd.caption;                
                 log.description = wnd.note;
                 log.date=DateTime.Now;
+
+                if(!Globals.isMultiuser)
+                {
+					log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+				}
+                else
+                {
+                    long id=new LogAPI().Create(log, project); 
+                    log.id = id;
+                }
+
                 Projects.Instance.Project[project].Log.Insert(0,log);                           
                 Projects.Save();
                 lbLog.ItemsSource = Projects.Instance.Project[project].Log;
@@ -308,6 +359,12 @@ namespace ProjectOrganizer
                             Projects.Instance.Project[project].Notes[i].text = addEditNote.note;
                             Projects.Instance.Project[project].Notes[i].description = addEditNote.description;
                             Projects.Instance.Project[project].Notes[i].name = addEditNote.caption;
+
+                            if (Globals.isMultiuser)
+                            {
+                                new NoteAPI().Update(Projects.Instance.Project[project].Notes[i], project);
+                            }
+
                             Projects.Save();
                             break;
                         }
@@ -331,11 +388,17 @@ namespace ProjectOrganizer
                     for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
                     {
                         if (Projects.Instance.Project[project].ToDo[i].caption == toDo.caption)
-                        {
-
+                        {                            
                             Projects.Instance.Project[project].ToDo[i].description = addEditNote.note;
                             Projects.Instance.Project[project].ToDo[i].caption = addEditNote.caption;
                             Projects.Save();
+
+                            if (Globals.isMultiuser)
+                            {
+                                new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+
+							}
+
                             break;
                         }
                     }
@@ -361,7 +424,13 @@ namespace ProjectOrganizer
                         {
 
                             Projects.Instance.Project[project].Log[i].description = addEditNote.note;
-                            Projects.Instance.Project[project].Log[i].caption = addEditNote.caption;                            
+                            Projects.Instance.Project[project].Log[i].caption = addEditNote.caption;                         
+                            
+                            if(Globals.isMultiuser)
+                            {
+                                new LogAPI().Update(Projects.Instance.Project[project].Log[i], project);
+                            }
+
                             Projects.Save();
                             break;
                         }
@@ -391,7 +460,17 @@ namespace ProjectOrganizer
                         toDo.to = DateTime.Parse(tbCalendarTo.Text);
                         toDo.handled = false;
                         toDo.date = (DateTime)calCalendar.SelectedDate;
-                        toDo.id = Projects.Instance.Project[project].Calendar.Count == 0 ? 0 : Projects.Instance.Project[project].Calendar.Max(a => a.id) + 1;
+
+                        if (!Globals.isMultiuser)
+                        {
+                            toDo.id = Projects.Instance.Project[project].Calendar.Count == 0 ? 0 : Projects.Instance.Project[project].Calendar.Max(a => a.id) + 1;
+                        }
+                        else
+                        {
+                            long id=new CalendarAPI().Create(toDo, project);
+                            toDo.id=id;
+                        }
+
                         Projects.Instance.Project[project].Calendar.Add(toDo);
                         Projects.Save();
                         
@@ -410,6 +489,12 @@ namespace ProjectOrganizer
                                 Projects.Instance.Project[project].Calendar[i].to = DateTime.Parse(tbCalendarTo.Text);
                                 Projects.Instance.Project[project].Calendar[i].text = tbCalendarDetails.Text;
                                 Projects.Instance.Project[project].Calendar[i].caption = tbCalendarCaption.Text;
+
+                                if (Globals.isMultiuser)
+                                {
+                                    new CalendarAPI().Update(Projects.Instance.Project[project].Calendar[i], project);
+                                }
+
                                 Projects.Save();
                                 reloadItems();
                                 break;
@@ -483,13 +568,25 @@ namespace ProjectOrganizer
             if (lbApps.SelectedItems.Count > 0 && currentLB==lbApps)
             {
                 Program p = lbApps.SelectedItem as Program;
+
+                if(Globals.isMultiuser)
+                {
+                    new ProgramAPI().Delete((int)p.id, project);
+                }
+
                 Projects.Instance.Project[project].Apps.Remove(p);
                 Projects.Save();
             }
             else if(lbFiles.SelectedItems.Count>0 && currentLB==lbFiles)
             {
                 File p = lbFiles.SelectedItem as File;
-                Projects.Instance.Project[project].Files.Remove(p);
+
+				if (Globals.isMultiuser)
+				{
+					new FileAPI().Delete((int)p.id, project);
+				}
+
+				Projects.Instance.Project[project].Files.Remove(p);
                 Projects.Save();
             }
         }
@@ -511,7 +608,13 @@ namespace ProjectOrganizer
             if (lbNotes.SelectedItems.Count > 0)
             {
                 Note p = lbNotes.SelectedItem as Note;
-                Projects.Instance.Project[project].Notes.Remove(p);
+
+				if (Globals.isMultiuser)
+				{
+					new NoteAPI().Delete((int)p.id, project);
+				}
+
+				Projects.Instance.Project[project].Notes.Remove(p);
                 Projects.Save();
             }
         }
@@ -524,13 +627,29 @@ namespace ProjectOrganizer
                 if (MessageBox.Show("Move to Log?", "Move to Log", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {                          
                     Log log = new Log();
-                    log.caption = p.caption;
-                    log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+                    log.caption = p.caption;                    
                     log.description = p.description;
                     log.date = DateTime.Now;
-                    Projects.Instance.Project[project].Log.Add(log);                
+
+                    if (!Globals.isMultiuser)
+                    {
+                        log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+                    }
+                    else
+                    {
+                        long id=new LogAPI().Create(log, project);
+                        log.id=id;
+                    }
+
+					Projects.Instance.Project[project].Log.Add(log);                
                 }
-                Projects.Instance.Project[project].ToDo.Remove(p);
+
+				if (Globals.isMultiuser)
+				{
+					new ToDoAPI().Delete((int)p.id, project);
+				}
+
+				Projects.Instance.Project[project].ToDo.Remove(p);
                 Projects.Save();
                 reloadItems();
             }
@@ -541,7 +660,14 @@ namespace ProjectOrganizer
             if (lbLog.SelectedItems.Count > 0)
             {
                 Log p = lbLog.SelectedItem as Log;
-                Projects.Instance.Project[project].Log.Remove(p);
+
+
+				if (Globals.isMultiuser)
+				{
+					new LogAPI().Delete((int)p.id, project);
+				}
+
+				Projects.Instance.Project[project].Log.Remove(p);
                 Projects.Save();
             }
         }
@@ -551,7 +677,14 @@ namespace ProjectOrganizer
             if (lbCalendar.SelectedItems.Count > 0)
             {
                 Calendar p = lbCalendar.SelectedItem as Calendar;
-                Projects.Instance.Project[project].Calendar.Remove(p);
+
+
+				if (Globals.isMultiuser)
+				{
+					new CalendarAPI().Delete((int)p.id, project);
+				}
+
+				Projects.Instance.Project[project].Calendar.Remove(p);
                 Projects.Save();
             }
         }
@@ -570,7 +703,14 @@ namespace ProjectOrganizer
         {
             if (lbCalendar.SelectedItems.Count > 0)
             {
-                Projects.Instance.Project[project].Calendar.Remove((Calendar)lbCalendar.SelectedItem);
+
+
+				if (Globals.isMultiuser)
+				{
+					new CalendarAPI().Delete((int)((Calendar)lbCalendar.SelectedItem).id, project);
+				}
+
+				Projects.Instance.Project[project].Calendar.Remove((Calendar)lbCalendar.SelectedItem);
                 tbCalendarCaption.Text = string.Empty;
                 tbCalendarDetails.Text = string.Empty;
                 tbCalendarFrom.Text = string.Empty;
@@ -608,6 +748,12 @@ namespace ProjectOrganizer
 
                             Projects.Instance.Project[project].ToDo[i].description = addEditNote.note;
                             Projects.Instance.Project[project].ToDo[i].caption = addEditNote.caption;
+
+                            if (Globals.isMultiuser)
+                            {
+                                new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+                            }
+
                             Projects.Save();
                             reloadItems();
                             break;
@@ -638,7 +784,14 @@ namespace ProjectOrganizer
                             l.caption = addEditNote.caption;
                             Projects.Instance.Project[project].Log.RemoveAt(i);
                             Projects.Instance.Project[project].Log.Insert(i, l);
-                            Projects.Save();
+
+
+							if (Globals.isMultiuser)
+							{
+								new LogAPI().Update(Projects.Instance.Project[project].Log[i], project);
+							}
+
+							Projects.Save();
                             break;
                         }
                     }
@@ -680,8 +833,15 @@ namespace ProjectOrganizer
 
                             Projects.Instance.Project[project].Notes[i].text = addEditNote.note;
                             Projects.Instance.Project[project].Notes[i].description = addEditNote.description;
-                            Projects.Instance.Project[project].Notes[i].name = addEditNote.caption;                            
-                            Projects.Save();
+                            Projects.Instance.Project[project].Notes[i].name = addEditNote.caption;
+
+
+							if (Globals.isMultiuser)
+							{
+								new NoteAPI().Update(Projects.Instance.Project[project].Notes[i], project);
+							}
+
+							Projects.Save();
                             reloadItems();
                             break;
                         }
@@ -731,7 +891,14 @@ namespace ProjectOrganizer
                             if (Projects.Instance.Project[project].Files[i] == (File)lbFiles.SelectedItem)
                             {
                                 Projects.Instance.Project[project].Files[i] = p;
-                                break;
+
+
+								if (Globals.isMultiuser)
+								{
+									new FileAPI().Update(p, project);
+								}
+
+								break;
                             }
                         }
 
@@ -792,7 +959,13 @@ namespace ProjectOrganizer
                                 if (Projects.Instance.Project[project].Apps[i] == (Program)lbApps.SelectedItem)
                                 {
                                     Projects.Instance.Project[project].Apps[i] = p;
-                                    break;
+
+									if (Globals.isMultiuser)
+									{
+										new ProgramAPI().Update(p, project);
+									}
+
+									break;
                                 }
                             }
                             
@@ -826,10 +999,7 @@ namespace ProjectOrganizer
                         if (msgBox.ShowDialog()==true)
                         {
                             p.name = msgBox.ret;
-                            if (Projects.Instance.Project[project].Apps.Count == 0)
-                                p.id = 0;
-                            else
-                                p.id = Projects.Instance.Project[project].Apps.Max(a => a.id) + 1;
+                         
 
                             p.startOnce = false;
                             System.Drawing.Icon result = (System.Drawing.Icon)null;
@@ -839,6 +1009,20 @@ namespace ProjectOrganizer
                             {
                                 ImageSource img = ToImageSource(result);
                                 p.picture = img;
+
+                                if (!Globals.isMultiuser)
+                                {
+									if (Projects.Instance.Project[project].Apps.Count == 0)
+										p.id = 0;
+									else
+										p.id = Projects.Instance.Project[project].Apps.Max(a => a.id) + 1;
+                                }
+                                else
+                                {
+									long id=new ProgramAPI().Create(p, project);
+                                    p.id = id;
+								}
+
                                 Projects.Instance.Project[project].Apps.Add(p);                       
                                 Projects.Save();
                             }
@@ -880,7 +1064,18 @@ namespace ProjectOrganizer
                         }
 
                         p.picture = img;
-                        Projects.Instance.Project[project].Files.Add(p);
+
+                        if(!Globals.isMultiuser)
+                        {
+							p.id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+						}
+                        else
+                        {
+                            long id = new FileAPI().Create(p, project);
+                            p.id = id;
+                        }
+
+						Projects.Instance.Project[project].Files.Add(p);
                         Projects.Save();
                     }
                 }
@@ -898,6 +1093,12 @@ namespace ProjectOrganizer
 						{
 
                             Projects.Instance.Project[project].ToDo[i].priority = 1;
+
+                            if(Globals.isMultiuser)
+                            {
+                                new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+							}
+
 							Projects.Save();
 							reloadItems();
 							break;
@@ -917,6 +1118,13 @@ namespace ProjectOrganizer
 					{
 
 						Projects.Instance.Project[project].ToDo[i].priority = 2;
+
+
+						if (Globals.isMultiuser)
+						{
+							new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+						}
+
 						Projects.Save();
 						reloadItems();
 						break;
@@ -936,6 +1144,13 @@ namespace ProjectOrganizer
 					{
 
 						Projects.Instance.Project[project].ToDo[i].priority = 3;
+
+
+						if (Globals.isMultiuser)
+						{
+							new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+						}
+
 						Projects.Save();
 						reloadItems();
 						break;

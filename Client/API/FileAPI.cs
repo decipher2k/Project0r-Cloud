@@ -23,7 +23,7 @@ namespace Project_Assistant.API
 			return JsonConvert.DeserializeObject<File>(sItem);
 		}
 
-		public bool Update(ToDo item, String project)
+		public bool Update(File item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
 			return PostUpdate(sItem, "/api/File/Update", project);

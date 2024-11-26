@@ -23,7 +23,7 @@ namespace Project_Assistant.API
 			return JsonConvert.DeserializeObject<ToDo>(sToDo);
 		}
 
-		public bool Update(ToDo item, String project)
+		public bool Update(Calendar item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
 			return PostUpdate(sItem, "/api/Calendar/Update", project);

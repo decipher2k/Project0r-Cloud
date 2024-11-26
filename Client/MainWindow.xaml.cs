@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using Project_Assistant;
+using Project_Assistant.API;
 
 namespace ProjectOrganizer
 {
@@ -35,6 +36,7 @@ namespace ProjectOrganizer
     public static MainWindow Instance { get; private set; }
 
         FloatingWindow w;
+        
         public MainWindow()
         {                   
             Instance = this;
@@ -60,6 +62,7 @@ namespace ProjectOrganizer
             if (Projects.Instance.Project.Count > 0)
             {
                 tabMain.Items.Clear();
+                new ProjectAPI().FetchAll();
                 var lst = Projects.Instance.Project.OrderBy(project => project.Key);
 
                 foreach (KeyValuePair<String,Data> key in lst)
@@ -99,6 +102,11 @@ namespace ProjectOrganizer
                         tabMain.Items.Clear();
                     noProjects = false;
                     Projects.Instance.Project.Add(input, new Data());
+                    if (Globals.isMultiuser)
+                    {
+                        new ProjectAPI().Create(input);
+                    }
+
                     loadTabs();
                     Projects.Save();
                     tabMain.SelectedIndex = 0;
@@ -118,6 +126,12 @@ namespace ProjectOrganizer
                     Data tmp = Projects.Instance.Project[((TabItem)tabMain.SelectedItem).Header.ToString()];
                     Projects.Instance.Project.Remove(((TabItem)tabMain.SelectedItem).Header.ToString());
                     Projects.Instance.Project.Add(input, tmp);
+
+                    if (Globals.isMultiuser)
+                    {
+                        new ProjectAPI().Update(input, ((TabItem)tabMain.SelectedItem).Header.ToString());
+                    }
+
                     Projects.Save();
                     loadTabs();
                 }
@@ -162,6 +176,12 @@ namespace ProjectOrganizer
             if (System.Windows.MessageBox.Show("You are about to delete the project " + ((TabItem)tabMain.SelectedItem).Header.ToString() + "!\r\nAre you sure?","Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning)==MessageBoxResult.Yes)
             {
                 Projects.Instance.Project.Remove(((TabItem)tabMain.SelectedItem).Header.ToString());
+                if(Globals.isMultiuser)
+                {
+                    new ProjectAPI().Delete(((TabItem)tabMain.SelectedItem).Header.ToString());
+
+				}
+
                 Projects.Save();
                 tabMain.Items.Remove(tabMain.SelectedItem);
             }
@@ -215,7 +235,6 @@ namespace ProjectOrganizer
                     Projects.Load(openFileDialog.FileName);
                     Projects.Save();
                     this.loadTabs();
-
 				}
             }
 		}

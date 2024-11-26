@@ -10,5 +10,6 @@ namespace Project_Assistant
 	{
 		public static String session = "";
 		public static String ServerAddress = "";
+		public static bool isMultiuser = false;
 	}
 }

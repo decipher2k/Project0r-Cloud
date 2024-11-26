@@ -10,14 +10,14 @@ namespace Project_Assistant.API
 {
 	public class APIBase
 	{
-		protected IdSessionDto PostCreate(String item, String APIEndpoint, String project)
+		protected IdSessionDto PostCreate(String item, String APIEndpoint, String project="")
 		{ 			
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()
 			{
 				{ "session",Globals.session },
 				{ "ItemData", item },
-				{ "project", project }				
+				{ "project", project }
 			};
 
 			FormUrlEncodedContent content = new FormUrlEncodedContent(values);

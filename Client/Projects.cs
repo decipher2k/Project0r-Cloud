@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_Assistant;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -28,92 +29,95 @@ namespace ProjectOrganizer
 
         public static void Save(String saveTo="")
         {
-
-            Instance.x=FloatingWindow.Instance.Left;
-            Instance.y =FloatingWindow.Instance.Top;
-
-            foreach (String project in Instance.Project.Keys)
+            if (!Globals.isMultiuser)
             {
-                for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
+                Instance.x = FloatingWindow.Instance.Left;
+                Instance.y = FloatingWindow.Instance.Top;
+
+                foreach (String project in Instance.Project.Keys)
                 {
-                    var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
-                    String file = app.executaleFile;                                                         
-                    app.picture = null;
-                }
-            }
-
-            foreach (String project in Instance.Project.Keys)
-            {
-                for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
-                {
-                    var app = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
-                    String file = app.fileName;
-                    app.picture = null;
-                }
-            }
-
-
-            if (!Directory.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant"))
-            {
-                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant");
-            }
-            String text=Newtonsoft.Json.JsonConvert.SerializeObject(Instance);
-            
-            if(saveTo=="")
-                System.IO.File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)+"\\ProjectAssistant\\settings.json", text);
-            else
-				System.IO.File.WriteAllText(saveTo, text);
-
-
-			foreach (String project in Instance.Project.Keys)
-            {
-                for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
-                {
-                    var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
-                    String file = app.executaleFile;
-
-                    Icon result = (Icon)null;
-                    try
+                    for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
                     {
-                        result = Icon.ExtractAssociatedIcon(file);
-                        if (result != null)
-                        {
-                            ImageSource img = ToImageSource(result);
-                            app.picture = img;
-                            ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
-                        }
+                        var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
+                        String file = app.executaleFile;
+                        app.picture = null;
                     }
-                    catch (Exception ex) { }
                 }
 
-                
-
-                for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
+                foreach (String project in Instance.Project.Keys)
                 {
-                    try
+                    for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
                     {
-                        var file = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
+                        var app = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
+                        String file = app.fileName;
+                        app.picture = null;
+                    }
+                }
+
+
+                if (!Directory.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant"))
+                {
+                    Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant");
+                }
+                String text = Newtonsoft.Json.JsonConvert.SerializeObject(Instance);
+
+                if (saveTo == "")
+                    System.IO.File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant\\settings.json", text);
+                else
+                    System.IO.File.WriteAllText(saveTo, text);
+
+
+                foreach (String project in Instance.Project.Keys)
+                {
+                    for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
+                    {
+                        var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
+                        String file = app.executaleFile;
 
                         Icon result = (Icon)null;
-                        ImageSource img;
-
                         try
                         {
-                            result = Icon.ExtractAssociatedIcon(file.fileName);
-                            img = ToImageSource(result);
+                            result = Icon.ExtractAssociatedIcon(file);
+                            if (result != null)
+                            {
+                                ImageSource img = ToImageSource(result);
+                                app.picture = img;
+                                ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
+                            }
                         }
-                        catch
-                        {
-                            img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                        }
-
-                        file.picture = img;
-                        ProjectOrganizer.Projects.Instance.Project[project].Files[i] = file;
+                        catch (Exception ex) { }
                     }
-                    catch (Exception ex) { }
+
+
+
+                    for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
+                    {
+                        try
+                        {
+                            var file = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
+
+                            Icon result = (Icon)null;
+                            ImageSource img;
+
+                            try
+                            {
+                                result = Icon.ExtractAssociatedIcon(file.fileName);
+                                img = ToImageSource(result);
+                            }
+                            catch
+                            {
+                                img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                            }
+
+                            file.picture = img;
+                            ProjectOrganizer.Projects.Instance.Project[project].Files[i] = file;
+                        }
+                        catch (Exception ex) { }
+                    }
                 }
             }
         }
+
         public static ImageSource ToImageSource(Icon icon)
         {
             ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
@@ -125,81 +129,84 @@ namespace ProjectOrganizer
         }
         public static void Load(String loadFile="")
         {
-            String fileToLoad;
-            if (loadFile == "")
-                fileToLoad = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant\\settings.json";
-            else
-                fileToLoad = loadFile;
-
-            try
+            if (!Globals.isMultiuser)
             {
-                if (System.IO.File.Exists(fileToLoad))
+                String fileToLoad;
+                if (loadFile == "")
+                    fileToLoad = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ProjectAssistant\\settings.json";
+                else
+                    fileToLoad = loadFile;
+
+                try
                 {
-                    String text = System.IO.File.ReadAllText(fileToLoad);
-                    Instance = (Projects)Newtonsoft.Json.JsonConvert.DeserializeObject<Projects>(text);
-
-                    foreach (String project in Instance.Project.Keys)
+                    if (System.IO.File.Exists(fileToLoad))
                     {
-                        for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
-                        {
-                            var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
-                            String file = app.executaleFile;
+                        String text = System.IO.File.ReadAllText(fileToLoad);
+                        Instance = (Projects)Newtonsoft.Json.JsonConvert.DeserializeObject<Projects>(text);
 
-                            Icon result = (Icon)null;
-                            try
-                            {
-                                result = Icon.ExtractAssociatedIcon(file);
-                                if (result != null)
-                                {
-                                    ImageSource img = ToImageSource(result);
-                                    app.picture = img;
-                                    ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
-                                }
-                            }
-                            catch (Exception ex) { }
-                        }
-
-                        for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
+                        foreach (String project in Instance.Project.Keys)
                         {
-                            try
+                            for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Apps.Count; i++)
                             {
-                                var app = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
-                                String file = app.fileName;
+                                var app = ProjectOrganizer.Projects.Instance.Project[project].Apps[i];
+                                String file = app.executaleFile;
 
                                 Icon result = (Icon)null;
-
-                                ImageSource img;
                                 try
                                 {
                                     result = Icon.ExtractAssociatedIcon(file);
-                                    img = ToImageSource(result);
+                                    if (result != null)
+                                    {
+                                        ImageSource img = ToImageSource(result);
+                                        app.picture = img;
+                                        ProjectOrganizer.Projects.Instance.Project[project].Apps[i] = app;
+                                    }
                                 }
-                                catch
+                                catch (Exception ex) { }
+                            }
+
+                            for (int i = 0; i < ProjectOrganizer.Projects.Instance.Project[project].Files.Count; i++)
+                            {
+                                try
                                 {
-                                    img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                    var app = ProjectOrganizer.Projects.Instance.Project[project].Files[i];
+                                    String file = app.fileName;
+
+                                    Icon result = (Icon)null;
+
+                                    ImageSource img;
+                                    try
+                                    {
+                                        result = Icon.ExtractAssociatedIcon(file);
+                                        img = ToImageSource(result);
+                                    }
+                                    catch
+                                    {
+                                        img = Imaging.CreateBitmapSourceFromHBitmap(new System.Drawing.Bitmap(System.Drawing.Image.FromFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\folder.png")).GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                    }
+
+                                    app.picture = img;
+
+                                    ProjectOrganizer.Projects.Instance.Project[project].Files[i] = app;
                                 }
-
-                                app.picture = img;
-
-                                ProjectOrganizer.Projects.Instance.Project[project].Files[i] = app;
-                            }catch(Exception ex) { }
+                                catch (Exception ex) { }
+                            }
                         }
                     }
-
+                    else if (loadFile == "")
+                    {
+                        Instance = new Projects();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Can't read settings", "Error");
+                    }
                 }
-                else if (loadFile == "")
-                {
-                    Instance = new Projects();
-                }
-                else
+                catch (Exception ex)
                 {
                     MessageBox.Show("Can't read settings", "Error");
                 }
             }
-            catch (Exception ex)
-            {
-				MessageBox.Show("Can't read settings", "Error");
-			}
 		}
 
     }
