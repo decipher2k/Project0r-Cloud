@@ -58,12 +58,12 @@ namespace Project_Assistant_Server.Controllers.API
 			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
 				
-				String sProjectData = collection["ProjectData"];
+				String sProjectData = collection["ProjectName"];
 
-				Project project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(sProjectData);
-
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project.Name).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
+					Project project = new Project();
+					project.Name = sProjectData;
 					context.projects.Add(project);
 					context.SaveChanges();
 
@@ -92,13 +92,14 @@ namespace Project_Assistant_Server.Controllers.API
 
 			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
-				String sProjectData = collection["ProjectData"];
+				String sProjectData = collection["ProjectName"];
+				String sProjectId = collection["ProjectId"];
 
-				Project project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(sProjectData);
-
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project.Name && a.Id!=project.Id).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData && a.Id!=int.Parse(sProjectId)).Any()).Any())
 				{
-					context.projects.Update(project);
+					Project p = context.projects.Where(a=> a.Id == int.Parse(sProjectId)).First();
+					p.Name = sProjectData;
+					context.projects.Update(p);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"]);
@@ -125,17 +126,16 @@ namespace Project_Assistant_Server.Controllers.API
 
 			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{				
+				
+				String sProjectId = collection["ProjectId"];
 
-				String newSession = new Session(context).newSession(collection["session"]);
-				String sProjectData = collection["ProjectData"];
-
-				Project project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(sProjectData);
-
-				if (context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Contains(project)).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Id == int.Parse(sProjectId)).Any()).Any()) 
 				{
+					Project project = context.projects.Where(a => a.Id == int.Parse(sProjectId);
 					context.projects.Remove(project);
 					context.SaveChanges();
 
+					String newSession = new Session(context).newSession(collection["session"]);
 					SessionData sessionData = new SessionData();
 					sessionData.session = newSession;
 					return Ok(sessionData);

@@ -1,4 +1,5 @@
-﻿namespace Project_Assistant_Server.Dto
+﻿using System;
+namespace Project_Assistant_Server.Dto
 {
 	public class CreateUserDto : SessionData
 	{
