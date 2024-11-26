@@ -1,4 +1,5 @@
 ﻿using Project_Assistant;
+using Project_Assistant.API;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -207,6 +208,11 @@ namespace ProjectOrganizer
                     MessageBox.Show("Can't read settings", "Error");
                 }
             }
+            else
+            {
+                new ProjectAPI().FetchAll();
+            }
+
 		}
 
     }
