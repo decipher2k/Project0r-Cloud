@@ -12,6 +12,7 @@ namespace ProjectOrganizer
         public String caption;
         public String description;
         public int priority = 99;
+        public int weight = 0;
         public long id;
         public override String ToString()
         {

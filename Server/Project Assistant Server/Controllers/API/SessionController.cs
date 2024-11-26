@@ -7,9 +7,10 @@ using System.Text;
 
 namespace Project_Assistant_Server.Controllers.API
 {
+	[Route("/api/Session")]
 	public class SessionController : ControllerBase
 	{
-
+	
 		private DatabaseContext context;
 
 		public SessionController(DatabaseContext _context)

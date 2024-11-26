@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Assistant"
         mc:Ignorable="d"
-        Title="Connect to Server" Height="159" Width="224" WindowStyle="ToolWindow">
+        Title="Connect to Server" Height="200" Width="221" WindowStyle="ToolWindow">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="727*"/>
@@ -14,11 +14,12 @@
         <Label Content="Username" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
         <Label Content="Server" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="78,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="78,45,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="78,76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <Button Content="OK" HorizontalAlignment="Left" Margin="61,105,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.702,-1.082" Width="64"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="138,105,0,0" VerticalAlignment="Top" Width="59"/>
+        <TextBox Name="tbUsername" HorizontalAlignment="Left" Margin="78,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="tbPassword" HorizontalAlignment="Left" Margin="78,45,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="tbServer" HorizontalAlignment="Left" Margin="78,76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Button Name="bnOK" Content="OK" HorizontalAlignment="Left" Margin="61,137,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.702,-1.082" Width="64" Click="Button_Click"/>
+        <Button Name="bnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="138,137,0,0" VerticalAlignment="Top" Width="59" Click="bnCancel_Click"/>
+        <CheckBox Name="cbSSO" Content="SSO" HorizontalAlignment="Left" Margin="159,106,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

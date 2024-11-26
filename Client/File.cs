@@ -15,7 +15,8 @@ namespace ProjectOrganizer
         public String description { get; set; }
         public String fileName { get; set; }
 
-        public ImageSource picture { get; set; }
+        [NonSerialized]
+        public ImageSource picture;
         public bool startOnce { get; set; }
 
         [NonSerialized]
