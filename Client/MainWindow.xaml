@@ -56,6 +56,10 @@
                 <Separator/>
                 <MenuItem x:Name="mnuRemoveProject" Header="Remove Project" Click="mnuRemoveProject_Click"/>
             </MenuItem>
+            <MenuItem Header="Server">
+                <MenuItem x:Name="mnuConnectServer" Header="Connect" Click="mnuConnectServer_Click"/>
+                <MenuItem x:Name="mnuDisonnectServer" Header="Disconnect" Click="mnuDisconnectServer_Click" IsEnabled="false"/>
+            </MenuItem>
         </Menu>
 
         <TabControl x:Name="tabMain" Height="Auto" Width="Auto" Grid.Row="2" Margin="0,0,-5,-5" SelectionChanged="tabMain_SelectionChanged">

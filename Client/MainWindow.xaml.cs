@@ -219,5 +219,10 @@ namespace ProjectOrganizer
 				}
             }
 		}
+
+		private void mnuConnectServer_Click()
+		{
+
+		}
 	}
 }
