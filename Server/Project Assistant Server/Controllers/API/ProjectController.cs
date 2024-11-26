@@ -128,10 +128,11 @@ namespace Project_Assistant_Server.Controllers.API
 			{				
 				
 				String sProjectId = collection["ProjectId"];
+				String session = collection["session"];
 
 				if (context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Id == int.Parse(sProjectId)).Any()).Any()) 
 				{
-					Project project = context.projects.Where(a => a.Id == int.Parse(sProjectId);
+					Project project = context.users.Where(a=>a.CurrentSession==session).First().Projects.Where(a => a.Id == int.Parse(sProjectId)).First();
 					context.projects.Remove(project);
 					context.SaveChanges();
 

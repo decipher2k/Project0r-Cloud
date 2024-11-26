@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Project_Assistant_Server.Dto;
+using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
@@ -12,78 +16,171 @@ namespace Project_Assistant_Server.Controllers.API
 			context = _context;
 		}
 
-		// GET: ToDoController
-		public ActionResult Index()
+
+		// GET: ProjectController
+		[HttpPost(Name = "/Read")]
+		public ActionResult Read(IFormCollection collection)
 		{
-			return View();
+
+			String session = collection["session"];
+
+			if (context.users.Where(a => a.CurrentSession == session).Any())
+			{
+
+				int iItemId = int.Parse(collection["ItemId"]);
+				String project = collection["project"];
+
+				Models.ToDo ToDo = context.users.Where(a => a.CurrentSession == session)
+					.Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
+					.Projects.Where(a => a.Name == project).First()
+					.ToDo.Where(a => a.id == iItemId).First();
+
+				return Ok(ToDo);
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// GET: ToDoController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
 
-		// GET: ToDoController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
 
-		// POST: ToDoController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+
+
+		// POST: ProjectController/Create
+		[HttpPost(Name = "/Create")]
 		public ActionResult Create(IFormCollection collection)
 		{
-			try
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
-				return RedirectToAction(nameof(Index));
+
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.ToDo ToDo = JsonConvert.DeserializeObject<ToDo>(sProjectData);
+					project.ToDo.Add(ToDo);
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = ToDo.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 
-		// GET: ToDoController/Edit/5
-		public ActionResult Edit(int id)
+
+		// POST: ProjectController/Edit/5
+		[HttpPost(Name = "/Edit")]
+		public ActionResult Edit(IFormCollection collection)
 		{
-			return View();
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
+
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
+					for (int i = 0; i < project.ToDo.Count; i++)
+					{
+						if (project.ToDo[i].id == ToDo.id)
+						{
+							project.ToDo[i] = ToDo;
+							break;
+						}
+					}
+
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = ToDo.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// POST: ToDoController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		// POST: ProjectController/Delete/5
+		[HttpPost(Name = "/Delete")]
+		public ActionResult Delete(IFormCollection collection)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+			UserDto userDto = new UserDto();
 
-		// GET: ToDoController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
 
-		// POST: ToDoController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
+					for (int i = 0; i < project.ToDo.Count; i++)
+					{
+						if (project.ToDo[i].id == ToDo.id)
+						{
+							project.ToDo.RemoveAt(i);
+							break;
+						}
+					}
+
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = ToDo.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 	}

@@ -17,8 +17,8 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		// GET: ProjectController
-		[HttpPost(Name = "/Get")]
-		public ActionResult Get(IFormCollection collection)
+		[HttpPost(Name = "/Read")]
+		public ActionResult Read(IFormCollection collection)
 		{
 			
 			String session = collection["session"];
@@ -60,7 +60,10 @@ namespace Project_Assistant_Server.Controllers.API
 
 				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).First().Projects.Where(a=>a.Name== sProjectName).First();
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a=>a.Name== sProjectName).First();
+
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
 					project.Calendars.Add(calendar);
 					context.projects.Update(project);
@@ -92,19 +95,33 @@ namespace Project_Assistant_Server.Controllers.API
 
 			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
-				String sProjectData = collection["ProjectName"];
-				String sProjectId = collection["ProjectId"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData && a.Id != int.Parse(sProjectId)).Any()).Any())
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project p = context.projects.Where(a => a.Id == int.Parse(sProjectId)).First();
-					p.Name = sProjectData;
-					context.projects.Update(p);
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
+					for (int i = 0; i < project.Calendars.Count; i++)
+					{
+						if (project.Calendars[i].id == calendar.id)
+						{
+							project.Calendars[i] = calendar;
+							break;
+						}
+					}
+
+					context.projects.Update(project);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"]);
-					SessionData sessionData = new SessionData();
+					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
+					sessionData.Id = calendar.id;
 					return Ok(sessionData);
 				}
 				else
@@ -127,22 +144,37 @@ namespace Project_Assistant_Server.Controllers.API
 			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
 
-				String sProjectId = collection["ProjectId"];
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Id == int.Parse(sProjectId)).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project project = context.projects.Where(a => a.Id == int.Parse(sProjectId);
-					context.projects.Remove(project);
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
+					for (int i = 0; i < project.Calendars.Count; i++)
+					{
+						if (project.Calendars[i].id == calendar.id)
+						{
+							project.Calendars.RemoveAt(i);							
+							break;
+						}
+					}
+
+					context.projects.Update(project);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"]);
-					SessionData sessionData = new SessionData();
+					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
+					sessionData.Id = calendar.id;
 					return Ok(sessionData);
 				}
 				else
 				{
-					return Unauthorized();
+					return BadRequest();
 				}
 			}
 			else

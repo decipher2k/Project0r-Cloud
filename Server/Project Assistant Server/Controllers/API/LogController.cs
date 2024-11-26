@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Project_Assistant_Server.Dto;
+using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
@@ -11,78 +15,170 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			context = _context;
 		}
-		// GET: LogController
-		public ActionResult Index()
+		// GET: ProjectController
+		[HttpPost(Name = "/Read")]
+		public ActionResult Read(IFormCollection collection)
 		{
-			return View();
+
+			String session = collection["session"];
+
+			if (context.users.Where(a => a.CurrentSession == session).Any())
+			{
+
+				int iItemId = int.Parse(collection["ItemId"]);
+				String project = collection["project"];
+
+				Models.Log Log = context.users.Where(a => a.CurrentSession == session)
+					.Include(a => a.Projects).ThenInclude(a => a.Logs).First()
+					.Projects.Where(a => a.Name == project).First()
+					.Logs.Where(a => a.id == iItemId).First();
+
+				return Ok(Log);
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// GET: LogController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
 
-		// GET: LogController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
 
-		// POST: LogController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+
+
+		// POST: ProjectController/Create
+		[HttpPost(Name = "/Create")]
 		public ActionResult Create(IFormCollection collection)
 		{
-			try
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
-				return RedirectToAction(nameof(Index));
+
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.Log Log = JsonConvert.DeserializeObject<Log>(sProjectData);
+					project.Logs.Add(Log);
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = Log.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 
-		// GET: LogController/Edit/5
-		public ActionResult Edit(int id)
+
+		// POST: ProjectController/Edit/5
+		[HttpPost(Name = "/Edit")]
+		public ActionResult Edit(IFormCollection collection)
 		{
-			return View();
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
+
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.Log Log = JsonConvert.DeserializeObject<Models.Log>(sProjectData);
+					for (int i = 0; i < project.Logs.Count; i++)
+					{
+						if (project.Logs[i].id == Log.id)
+						{
+							project.Logs[i] = Log;
+							break;
+						}
+					}
+
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = Log.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// POST: LogController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		// POST: ProjectController/Delete/5
+		[HttpPost(Name = "/Delete")]
+		public ActionResult Delete(IFormCollection collection)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+			UserDto userDto = new UserDto();
 
-		// GET: LogController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
 
-		// POST: LogController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
+				String sProjectData = collection["ItemData"];
+				String sProjectName = collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+						Include(a => a.Projects).First()
+						.Projects.Where(a => a.Name == sProjectName).First();
+
+					Models.Log Log = JsonConvert.DeserializeObject<Models.Log>(sProjectData);
+					for (int i = 0; i < project.Logs.Count; i++)
+					{
+						if (project.Logs[i].id == Log.id)
+						{
+							project.Logs.RemoveAt(i);
+							break;
+						}
+					}
+
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = Log.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 	}
