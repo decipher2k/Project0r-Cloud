@@ -30,9 +30,9 @@ namespace Project_Assistant.API
 			}
 		}
 
-		public bool Create(String item, String project)
+		public long Create(String item, String project)
 		{		
-			return PostCreate(item, "/api/Project/Create", project);
+			IdSessionDto idSessionDto = PostCreate( item, "/api/Project/Create", project); return idSessionDto.Id;
 		}
 
 		public String Read(int Id, String project)

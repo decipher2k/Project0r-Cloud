@@ -10,10 +10,10 @@ namespace Project_Assistant.API
 {
 	public class NoteAPI : APIBase
 	{
-		public bool Create(Note item, String project)
+		public long Create(Note item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Note/Create", project);
+			IdSessionDto idSessionDto = PostCreate( sItem, "/api/Note/Create", project); return idSessionDto.Id;
 
 		}
 

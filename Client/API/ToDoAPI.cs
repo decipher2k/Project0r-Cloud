@@ -11,10 +11,10 @@ namespace Project_Assistant.API
 {
 	public  class ToDoAPI : APIBase
 	{
-		public bool Create(ToDo item, String project)
+		public long Create(ToDo item, String project)
 		{
 			String sItem=JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/ToDo/Create", project);				
+			IdSessionDto idSessionDto = PostCreate( sItem, "/api/ToDo/Create", project); return idSessionDto.Id;				
 		}
 
 		public ToDo Read(int Id, String project)

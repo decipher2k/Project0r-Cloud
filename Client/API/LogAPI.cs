@@ -10,10 +10,10 @@ namespace Project_Assistant.API
 {
 	public class LogAPI : APIBase
 	{
-		public bool Create(Log item, String project)
+		public long Create(Log item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Log/Create", project);
+			IdSessionDto idSessionDto = PostCreate( sItem, "/api/Log/Create", project); return idSessionDto.Id;
 
 		}
 

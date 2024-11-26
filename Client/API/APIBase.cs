@@ -10,7 +10,7 @@ namespace Project_Assistant.API
 {
 	public class APIBase
 	{
-		protected bool PostCreate(String item, String APIEndpoint, String project)
+		protected IdSessionDto PostCreate(String item, String APIEndpoint, String project)
 		{ 			
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()
@@ -26,12 +26,12 @@ namespace Project_Assistant.API
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;
-				Globals.session = JsonConvert.DeserializeObject<SessionData>(responseString).session;
-				return true;
+				Globals.session = JsonConvert.DeserializeObject<IdSessionDto>(responseString).session;
+				return JsonConvert.DeserializeObject<IdSessionDto>(responseString);
 			}
 			else
 			{ 
-				return false;
+				return null;
 			}
 		}
 

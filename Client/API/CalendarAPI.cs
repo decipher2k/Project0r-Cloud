@@ -10,10 +10,10 @@ namespace Project_Assistant.API
 {
 	public class CalendarAPI : APIBase
 	{
-		public bool Create(Calendar item, String project)
+		public long Create(Calendar item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Calendar/Create", project);
+			IdSessionDto idSessionDto=PostCreate(sItem, "/api/Calendar/Create", project); return idSessionDto.Id;
 
 		}
 
