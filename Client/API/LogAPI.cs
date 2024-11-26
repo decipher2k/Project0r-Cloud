@@ -26,7 +26,7 @@ namespace Project_Assistant.API
 		public bool Update(Log item)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Log/Update");
+			return PostUpdate(sItem, "/api/Log/Update");
 		}
 
 		public bool Delete(int Id)

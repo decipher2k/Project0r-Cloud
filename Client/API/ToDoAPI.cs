@@ -14,8 +14,7 @@ namespace Project_Assistant.API
 		public bool Create(ToDo item)
 		{
 			String sItem=JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/ToDo/Create");
-				
+			return PostCreate(sItem, "/api/ToDo/Create");				
 		}
 
 		public ToDo Read(int Id)
@@ -27,7 +26,7 @@ namespace Project_Assistant.API
 		public bool Update(ToDo item)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/ToDo/Update");
+			return PostUpdate(sItem, "/api/ToDo/Update");
 		}
 
 		public bool Delete(int Id)

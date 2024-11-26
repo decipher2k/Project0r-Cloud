@@ -29,7 +29,7 @@ namespace Project_Assistant.API
 
 		public bool Update(String item)
 		{
-			return PostCreate(item, "/api/Project/Update");
+			return PostUpdate(item, "/api/Project/Update");
 		}
 
 		public bool Delete(int Id)
