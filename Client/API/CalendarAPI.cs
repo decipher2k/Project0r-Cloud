@@ -10,28 +10,28 @@ namespace Project_Assistant.API
 {
 	public class CalendarAPI : APIBase
 	{
-		public bool Create(Calendar item)
+		public bool Create(Calendar item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Calendar/Create");
+			return PostCreate(sItem, "/api/Calendar/Create", project);
 
 		}
 
-		public ToDo Read(int Id)
+		public ToDo Read(int Id, String project)
 		{
-			String sToDo = PostRead(Id, "/api/Calendar/Read");
+			String sToDo = PostRead(Id, "/api/Calendar/Read", project);
 			return JsonConvert.DeserializeObject<ToDo>(sToDo);
 		}
 
-		public bool Update(ToDo item)
+		public bool Update(ToDo item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostUpdate(sItem, "/api/Calendar/Update");
+			return PostUpdate(sItem, "/api/Calendar/Update", project);
 		}
 
-		public bool Delete(int Id)
+		public bool Delete(int Id, String project)
 		{			
-			return PostDelete(Id, "/api/Calendar/Delete");
+			return PostDelete(Id, "/api/Calendar/Delete", project);
 		}
 
 	}

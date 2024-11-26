@@ -19,8 +19,12 @@ namespace ProjectOrganizer
                     files = new ObservableCollection<File>();
                 return files;
             }
-        }
-
+			set
+			{
+				files = value;
+			}
+		}
+        
         private ObservableCollection<Program> apps;
         public ObservableCollection<Program> Apps
         {
@@ -30,7 +34,12 @@ namespace ProjectOrganizer
                     apps = new ObservableCollection<Program>();
                 return apps;
             }
-        }
+			set
+			{
+				apps = value;
+			}
+		}
+	
 
         private ObservableCollection<Note> notes;
         public ObservableCollection<Note> Notes
@@ -41,6 +50,10 @@ namespace ProjectOrganizer
                     notes = new ObservableCollection<Note>();
                 return notes;
             }
+	        set
+	        {
+		        notes = value;
+	        }
         }
 
         private ObservableCollection<ToDo> todo;
@@ -52,7 +65,11 @@ namespace ProjectOrganizer
                     todo = new ObservableCollection<ToDo>();
                 return todo;
             }
-        }
+			set
+			{
+				todo = value;
+			}
+		}
 
         private ObservableCollection<Calendar> calendar;
         public ObservableCollection<Calendar> Calendar
@@ -62,6 +79,10 @@ namespace ProjectOrganizer
                 if (calendar == null)
                     calendar = new ObservableCollection<Calendar>();
                 return calendar;
+            }
+            set
+            {
+                calendar = value;
             }
         }
 

@@ -220,9 +220,9 @@ namespace ProjectOrganizer
             }
 		}
 
-		private void mnuConnectServer_Click()
+		private void mnuConnectServer_Click(object sender, RoutedEventArgs e)
 		{
 
-		}
-	}
+        }
+    }
 }

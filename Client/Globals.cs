@@ -9,5 +9,6 @@ namespace Project_Assistant
 	public class Globals
 	{
 		public static String session = "";
+		public static String ServerAddress = "";
 	}
 }

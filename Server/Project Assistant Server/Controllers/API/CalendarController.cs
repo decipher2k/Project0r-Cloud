@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
+using Project_Assistant_Server.Dto;
+using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
@@ -11,78 +16,138 @@ namespace Project_Assistant_Server.Controllers.API
 			context = _context;
 		}
 
-		// GET: CalendarController
-		public ActionResult Index()
+		// GET: ProjectController
+		[HttpPost(Name = "/Get")]
+		public ActionResult Get(IFormCollection collection)
 		{
-			return View();
+			
+			String session = collection["session"];
+
+			if (context.users.Where(a => a.CurrentSession == session).Any())
+			{
+				
+				int iItemId = int.Parse(collection["ItemId"]);
+				String project = collection["project"];
+
+				Calendar calendar=context.users.Where(a => a.CurrentSession == session)
+					.Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
+					.Projects.Where(a=>a.Name==project).First()
+					.Calendars.Where(a=>a.id==iItemId).First();		
+				
+				return Ok(calendar);				
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// GET: CalendarController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
 
-		// GET: CalendarController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
 
-		// POST: CalendarController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+
+
+		// POST: ProjectController/Create
+		[HttpPost(Name = "/Create")]
 		public ActionResult Create(IFormCollection collection)
 		{
-			try
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
 			{
-				return RedirectToAction(nameof(Index));
+
+				String sProjectData = collection["ItemData"];
+				String sProjectName=collection["project"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				{
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).First().Projects.Where(a=>a.Name== sProjectName).First();
+					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
+					project.Calendars.Add(calendar);
+					context.projects.Update(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					sessionData.Id = calendar.id;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 
-		// GET: CalendarController/Edit/5
-		public ActionResult Edit(int id)
+
+		// POST: ProjectController/Edit/5
+		[HttpPost(Name = "/Edit")]
+		public ActionResult Edit(IFormCollection collection)
 		{
-			return View();
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
+				String sProjectData = collection["ProjectName"];
+				String sProjectId = collection["ProjectId"];
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData && a.Id != int.Parse(sProjectId)).Any()).Any())
+				{
+					Project p = context.projects.Where(a => a.Id == int.Parse(sProjectId)).First();
+					p.Name = sProjectData;
+					context.projects.Update(p);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					SessionData sessionData = new SessionData();
+					sessionData.session = newSession;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
 		}
 
-		// POST: CalendarController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		// POST: ProjectController/Delete/5
+		[HttpPost(Name = "/Delete")]
+		public ActionResult Delete(IFormCollection collection)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+			UserDto userDto = new UserDto();
 
-		// GET: CalendarController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
+			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			{
 
-		// POST: CalendarController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
+				String sProjectId = collection["ProjectId"];
+
+				if (context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Id == int.Parse(sProjectId)).Any()).Any())
+				{
+					Project project = context.projects.Where(a => a.Id == int.Parse(sProjectId);
+					context.projects.Remove(project);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"]);
+					SessionData sessionData = new SessionData();
+					sessionData.session = newSession;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return Unauthorized();
+				}
 			}
-			catch
+			else
 			{
-				return View();
+				return Unauthorized();
 			}
 		}
 	}

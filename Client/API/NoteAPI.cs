@@ -10,28 +10,28 @@ namespace Project_Assistant.API
 {
 	public class NoteAPI : APIBase
 	{
-		public bool Create(Note item)
+		public bool Create(Note item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Note/Create");
+			return PostCreate(sItem, "/api/Note/Create", project);
 
 		}
 
-		public Note Read(int Id)
+		public Note Read(int Id, String project)
 		{
-			String sItem = PostRead(Id, "/api/Note/Read");
+			String sItem = PostRead(Id, "/api/Note/Read", project);
 			return JsonConvert.DeserializeObject<Note>(sItem);
 		}
 
-		public bool Update(Note item)
+		public bool Update(Note item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostUpdate(sItem, "/api/Note/Update");
+			return PostUpdate(sItem, "/api/Note/Update", project);
 		}
 
-		public bool Delete(int Id)
+		public bool Delete(int Id, String project)
 		{
-			return PostDelete(Id, "/api/Note/Delete");
+			return PostDelete(Id, "/api/Note/Delete", project);
 		}
 	}
 }

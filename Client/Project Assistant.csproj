@@ -55,6 +55,7 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -79,12 +80,28 @@
     <Compile Include="AddEditNote.xaml.cs">
       <DependentUpon>AddEditNote.xaml</DependentUpon>
     </Compile>
+    <Compile Include="API\APIBase.cs" />
+    <Compile Include="API\CalendarAPI.cs" />
+    <Compile Include="API\FileAPI.cs" />
+    <Compile Include="API\LogAPI.cs" />
+    <Compile Include="API\NoteAPI.cs" />
+    <Compile Include="API\ProgramAPI.cs" />
+    <Compile Include="API\ProjectAPI.cs" />
+    <Compile Include="API\SessionData.cs" />
+    <Compile Include="API\ToDoAPI.cs" />
     <Compile Include="Calendar.cs" />
+    <Compile Include="ConnectServerWindow.xaml.cs">
+      <DependentUpon>ConnectServerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs" />
+    <Compile Include="Dto\CreateUserDto.cs" />
+    <Compile Include="Dto\Project.cs" />
+    <Compile Include="Dto\SessionData.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FloatingWindow.xaml.cs">
       <DependentUpon>FloatingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="LicenseCheck.xaml.cs">
       <DependentUpon>LicenseCheck.xaml</DependentUpon>
     </Compile>
@@ -107,6 +124,10 @@
     <Page Include="AddEditNote.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConnectServerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FloatingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +222,9 @@
     <Resource Include="schreiben.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CredentialManagement">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="MaterialDesignColors">
       <Version>3.1.0</Version>
     </PackageReference>

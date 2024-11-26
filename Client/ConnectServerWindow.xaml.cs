@@ -40,6 +40,7 @@ namespace Project_Assistant
 					if (sessionData != null)
 					{
 						Globals.session = sessionData.session;
+						Globals.ServerAddress = tbServer.Text;
 						success = true;
 						this.Close();
 					}

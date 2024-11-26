@@ -10,28 +10,28 @@ namespace Project_Assistant.API
 {
 	public class LogAPI : APIBase
 	{
-		public bool Create(Log item)
+		public bool Create(Log item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Log/Create");
+			return PostCreate(sItem, "/api/Log/Create", project);
 
 		}
 
-		public Log Read(int Id)
+		public Log Read(int Id, String project)
 		{
-			String sItem = PostRead(Id, "/api/Log/Log");
+			String sItem = PostRead(Id, "/api/Log/Read", project	);
 			return JsonConvert.DeserializeObject<Log>(sItem);
 		}
 
-		public bool Update(Log item)
+		public bool Update(Log item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostUpdate(sItem, "/api/Log/Update");
+			return PostUpdate(sItem, "/api/Log/Update", project);
 		}
 
-		public bool Delete(int Id)
+		public bool Delete(int Id, String project)
 		{
-			return PostDelete(Id, "/api/Log/Delete");
+			return PostDelete(Id, "/api/Log/Delete", project);
 		}
 	}
 }

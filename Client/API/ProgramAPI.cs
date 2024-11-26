@@ -10,28 +10,28 @@ namespace Project_Assistant.API
 {
 	public class ProgramAPI : APIBase
 	{
-		public bool Create(Program item)
+		public bool Create(Program item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostCreate(sItem, "/api/Program/Create");
+			return PostCreate(sItem, "/api/Program/Create", project);
 
 		}
 
-		public Program Read(int Id)
+		public Program Read(int Id, String project)
 		{
-			String sItem = PostRead(Id, "/api/Program/Read");
+			String sItem = PostRead(Id, "/api/Program/Read", project);
 			return JsonConvert.DeserializeObject<Program>(sItem);
 		}
 
-		public bool Update(Program item)
+		public bool Update(Program item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			return PostUpdate(sItem, "/api/Program/Update");
+			return PostUpdate(sItem, "/api/Program/Update", project);
 		}
 
-		public bool Delete(int Id)
+		public bool Delete(int Id, String project)
 		{
-			return PostDelete(Id, "/api/Program/Delete");
+			return PostDelete(Id, "/api/Program/Delete", project);
 		}
 	}
 }
