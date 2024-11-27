@@ -60,7 +60,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a=>a.ToDo).First()
@@ -102,7 +102,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()

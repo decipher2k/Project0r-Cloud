@@ -43,6 +43,7 @@ namespace Project_Assistant
 						Globals.session = sessionData.session;
 						Globals.ServerAddress = tbServer.Text;
 						Globals.isMultiuser = true;
+						this.DialogResult = true;
 						success = true;
 						this.Close();
 					}

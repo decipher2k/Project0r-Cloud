@@ -59,7 +59,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName=collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
@@ -100,7 +100,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
@@ -145,32 +145,26 @@ namespace Project_Assistant_Server.Controllers.API
 			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
-				String sProjectData = collection["ItemData"];
+				String sProjectId = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
-					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
-					for (int i = 0; i < project.Calendars.Count; i++)
-					{
-						if (project.Calendars[i].Id == calendar.Id)
-						{
-							project.Calendars.RemoveAt(i);							
-							break;
-						}
-					}
+					Models.Calendar Calendar = context.calendars.Where(a => a.Id == long.Parse(sProjectId)).First();
 
+					context.calendars.Remove(Calendar);
+					project.Calendars.Remove(Calendar);
 					context.projects.Update(project);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = calendar.Id;
+					sessionData.Id = Calendar.Id;
 					return Ok(sessionData);
 				}
 				else

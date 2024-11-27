@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Project_Assistant_Server.Models;
 using Project_Assistant_Server.Dto;
+using Microsoft.CodeAnalysis;
+using Project = Project_Assistant_Server.Models.Project;
 
 namespace Project_Assistant_Server.Controllers.API
 {
@@ -60,7 +62,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Files).First()
@@ -101,24 +103,19 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Files).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
-					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
-					for (int i = 0; i < project.Files.Count; i++)
-					{
-						if (project.Files[i].Id == File.Id)
-						{
-							project.Files[i] = File;
-							break;
-						}
-					}
+					Models.File files = context.files.Where(a => a.Id == long.Parse(sProjectData)).First();
 
+					context.files.Remove(files);
+					project.Files.Remove(files);
 					context.projects.Update(project);
 					context.SaveChanges();
+
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
@@ -149,7 +146,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.Files).First()

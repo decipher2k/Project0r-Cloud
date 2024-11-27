@@ -247,7 +247,7 @@ namespace ProjectOrganizer
                 if (connectServerWindow.success == true)
                 {
                     Projects.Load();
-					MainWindow.Instance.loadTabs();
+					this.loadTabs();
 				}
             }
             
