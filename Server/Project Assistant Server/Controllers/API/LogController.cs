@@ -164,7 +164,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Log.Id;
+			
 					return Ok(sessionData);
 				}
 				else
