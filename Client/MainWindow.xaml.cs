@@ -56,7 +56,7 @@ namespace ProjectOrganizer
             catch (Exception ex) { }
         }
 
-        void loadTabs()
+        public void loadTabs()
         {
             
             if (Projects.Instance.Project.Count > 0)
@@ -247,7 +247,8 @@ namespace ProjectOrganizer
                 if (connectServerWindow.success == true)
                 {
                     Projects.Load();
-                }
+					MainWindow.Instance.loadTabs();
+				}
             }
             
         }

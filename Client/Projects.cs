@@ -211,7 +211,8 @@ namespace ProjectOrganizer
             else
             {
                 new ProjectAPI().FetchAll();
-            }
+               
+			}
 
 		}
 

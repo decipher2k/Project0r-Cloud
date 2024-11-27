@@ -60,7 +60,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a=>a.ToDo).First()
@@ -102,7 +102,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
@@ -150,7 +150,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sItemId = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
@@ -160,9 +160,12 @@ namespace Project_Assistant_Server.Controllers.API
 						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
 						.Projects.Where(a => a.Name == sProjectName).First().ToDo.Where(a=>a.Id==long.Parse(sItemId)).First();
 
-					project.ToDo.Remove(project.ToDo.Where(a=>a.Id==long.Parse(sItemId)).First());
-					context.toDo.Remove(context.toDo.Where(a=>a.Id==long.Parse(sItemId)).First());
-					context.Update(project);
+								
+					context.Entry(todo).State = EntityState.Deleted;
+					project.ToDo.Remove(project.ToDo.Where(a => a.Id == long.Parse(sItemId)).First());
+					context.SaveChanges();
+					project.ToDo.Remove(project.ToDo.Where(a => a.Id == long.Parse(sItemId)).First());
+					context.Update(project);					
 					context.SaveChanges();
 						
 					String newSession = new Session(context).newSession(collection["session"].ToString());
