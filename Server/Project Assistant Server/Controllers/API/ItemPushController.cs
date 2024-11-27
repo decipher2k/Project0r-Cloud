@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Project_Assistant_Server.Dto;
 using Project_Assistant_Server.Models;
 using File = Project_Assistant_Server.Models.File;
 
@@ -59,7 +60,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
 				{
 					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
-					ItemPush push=context.itemPush.Where(a=>a.Id== iItemPushId).FirstOrDefault();
+					ItemPush push = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 					switch (push.Type)
 					{
 
@@ -120,7 +121,7 @@ namespace Project_Assistant_Server.Controllers.API
 								break;
 							}
 						case (ItemPush.ItemType.Program):
-							{ 
+							{
 								User newUser = context.users.Where(a => a.Id == iSenderId).First();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
@@ -155,13 +156,43 @@ namespace Project_Assistant_Server.Controllers.API
 								}
 								break;
 							}
-							break;
 					}
+					context.Remove(context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault());
+					context.SaveChanges();
 					return Ok();
 				}
 				else
 				{
 					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
+
+		[HttpPost("PollItems")]
+		public IActionResult PollItems(IFormCollection collection)
+		{
+			String project = collection["project"];
+			String Session = collection["session"];
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				{
+					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
+					ItemPushDto itemPushDto = new ItemPushDto();
+					foreach(ItemPush itemPush in context.itemPush.Where(a=>a.ReceiverId==user.Id))
+					{
+						itemPushDto.Items.Add(itemPush);
+					}
+					return Ok(itemPushDto);
+				}
+				else
+				{ 
+					return BadRequest(); 
 				}
 			}
 			else
