@@ -106,16 +106,7 @@ namespace Project_Assistant_Server.Controllers.API
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.Log Log = JsonConvert.DeserializeObject<Models.Log>(sProjectData);
-					for (int i = 0; i < project.Logs.Count; i++)
-					{
-						if (project.Logs[i].Id == Log.Id)
-						{
-							project.Logs[i] = Log;
-							break;
-						}
-					}
-
-					context.projects.Update(project);
+					context.Update(Log);					
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());

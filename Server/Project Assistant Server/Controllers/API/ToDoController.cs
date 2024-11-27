@@ -109,16 +109,8 @@ namespace Project_Assistant_Server.Controllers.API
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
-					for (int i = 0; i < project.ToDo.Count; i++)
-					{
-						if (project.ToDo[i].Id == ToDo.Id)
-						{
-							project.ToDo[i] = ToDo;
-							break;
-						}
-					}
 
-					context.projects.Update(project);
+					context.Update(ToDo);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());

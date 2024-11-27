@@ -107,16 +107,8 @@ namespace Project_Assistant_Server.Controllers.API
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
-					for (int i = 0; i < project.Calendars.Count; i++)
-					{
-						if (project.Calendars[i].Id == calendar.Id)
-						{
-							project.Calendars[i] = calendar;
-							break;
-						}
-					}
+					context.Update(calendar);
 
-					context.projects.Update(project);
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());

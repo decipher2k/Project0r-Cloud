@@ -108,16 +108,9 @@ namespace Project_Assistant_Server.Controllers.API
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
-					for (int i = 0; i < project.Files.Count; i++)
-					{
-						if (project.Files[i].Id == File.Id)
-						{
-							project.Files[i] = File;
-							break;
-						}
-					}
+					context.Update(File);
 
-					context.projects.Update(project);
+		
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString());
