@@ -23,5 +23,6 @@ namespace Project_Assistant_Server
 		public DbSet<ToDo> toDo { get; set; }
 		public DbSet<User> users { get; set; }
 		public DbSet<Project> projects { get; set; }
+		public DbSet<ItemPush> itemPush { get; set; }
 	}
 }
