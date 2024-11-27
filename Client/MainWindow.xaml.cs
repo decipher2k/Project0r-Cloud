@@ -242,7 +242,14 @@ namespace ProjectOrganizer
 		private void mnuConnectServer_Click(object sender, RoutedEventArgs e)
 		{
             ConnectServerWindow connectServerWindow = new ConnectServerWindow();
-            connectServerWindow.ShowDialog();
+            if (connectServerWindow.ShowDialog() == true)
+            {
+                if (connectServerWindow.success == true)
+                {
+                    Projects.Load();
+                }
+            }
+            
         }
 
 		private void mnuDisconnectServer_Click(object sender, RoutedEventArgs e)

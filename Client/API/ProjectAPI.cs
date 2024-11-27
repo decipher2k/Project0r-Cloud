@@ -16,15 +16,15 @@ namespace Project_Assistant.API
 		public void FetchAll()
 		{
 			Projects.Instance.Project.Clear();
-			List<Project> projects = JsonConvert.DeserializeObject<List<Project>>(PostFetchAll(Globals.session));
+			List<Project> projects = JsonConvert.DeserializeObject<UserDto>(PostFetchAll("/api/Project/GetAll/"+Globals.session)).projects;
 			foreach (var item in projects)
 			{
 				Data data = new Data();
-				data.Calendar = (ObservableCollection<Calendar>) item.Calendars.AsEnumerable(); 
-				data.ToDo = (ObservableCollection<ToDo>)item.ToDo.AsEnumerable();
-				data.Apps = (ObservableCollection<Program>)item.Programs.AsEnumerable();
-				data.Notes = (ObservableCollection<Note>)item.Notes.AsEnumerable();
-				data.Files = (ObservableCollection<File>)item.Files.AsEnumerable();
+				data.Calendar = new ObservableCollection<Calendar>(item.Calendars);
+				data.ToDo = new ObservableCollection<ToDo>(item.ToDo);
+				data.Apps = new ObservableCollection<Program>(item.Programs);
+				data.Notes = new ObservableCollection<Note>(item.Notes);
+				data.Files = new ObservableCollection<File>(item.Files);
 
 				Projects.Instance.Project.Add(item.Name, data);
 			}
@@ -35,9 +35,9 @@ namespace Project_Assistant.API
 			IdSessionDto idSessionDto = PostCreate( item, "/api/Project/Create"); return idSessionDto.Id;
 		}
 
-		public String Read(int Id, String project)
+		public String Read(String name, String project)
 		{
-			String sItem = PostRead(Id, "/api/Project/Read", project);
+			String sItem = PostRead(name, "/api/Project/Read", project);
 			return sItem;
 		}
 

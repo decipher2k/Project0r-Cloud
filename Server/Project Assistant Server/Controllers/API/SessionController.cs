@@ -19,7 +19,7 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		//Change to Post if accessed from web
-		[HttpGet(Name ="/Login/{Username}/{Password")]
+		[HttpGet("Login/{Username}/{Password}")]
 		public IActionResult Login(String Username, String Password)
 		{
 			if(context.users.Where(a=>a.Name==Username).Any())
@@ -49,13 +49,13 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		//Change to Post if accessed from web
-		[HttpPost(Name = "/Register")]
+		[HttpPost( "Register")]
 		public IActionResult RegisterUser(IFormCollection collection)
 		{
 			if (!isValidInput(collection["name"]) || !isValidInput(collection["fullname"]) || !isValidInput(collection["email"]))
 					return BadRequest();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"]).Any())
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Any())
 			{
 				User user = new User();
 				user.Salt=Session.RandomString(20);
@@ -67,7 +67,7 @@ namespace Project_Assistant_Server.Controllers.API
 				context.users.Add(user);
 				context.SaveChanges();
 
-				String newSession = new Session(context).newSession(collection["session"]);
+				String newSession = new Session(context).newSession(collection["session"].ToString());
 				SessionData sessionData = new SessionData();
 				sessionData.session = newSession;
 				return Ok(sessionData);

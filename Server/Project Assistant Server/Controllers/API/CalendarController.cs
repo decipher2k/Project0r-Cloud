@@ -17,11 +17,11 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		// GET: ProjectController
-		[HttpPost(Name = "/Read")]
+		[HttpPost("Read")]
 		public ActionResult Read(IFormCollection collection)
 		{
 			
-			String session = collection["session"];
+			String session = collection["session"].ToString();
 
 			if (context.users.Where(a => a.CurrentSession == session).Any())
 			{
@@ -47,20 +47,20 @@ namespace Project_Assistant_Server.Controllers.API
 
 
 		// POST: ProjectController/Create
-		[HttpPost(Name = "/Create")]
+		[HttpPost("Create")]
 		public ActionResult Create(IFormCollection collection)
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				String sProjectData = collection["ItemData"];
 				String sProjectName=collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).First()
 						.Projects.Where(a=>a.Name== sProjectName).First();
 
@@ -69,7 +69,7 @@ namespace Project_Assistant_Server.Controllers.API
 					context.projects.Update(project);
 					context.SaveChanges();
 
-					String newSession = new Session(context).newSession(collection["session"]);
+					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
 					sessionData.Id = calendar.Id;
@@ -88,20 +88,20 @@ namespace Project_Assistant_Server.Controllers.API
 
 
 		// POST: ProjectController/Edit/5
-		[HttpPost(Name = "/Edit")]
+		[HttpPost("Edit")]
 		public ActionResult Edit(IFormCollection collection)
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
@@ -118,7 +118,7 @@ namespace Project_Assistant_Server.Controllers.API
 					context.projects.Update(project);
 					context.SaveChanges();
 
-					String newSession = new Session(context).newSession(collection["session"]);
+					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
 					sessionData.Id = calendar.Id;
@@ -136,20 +136,20 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		// POST: ProjectController/Delete/5
-		[HttpPost(Name = "/Delete")]
+		[HttpPost("Delete")]
 		public ActionResult Delete(IFormCollection collection)
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"]).Count() > 0)
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				String sProjectData = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"]).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
-					Project project = context.users.Where(a => a.CurrentSession == collection["session"]).
+					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
 						Include(a => a.Projects).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
@@ -166,7 +166,7 @@ namespace Project_Assistant_Server.Controllers.API
 					context.projects.Update(project);
 					context.SaveChanges();
 
-					String newSession = new Session(context).newSession(collection["session"]);
+					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
 					sessionData.Id = calendar.Id;

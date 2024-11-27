@@ -45,7 +45,7 @@ namespace Project_Assistant.API
 
 			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+			var response = client.GetAsync(Globals.ServerAddress + APIEndpoint).Result;
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;
@@ -65,6 +65,30 @@ namespace Project_Assistant.API
 				{ "session",Globals.session },
 				{ "project",project },
 				{ "ItemId", itemId.ToString() },
+			};
+
+			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				var responseString = response.Content.ReadAsStringAsync().Result;
+				return responseString;
+			}
+			else
+			{
+				return "ERROR";
+			}
+		}
+
+		protected String PostRead(string itemName, String APIEndpoint, String project)
+		{
+			HttpClient client = new HttpClient();
+			Dictionary<string, string> values = new Dictionary<string, string>()
+			{
+				{ "session",Globals.session },
+				{ "project",project },
+				{ "ItemName", itemName.ToString() },
 			};
 
 			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
