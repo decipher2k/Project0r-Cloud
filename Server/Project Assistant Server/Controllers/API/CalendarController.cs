@@ -8,6 +8,7 @@ using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
+	[Route("/api/Calendar")]
 	public class CalendarController : ControllerBase
 	{
 
@@ -61,7 +62,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 						.Projects.Where(a=>a.Name== sProjectName).First();
 
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
@@ -102,7 +103,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
@@ -150,7 +151,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);

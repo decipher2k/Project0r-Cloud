@@ -16,7 +16,9 @@ namespace Project_Assistant.API
 		public void FetchAll()
 		{
 			Projects.Instance.Project.Clear();
-			List<Project> projects = JsonConvert.DeserializeObject<UserDto>(PostFetchAll("/api/Project/GetAll/"+Globals.session)).projects;
+			UserDto userDto = JsonConvert.DeserializeObject<UserDto>(PostFetchAll("/api/Project/GetAll/" + Globals.session));
+			Globals.session = userDto.session;
+			List<Project> projects = userDto.projects;
 			foreach (var item in projects)
 			{
 				Data data = new Data();
@@ -25,6 +27,7 @@ namespace Project_Assistant.API
 				data.Apps = new ObservableCollection<Program>(item.Programs);
 				data.Notes = new ObservableCollection<Note>(item.Notes);
 				data.Files = new ObservableCollection<File>(item.Files);
+				data.Log = new ObservableCollection<Log>(item.Logs);
 
 				Projects.Instance.Project.Add(item.Name, data);
 			}

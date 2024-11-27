@@ -7,6 +7,7 @@ using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
+	[Route("/api/Note")]
 	public class NoteController : ControllerBase
 	{
 
@@ -60,7 +61,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Notes).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.Note Note = JsonConvert.DeserializeObject<Note>(sProjectData);
@@ -101,7 +102,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Notes).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.Note Note = JsonConvert.DeserializeObject<Models.Note>(sProjectData);
@@ -149,7 +150,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Notes).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.Note Note = JsonConvert.DeserializeObject<Models.Note>(sProjectData);

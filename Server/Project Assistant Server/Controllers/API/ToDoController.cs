@@ -7,6 +7,7 @@ using Project_Assistant_Server.Models;
 
 namespace Project_Assistant_Server.Controllers.API
 {
+	[Route("/api/ToDo")]
 	public class ToDoController : ControllerBase
 	{
 
@@ -62,10 +63,11 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a=>a.ToDo).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.ToDo ToDo = JsonConvert.DeserializeObject<ToDo>(sProjectData);
+					
 					project.ToDo.Add(ToDo);
 					context.projects.Update(project);
 					context.SaveChanges();
@@ -103,7 +105,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
@@ -145,32 +147,27 @@ namespace Project_Assistant_Server.Controllers.API
 			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
-				String sProjectData = collection["ItemData"];
+				String sItemId = collection["ItemData"];
 				String sProjectName = collection["project"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
-					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
-					for (int i = 0; i < project.ToDo.Count; i++)
-					{
-						if (project.ToDo[i].Id == ToDo.Id)
-						{
-							project.ToDo.RemoveAt(i);
-							break;
-						}
-					}
+					ToDo todo = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
+						Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
+						.Projects.Where(a => a.Name == sProjectName).First().ToDo.Where(a=>a.Id==long.Parse(sItemId)).First();
 
-					context.projects.Update(project);
+					project.ToDo.Remove(project.ToDo.Where(a=>a.Id==long.Parse(sItemId)).First());
+					context.toDo.Remove(context.toDo.Where(a=>a.Id==long.Parse(sItemId)).First());
+					context.Update(project);
 					context.SaveChanges();
-
+						
 					String newSession = new Session(context).newSession(collection["session"].ToString());
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = ToDo.Id;
 					return Ok(sessionData);
 				}
 				else

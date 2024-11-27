@@ -7,6 +7,7 @@ using Project_Assistant_Server.Dto;
 
 namespace Project_Assistant_Server.Controllers.API
 {
+	[Route("/api/File")]
 	public class FileController : ControllerBase
 	{
 
@@ -62,7 +63,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Files).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
@@ -103,7 +104,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Files).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
@@ -151,7 +152,7 @@ namespace Project_Assistant_Server.Controllers.API
 				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectData).Any()).Any())
 				{
 					Project project = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).
-						Include(a => a.Projects).First()
+						Include(a => a.Projects).ThenInclude(a => a.Files).First()
 						.Projects.Where(a => a.Name == sProjectName).First();
 
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
