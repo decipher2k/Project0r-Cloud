@@ -24,9 +24,9 @@ namespace ProjectOrganizer
 
         [NonSerialized]
         public ImageSource picture;
-        public long id;
-        
-        public override String ToString()
+        public long Id { get; set; }
+
+		public override String ToString()
         {
             return name;
         }

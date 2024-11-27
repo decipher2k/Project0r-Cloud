@@ -46,9 +46,9 @@ namespace Project_Assistant.API
 			return PostUpdate(item, "/api/Project/Update", project);
 		}
 
-		public bool Delete(int Id, String project)
+		public bool Delete(String name, String project)
 		{
-			return PostDelete(Id, "/api/Project/Delete", project);
+			return PostDelete(name, "/api/Project/Delete", project);
 		}
 	}
 }

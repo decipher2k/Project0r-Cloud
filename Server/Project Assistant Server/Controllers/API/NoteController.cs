@@ -31,7 +31,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Models.Note Note = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Notes).First()
 					.Projects.Where(a => a.Name == project).First()
-					.Notes.Where(a => a.id == iItemId).First();
+					.Notes.Where(a => a.Id == iItemId).First();
 
 				return Ok(Note);
 			}
@@ -71,7 +71,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Note.id;
+					sessionData.Id = Note.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -107,7 +107,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Note Note = JsonConvert.DeserializeObject<Models.Note>(sProjectData);
 					for (int i = 0; i < project.Notes.Count; i++)
 					{
-						if (project.Notes[i].id == Note.id)
+						if (project.Notes[i].Id == Note.Id)
 						{
 							project.Notes[i] = Note;
 							break;
@@ -120,7 +120,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Note.id;
+					sessionData.Id = Note.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -155,7 +155,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Note Note = JsonConvert.DeserializeObject<Models.Note>(sProjectData);
 					for (int i = 0; i < project.Notes.Count; i++)
 					{
-						if (project.Notes[i].id == Note.id)
+						if (project.Notes[i].Id == Note.Id)
 						{
 							project.Notes.RemoveAt(i);
 							break;
@@ -168,7 +168,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Note.id;
+					sessionData.Id = Note.Id;
 					return Ok(sessionData);
 				}
 				else

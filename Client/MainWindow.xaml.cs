@@ -62,7 +62,8 @@ namespace ProjectOrganizer
             if (Projects.Instance.Project.Count > 0)
             {
                 tabMain.Items.Clear();
-                new ProjectAPI().FetchAll();
+                if(Globals.isMultiuser)
+                    new ProjectAPI().FetchAll();
                 var lst = Projects.Instance.Project.OrderBy(project => project.Key);
 
                 foreach (KeyValuePair<String,Data> key in lst)
@@ -178,8 +179,7 @@ namespace ProjectOrganizer
                 Projects.Instance.Project.Remove(((TabItem)tabMain.SelectedItem).Header.ToString());
                 if(Globals.isMultiuser)
                 {
-                    new ProjectAPI().Delete(((TabItem)tabMain.SelectedItem).Header.ToString());
-
+                    new ProjectAPI().Delete(((TabItem)tabMain.SelectedItem).Header.ToString(), ((TabItem)tabMain.SelectedItem).Header.ToString());
 				}
 
                 Projects.Save();
@@ -241,7 +241,14 @@ namespace ProjectOrganizer
 
 		private void mnuConnectServer_Click(object sender, RoutedEventArgs e)
 		{
-
+            ConnectServerWindow connectServerWindow = new ConnectServerWindow();
+            connectServerWindow.ShowDialog();
         }
-    }
+
+		private void mnuDisconnectServer_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+	}
 }

@@ -32,7 +32,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Calendar calendar=context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 					.Projects.Where(a=>a.Name==project).First()
-					.Calendars.Where(a=>a.id==iItemId).First();		
+					.Calendars.Where(a=>a.Id==iItemId).First();		
 				
 				return Ok(calendar);				
 			}
@@ -72,7 +72,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = calendar.id;
+					sessionData.Id = calendar.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -108,7 +108,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
 					for (int i = 0; i < project.Calendars.Count; i++)
 					{
-						if (project.Calendars[i].id == calendar.id)
+						if (project.Calendars[i].Id == calendar.Id)
 						{
 							project.Calendars[i] = calendar;
 							break;
@@ -121,7 +121,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = calendar.id;
+					sessionData.Id = calendar.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -156,7 +156,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Calendar calendar = JsonConvert.DeserializeObject<Calendar>(sProjectData);
 					for (int i = 0; i < project.Calendars.Count; i++)
 					{
-						if (project.Calendars[i].id == calendar.id)
+						if (project.Calendars[i].Id == calendar.Id)
 						{
 							project.Calendars.RemoveAt(i);							
 							break;
@@ -169,7 +169,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = calendar.id;
+					sessionData.Id = calendar.Id;
 					return Ok(sessionData);
 				}
 				else

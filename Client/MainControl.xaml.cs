@@ -152,14 +152,14 @@ namespace ProjectOrganizer
                     if (!Globals.isMultiuser)
                     {
                         if (Projects.Instance.Project[project].Apps.Count == 0)
-                            p.id = 0;
+                            p.Id = 0;
                         else
-                            p.id = Projects.Instance.Project[project].Apps.Max(a => a.id) + 1;
+                            p.Id = Projects.Instance.Project[project].Apps.Max(a => a.Id) + 1;
                     }
                     else
                     {
-                        long id=new ProgramAPI().Create(p,project);
-                        p.id= id;
+                        long Id=new ProgramAPI().Create(p,project);
+                        p.Id= Id;
                     }
 
                     p.startOnce = wnd.startOnce;                   
@@ -193,12 +193,12 @@ namespace ProjectOrganizer
 
 				if (!Globals.isMultiuser)
 				{
-					p.id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+					p.Id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.Id) + 1;
 				}
                 else
                 {
-                    long id=new FileAPI().Create(p, project);
-                    p.id = id;
+                    long Id=new FileAPI().Create(p, project);
+                    p.Id = Id;
                 }
 
 				System.Drawing.Icon result = (System.Drawing.Icon)null;
@@ -269,14 +269,14 @@ namespace ProjectOrganizer
                 if (!Globals.isMultiuser)
                 {
                     if (Projects.Instance.Project[project].Notes.Count == 0)
-                        note.id = 0;
+                        note.Id = 0;
                     else
-                        note.id = Projects.Instance.Project[project].Notes.Max(a => a.id) + 1;
+                        note.Id = Projects.Instance.Project[project].Notes.Max(a => a.Id) + 1;
                 }
                 else
                 {
-                    long id=new NoteAPI().Create(note, project);
-                    note.id = id;
+                    long Id=new NoteAPI().Create(note, project);
+                    note.Id = Id;
                 }
 
 				Projects.Instance.Project[project].Notes.Add(note);
@@ -296,12 +296,12 @@ namespace ProjectOrganizer
 
                 if (!Globals.isMultiuser)
                 {
-                    toDo.id = Projects.Instance.Project[project].ToDo.Count == 0 ? 0 : Projects.Instance.Project[project].ToDo.Max(a => a.id) + 1;
+                    toDo.Id = Projects.Instance.Project[project].ToDo.Count == 0 ? 0 : Projects.Instance.Project[project].ToDo.Max(a => a.Id) + 1;
                 }
                 else
                 {
-                    long id=new ToDoAPI().Create(toDo, project);
-                    toDo.id = id;
+                    long Id=new ToDoAPI().Create(toDo, project);
+                    toDo.Id = Id;
                 }
 
 				Projects.Instance.Project[project].ToDo.Add(toDo);
@@ -323,12 +323,12 @@ namespace ProjectOrganizer
 
                 if(!Globals.isMultiuser)
                 {
-					log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+					log.Id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.Id) + 1;
 				}
                 else
                 {
-                    long id=new LogAPI().Create(log, project); 
-                    log.id = id;
+                    long Id=new LogAPI().Create(log, project); 
+                    log.Id = Id;
                 }
 
                 Projects.Instance.Project[project].Log.Insert(0,log);                           
@@ -463,12 +463,12 @@ namespace ProjectOrganizer
 
                         if (!Globals.isMultiuser)
                         {
-                            toDo.id = Projects.Instance.Project[project].Calendar.Count == 0 ? 0 : Projects.Instance.Project[project].Calendar.Max(a => a.id) + 1;
+                            toDo.Id = Projects.Instance.Project[project].Calendar.Count == 0 ? 0 : Projects.Instance.Project[project].Calendar.Max(a => a.Id) + 1;
                         }
                         else
                         {
-                            long id=new CalendarAPI().Create(toDo, project);
-                            toDo.id=id;
+                            long Id=new CalendarAPI().Create(toDo, project);
+                            toDo.Id=Id;
                         }
 
                         Projects.Instance.Project[project].Calendar.Add(toDo);
@@ -483,7 +483,7 @@ namespace ProjectOrganizer
                         for (int i = 0; i < Projects.Instance.Project[project].Calendar.Count; i++)
                         {
                             
-                            if (Projects.Instance.Project[project].Calendar[i].id == c.id)
+                            if (Projects.Instance.Project[project].Calendar[i].Id == c.Id)
                             {
                                 Projects.Instance.Project[project].Calendar[i].from = DateTime.Parse(tbCalendarFrom.Text);
                                 Projects.Instance.Project[project].Calendar[i].to = DateTime.Parse(tbCalendarTo.Text);
@@ -571,7 +571,7 @@ namespace ProjectOrganizer
 
                 if(Globals.isMultiuser)
                 {
-                    new ProgramAPI().Delete((int)p.id, project);
+                    new ProgramAPI().Delete((int)p.Id, project);
                 }
 
                 Projects.Instance.Project[project].Apps.Remove(p);
@@ -583,7 +583,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new FileAPI().Delete((int)p.id, project);
+					new FileAPI().Delete((int)p.Id, project);
 				}
 
 				Projects.Instance.Project[project].Files.Remove(p);
@@ -611,7 +611,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new NoteAPI().Delete((int)p.id, project);
+					new NoteAPI().Delete((int)p.Id, project);
 				}
 
 				Projects.Instance.Project[project].Notes.Remove(p);
@@ -633,12 +633,12 @@ namespace ProjectOrganizer
 
                     if (!Globals.isMultiuser)
                     {
-                        log.id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.id) + 1;
+                        log.Id = Projects.Instance.Project[project].Log.Count == 0 ? 0 : Projects.Instance.Project[project].Log.Max(a => a.Id) + 1;
                     }
                     else
                     {
-                        long id=new LogAPI().Create(log, project);
-                        log.id=id;
+                        long Id=new LogAPI().Create(log, project);
+                        log.Id=Id;
                     }
 
 					Projects.Instance.Project[project].Log.Add(log);                
@@ -646,7 +646,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new ToDoAPI().Delete((int)p.id, project);
+					new ToDoAPI().Delete((int)p.Id, project);
 				}
 
 				Projects.Instance.Project[project].ToDo.Remove(p);
@@ -664,7 +664,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new LogAPI().Delete((int)p.id, project);
+					new LogAPI().Delete((int)p.Id, project);
 				}
 
 				Projects.Instance.Project[project].Log.Remove(p);
@@ -681,7 +681,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new CalendarAPI().Delete((int)p.id, project);
+					new CalendarAPI().Delete((int)p.Id, project);
 				}
 
 				Projects.Instance.Project[project].Calendar.Remove(p);
@@ -707,7 +707,7 @@ namespace ProjectOrganizer
 
 				if (Globals.isMultiuser)
 				{
-					new CalendarAPI().Delete((int)((Calendar)lbCalendar.SelectedItem).id, project);
+					new CalendarAPI().Delete((int)((Calendar)lbCalendar.SelectedItem).Id, project);
 				}
 
 				Projects.Instance.Project[project].Calendar.Remove((Calendar)lbCalendar.SelectedItem);
@@ -743,7 +743,7 @@ namespace ProjectOrganizer
                 {
                     for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
                     {
-                        if (Projects.Instance.Project[project].ToDo[i].id == note.id)
+                        if (Projects.Instance.Project[project].ToDo[i].Id == note.Id)
                         {
 
                             Projects.Instance.Project[project].ToDo[i].description = addEditNote.note;
@@ -777,7 +777,7 @@ namespace ProjectOrganizer
                 {
                     for (int i = 0; i < Projects.Instance.Project[project].Log.Count; i++)
                     {
-                        if (Projects.Instance.Project[project].Log[i].id == log.id)
+                        if (Projects.Instance.Project[project].Log[i].Id == log.Id)
                         {
                             Log l = Projects.Instance.Project[project].Log[i];
                             l.description = addEditNote.note;
@@ -828,7 +828,7 @@ namespace ProjectOrganizer
                 {
                     for (int i = 0; i < Projects.Instance.Project[project].Notes.Count; i++)
                     {
-                        if (Projects.Instance.Project[project].Notes[i].id == note.id)
+                        if (Projects.Instance.Project[project].Notes[i].Id == note.Id)
                         {
 
                             Projects.Instance.Project[project].Notes[i].text = addEditNote.note;
@@ -1013,14 +1013,14 @@ namespace ProjectOrganizer
                                 if (!Globals.isMultiuser)
                                 {
 									if (Projects.Instance.Project[project].Apps.Count == 0)
-										p.id = 0;
+										p.Id = 0;
 									else
-										p.id = Projects.Instance.Project[project].Apps.Max(a => a.id) + 1;
+										p.Id = Projects.Instance.Project[project].Apps.Max(a => a.Id) + 1;
                                 }
                                 else
                                 {
-									long id=new ProgramAPI().Create(p, project);
-                                    p.id = id;
+									long Id=new ProgramAPI().Create(p, project);
+                                    p.Id = Id;
 								}
 
                                 Projects.Instance.Project[project].Apps.Add(p);                       
@@ -1041,7 +1041,7 @@ namespace ProjectOrganizer
                 foreach (String file in files)
                 {
                     File p = new File();
-                    p.id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+                    p.Id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.Id) + 1;
                     p.fileName = file;
                     p.description = "";
                     MsgBox msgBox = new MsgBox("Please enter a title for " + System.IO.Path.GetFileName(file));
@@ -1067,12 +1067,12 @@ namespace ProjectOrganizer
 
                         if(!Globals.isMultiuser)
                         {
-							p.id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.id) + 1;
+							p.Id = Projects.Instance.Project[project].Files.Count == 0 ? 0 : Projects.Instance.Project[project].Files.Max(a => a.Id) + 1;
 						}
                         else
                         {
-                            long id = new FileAPI().Create(p, project);
-                            p.id = id;
+                            long Id = new FileAPI().Create(p, project);
+                            p.Id = Id;
                         }
 
 						Projects.Instance.Project[project].Files.Add(p);
@@ -1089,7 +1089,7 @@ namespace ProjectOrganizer
 			{
 					for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
 					{
-						if (Projects.Instance.Project[project].ToDo[i].id == note.id)
+						if (Projects.Instance.Project[project].ToDo[i].Id == note.Id)
 						{
 
                             Projects.Instance.Project[project].ToDo[i].priority = 1;
@@ -1114,7 +1114,7 @@ namespace ProjectOrganizer
 			{
 				for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
 				{
-					if (Projects.Instance.Project[project].ToDo[i].id == note.id)
+					if (Projects.Instance.Project[project].ToDo[i].Id == note.Id)
 					{
 
 						Projects.Instance.Project[project].ToDo[i].priority = 2;
@@ -1140,7 +1140,7 @@ namespace ProjectOrganizer
 			{
 				for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
 				{
-					if (Projects.Instance.Project[project].ToDo[i].id == note.id)
+					if (Projects.Instance.Project[project].ToDo[i].Id == note.Id)
 					{
 
 						Projects.Instance.Project[project].ToDo[i].priority = 3;

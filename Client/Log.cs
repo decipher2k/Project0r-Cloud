@@ -9,14 +9,14 @@ namespace ProjectOrganizer
 {
     public class Log
     {
-        public String caption;
-        public String description;
-        public DateTime date;
-        public String dateString { get { return date.ToShortDateString(); } }
+        public String caption { get; set; }
+		public String description { get; set; }
+		public DateTime date { get; set; }
+		public String dateString { get { return date.ToShortDateString(); } }
         public String captionString { get { return caption; } }
 
-        public long id;
-        public override String ToString()
+        public long Id { get; set; }
+		public override String ToString()
         {
             return caption;
         }

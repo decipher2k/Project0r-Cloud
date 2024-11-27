@@ -33,7 +33,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Models.ToDo ToDo = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.ToDo).First()
 					.Projects.Where(a => a.Name == project).First()
-					.ToDo.Where(a => a.id == iItemId).First();
+					.ToDo.Where(a => a.Id == iItemId).First();
 
 				return Ok(ToDo);
 			}
@@ -73,7 +73,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = ToDo.id;
+					sessionData.Id = ToDo.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -109,7 +109,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
 					for (int i = 0; i < project.ToDo.Count; i++)
 					{
-						if (project.ToDo[i].id == ToDo.id)
+						if (project.ToDo[i].Id == ToDo.Id)
 						{
 							project.ToDo[i] = ToDo;
 							break;
@@ -122,7 +122,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = ToDo.id;
+					sessionData.Id = ToDo.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -157,7 +157,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.ToDo ToDo = JsonConvert.DeserializeObject<Models.ToDo>(sProjectData);
 					for (int i = 0; i < project.ToDo.Count; i++)
 					{
-						if (project.ToDo[i].id == ToDo.id)
+						if (project.ToDo[i].Id == ToDo.Id)
 						{
 							project.ToDo.RemoveAt(i);
 							break;
@@ -170,7 +170,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = ToDo.id;
+					sessionData.Id = ToDo.Id;
 					return Ok(sessionData);
 				}
 				else

@@ -32,7 +32,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Models.Program Program = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Programs).First()
 					.Projects.Where(a => a.Name == project).First()
-					.Programs.Where(a => a.id == iItemId).First();
+					.Programs.Where(a => a.Id == iItemId).First();
 
 				return Ok(Program);
 			}
@@ -72,7 +72,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Program.id;
+					sessionData.Id = Program.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -108,7 +108,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Program Program = JsonConvert.DeserializeObject<Models.Program>(sProjectData);
 					for (int i = 0; i < project.Programs.Count; i++)
 					{
-						if (project.Programs[i].id == Program.id)
+						if (project.Programs[i].Id == Program.Id)
 						{
 							project.Programs[i] = Program;
 							break;
@@ -121,7 +121,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Program.id;
+					sessionData.Id = Program.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -156,7 +156,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Program Program = JsonConvert.DeserializeObject<Models.Program>(sProjectData);
 					for (int i = 0; i < project.Programs.Count; i++)
 					{
-						if (project.Programs[i].id == Program.id)
+						if (project.Programs[i].Id == Program.Id)
 						{
 							project.Programs.RemoveAt(i);
 							break;
@@ -169,7 +169,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Program.id;
+					sessionData.Id = Program.Id;
 					return Ok(sessionData);
 				}
 				else

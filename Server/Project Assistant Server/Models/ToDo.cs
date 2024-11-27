@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project_Assistant_Server.Models
 {
+	[PrimaryKey("Id")]
 	public class ToDo
 	{
-		public String caption;
-		public String description;
-		public int priority = 99;
-		public int weight = 0;
+		public String caption{ get; set; }
+		public String description{ get; set; }
+		public int priority { get; set; } = 99;
+		public int weight { get; set; } = 0;
 		[Key]
-		public long id;
+		public long Id{ get; set; }
 	}
 }

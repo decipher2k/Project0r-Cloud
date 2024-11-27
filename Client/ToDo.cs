@@ -13,7 +13,7 @@ namespace ProjectOrganizer
         public String description;
         public int priority = 99;
         public int weight = 0;
-        public long id;
+        public long Id;
         public override String ToString()
         {
             String token = "";

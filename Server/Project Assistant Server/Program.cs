@@ -12,7 +12,8 @@ namespace Project_Assistant_Server
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-			var connectionstring = "Connection string";
+            //var connectionstring = "Connection string";
+            var connectionstring = File.ReadAllText(".\\db.conf");
 
 
 			builder.Services.AddDbContext<DatabaseContext>(options =>

@@ -33,7 +33,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Models.File File = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Files).First()
 					.Projects.Where(a => a.Name == project).First()
-					.Files.Where(a => a.id == iItemId).First();
+					.Files.Where(a => a.Id == iItemId).First();
 
 				return Ok(File);
 			}
@@ -73,7 +73,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = File.id;
+					sessionData.Id = File.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -109,7 +109,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
 					for (int i = 0; i < project.Files.Count; i++)
 					{
-						if (project.Files[i].id == File.id)
+						if (project.Files[i].Id == File.Id)
 						{
 							project.Files[i] = File;
 							break;
@@ -122,7 +122,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = File.id;
+					sessionData.Id = File.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -157,7 +157,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.File File = JsonConvert.DeserializeObject<Models.File>(sProjectData);
 					for (int i = 0; i < project.Files.Count; i++)
 					{
-						if (project.Files[i].id == File.id)
+						if (project.Files[i].Id == File.Id)
 						{
 							project.Files.RemoveAt(i);
 							break;
@@ -170,7 +170,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = File.id;
+					sessionData.Id = File.Id;
 					return Ok(sessionData);
 				}
 				else

@@ -12,13 +12,14 @@ namespace Project_Assistant_Server
 			public DatabaseContext(DbContextOptions<DatabaseContext> options)
 			: base(options) // The base(options) call passes the options to the base DbContext class constructor.
 			{
+				Database.Migrate();
 			}
 
 		public DbSet<Calendar> calendars { get; set; }
 		public DbSet<Models.File> files { get; set; }
 		public DbSet<Log> logs { get; set; }
 		public DbSet<Note> notes { get; set; }
-		public DbSet<Program> program { get; set; }
+		public DbSet<Models.Program> program { get; set; }
 		public DbSet<ToDo> toDo { get; set; }
 		public DbSet<User> users { get; set; }
 		public DbSet<Project> projects { get; set; }

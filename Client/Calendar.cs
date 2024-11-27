@@ -8,13 +8,13 @@ namespace ProjectOrganizer
 {
     public class Calendar
     {
-        public DateTime date;
-        public DateTime from;
-        public DateTime to;
-        public String text;
-        public String caption;
-        public bool handled;
-        public long id;
+        public DateTime date { get; set; }
+		public DateTime from { get; set; }
+		public DateTime to { get; set; }
+		public String text { get; set; }
+		public String caption { get; set; }
+		public bool handled { get; set; }
+		public long Id { get; set; }
         
 
         public override string ToString()

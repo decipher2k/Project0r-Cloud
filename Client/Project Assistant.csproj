@@ -83,6 +83,7 @@
     <Compile Include="API\APIBase.cs" />
     <Compile Include="API\CalendarAPI.cs" />
     <Compile Include="API\FileAPI.cs" />
+    <Compile Include="API\IdSessionDto.cs" />
     <Compile Include="API\LogAPI.cs" />
     <Compile Include="API\NoteAPI.cs" />
     <Compile Include="API\ProgramAPI.cs" />

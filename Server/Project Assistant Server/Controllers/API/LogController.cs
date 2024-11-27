@@ -31,7 +31,7 @@ namespace Project_Assistant_Server.Controllers.API
 				Models.Log Log = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Logs).First()
 					.Projects.Where(a => a.Name == project).First()
-					.Logs.Where(a => a.id == iItemId).First();
+					.Logs.Where(a => a.Id == iItemId).First();
 
 				return Ok(Log);
 			}
@@ -71,7 +71,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Log.id;
+					sessionData.Id = Log.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -107,7 +107,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Log Log = JsonConvert.DeserializeObject<Models.Log>(sProjectData);
 					for (int i = 0; i < project.Logs.Count; i++)
 					{
-						if (project.Logs[i].id == Log.id)
+						if (project.Logs[i].Id == Log.Id)
 						{
 							project.Logs[i] = Log;
 							break;
@@ -120,7 +120,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Log.id;
+					sessionData.Id = Log.Id;
 					return Ok(sessionData);
 				}
 				else
@@ -155,7 +155,7 @@ namespace Project_Assistant_Server.Controllers.API
 					Models.Log Log = JsonConvert.DeserializeObject<Models.Log>(sProjectData);
 					for (int i = 0; i < project.Logs.Count; i++)
 					{
-						if (project.Logs[i].id == Log.id)
+						if (project.Logs[i].Id == Log.Id)
 						{
 							project.Logs.RemoveAt(i);
 							break;
@@ -168,7 +168,7 @@ namespace Project_Assistant_Server.Controllers.API
 					String newSession = new Session(context).newSession(collection["session"]);
 					IdSessionDto sessionData = new IdSessionDto();
 					sessionData.session = newSession;
-					sessionData.Id = Log.id;
+					sessionData.Id = Log.Id;
 					return Ok(sessionData);
 				}
 				else

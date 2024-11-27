@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project_Assistant_Server.Models
 {
+	[PrimaryKey("Id")]
 	public class Log
 	{
-		public String caption;
-		public String description;
-		public DateTime date;
+		public String caption{ get; set; }
+		public String description{ get; set; }
+		public DateTime date{ get; set; }
 		[Key]
-		public long id;
+		public long Id{ get; set; }
 
 	}
 }
