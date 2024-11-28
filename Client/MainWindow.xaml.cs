@@ -58,6 +58,21 @@ namespace ProjectOrganizer
 
         }
 
+        public void ItemPushThread()
+        {
+            while (FloatingWindow.Instance.running)
+            {
+                if (FloatingWindow.Instance.isItemPushAvailable)
+                {
+                    bnIncomingPush.Visibility = Visibility.Visible;
+				}
+                else
+                {
+					bnIncomingPush.Visibility = Visibility.Hidden;
+				}
+            }
+        }
+
         public void loadTabs()
         {
             
@@ -262,7 +277,8 @@ namespace ProjectOrganizer
 
 		private void bnIncomingPush_Click(object sender, RoutedEventArgs e)
 		{
-
+            ItemPushWindow itemPushWindow = new ItemPushWindow();
+            itemPushWindow.ShowDialog();
 		}
 	}
 }

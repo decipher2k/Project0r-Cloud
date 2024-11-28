@@ -20,6 +20,7 @@ namespace Project_Assistant_Server.Controllers.API
 		public IActionResult PushItem(IFormCollection collection)
 		{
 			int iItemId = int.Parse(collection["itemId"]);
+			int iItemType= int.Parse(collection["itemType"]);
 			int iReceiverId = int.Parse(collection["contextId"]);
 			String project = collection["project"];
 			String Session = collection["session"];
@@ -31,6 +32,37 @@ namespace Project_Assistant_Server.Controllers.API
 					ItemPush push = new ItemPush();
 					push.ItemId = iItemId;
 					push.ReceiverId = iReceiverId;
+
+
+
+					String title = "";
+					switch(iItemType)
+					{
+						case (int)ItemPush.ItemType.ToDo:
+							title = context.toDo.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+						case (int)ItemPush.ItemType.Calendar:
+							title = context.calendars.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+						case (int)ItemPush.ItemType.Program:
+							title = context.program.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+						case (int)ItemPush.ItemType.Log:
+							title = context.logs.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+						case (int)ItemPush.ItemType.Note:
+							title = context.notes.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+						case (int)ItemPush.ItemType.File:
+							title = context.files.Where(a => ((int)a.Id) == iItemType).First().caption;
+							break;
+					}
+
+					push.Title=title;					
+					push.SenderName = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Fullname;
+					push.Type = (ItemPush.ItemType)iItemType;
+					push.SenderId = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Id;
+
 					context.Add(push);
 					context.SaveChanges();
 

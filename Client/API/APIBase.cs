@@ -181,13 +181,14 @@ namespace Project_Assistant.API
 			}
 		}
 
-		protected String PostContextualIDPush(int itemId, int contextId, String APIEndpoint, String project)
+		protected String PostContextualIDPush(int itemId, int contextId,String APIEndpoint, String project, int itemType=-1)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()
 			{
 				  { "session",Globals.session },
 				  { "itemId", itemId.ToString() },
+				  { "itemType", itemType.ToString() },
 				  { "contextId", contextId.ToString() },
 				  { "project",project }
 			 };

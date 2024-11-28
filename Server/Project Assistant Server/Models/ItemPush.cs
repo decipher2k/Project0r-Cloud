@@ -8,6 +8,9 @@
 		public long SenderId { get; set; }
 		public ItemType Type { get; set; }
 
+		public String Title { get; set; }
+		public String SenderName { get; set; }
+
 		public AcceptedDenied IsAccepted {get;set;} = AcceptedDenied.None;
 
 		public enum ItemType
