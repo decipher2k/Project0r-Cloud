@@ -55,8 +55,7 @@ namespace ProjectOrganizer
             }
             catch (Exception ex) { }
 
-            ItemPushWindow pushWindow = new ItemPushWindow();
-            pushWindow.ShowDialog();
+
         }
 
         public void loadTabs()

@@ -181,7 +181,7 @@ namespace Project_Assistant.API
 			}
 		}
 
-		protected String PostItemPush(int itemId, int contextId, String APIEndpoint, String project)
+		protected String PostContextualIDPush(int itemId, int contextId, String APIEndpoint, String project)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()

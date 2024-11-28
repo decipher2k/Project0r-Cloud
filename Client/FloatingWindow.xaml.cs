@@ -16,6 +16,9 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using Project_Assistant;
 using System.Globalization;
+using Project_Assistant_Server.Dto;
+using Project_Assistant.API;
+using Project_Assistant_Server.Models;
 
 namespace ProjectOrganizer
 {
@@ -31,6 +34,7 @@ namespace ProjectOrganizer
         bool startDragin=false;
         MainWindow mainWindow=new MainWindow();
         public static String currentProject = "";
+        public List<ItemPush> itemPushes = new List<ItemPush>();
         Dictionary<String,Reminder> reminders = new Dictionary<string, Reminder>();
 
         public FloatingWindow()
@@ -46,7 +50,8 @@ namespace ProjectOrganizer
             Top = Projects.Instance.y;
 
             new System.Threading.Thread(ReminderThread).Start();
-        }
+			new System.Threading.Thread(ItemPushThread).Start();
+		}
         public bool running = true;
         [STAThread]
         private void ReminderThread()
@@ -88,9 +93,37 @@ namespace ProjectOrganizer
                 System.Threading.Thread.Sleep(1000*60);
             }            
         }
-    
 
-    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+		[STAThread]
+		private void ItemPushThread()
+		{
+			while (running)
+			{
+                bool showWindow = false;
+                ItemPushDto itemPushDto = new ItemPushAPI().PullItems();
+                foreach (var item in itemPushDto.Items)
+                {
+                    if (!itemPushes.Where(a => a.Id == item.Id).Any())
+                    {
+                        showWindow = true;
+                        itemPushes.Add(item);
+                    }
+                }
+
+                if (showWindow)
+                {
+					Instance.Dispatcher.Invoke(() => {
+                        ItemPushWindow i = new ItemPushWindow();
+						i.Show();
+					});
+				}
+
+				System.Threading.Thread.Sleep(10000);
+			}
+		}
+
+
+		private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             
             startDragin = true;

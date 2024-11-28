@@ -1,4 +1,6 @@
-﻿using Project_Assistant_Server.Models;
+﻿using Project_Assistant.API;
+using Project_Assistant_Server.Models;
+using ProjectOrganizer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,8 @@ namespace Project_Assistant
 			public String Type { get; set; }
 			public String Task { get; set; }
 			public String Sender { get; set; }
+			public long Id { get; set; }
+			public String Project { get; set; }
 			public ItemPush.ItemType ItemType { get;set; }
 		}
 		public ItemPushWindow()
@@ -65,13 +69,34 @@ namespace Project_Assistant
 
 		private void ButtonAccept_Click(object sender, RoutedEventArgs e)
 		{
-			var curItem = ((ListBoxItem)lbReminder.ContainerFromElement((Button)sender)).Content;
-
+			var curItem = (Item)((ListBoxItem)lbReminder.ContainerFromElement((Button)sender)).Content;
+			FloatingWindow.Instance.itemPushes.Where(a => a.Id == curItem.Id && a.Type == curItem.ItemType).First();
+			for (int i = 0; i < FloatingWindow.Instance.itemPushes.Count; i++)
+			{
+				if(FloatingWindow.Instance.itemPushes[i].Id == curItem.Id)
+				{
+					FloatingWindow.Instance.itemPushes.Remove(FloatingWindow.Instance.itemPushes.Where(a => a.Id == curItem.Id).First());
+					i--;
+				}
+			}
+			new ItemPushAPI().AcceptItem((int)curItem.Id, curItem.Project);
+			lbReminder.Items.Remove(curItem);
 		}
 
 		private void ButtonDeny_Click(object sender, RoutedEventArgs e)
 		{
-
+			var curItem = (Item)((ListBoxItem)lbReminder.ContainerFromElement((Button)sender)).Content;
+			FloatingWindow.Instance.itemPushes.Where(a => a.Id == curItem.Id && a.Type == curItem.ItemType).First();
+			for (int i = 0; i < FloatingWindow.Instance.itemPushes.Count; i++)
+			{
+				if (FloatingWindow.Instance.itemPushes[i].Id == curItem.Id)
+				{
+					FloatingWindow.Instance.itemPushes.Remove(FloatingWindow.Instance.itemPushes.Where(a => a.Id == curItem.Id).First());
+					i--;
+				}
+			}
+			new ItemPushAPI().DenyItem((int)curItem.Id, curItem.Project);
+			lbReminder.Items.Remove(curItem);
 		}
 	}
 }

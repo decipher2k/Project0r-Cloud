@@ -5,6 +5,7 @@
 		public long Id { get; set; }
 		public long ItemId { get; set; }
 		public long ReceiverId { get; set; }
+		public long SenderId { get; set; }
 		public ItemType Type { get; set; }
 
 		public enum ItemType

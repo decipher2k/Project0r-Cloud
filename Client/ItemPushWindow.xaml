@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Assistant"
         mc:Ignorable="d"
-        Title="Requests" Height="469" Width="800" Topmost="True" WindowStartupLocation="CenterScreen">
+        Title="Requests" Height="469" Width="829" Topmost="True" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
     <Grid Margin="0,0,0,2">
         <Grid.RowDefinitions>
             <RowDefinition Height="367*"/>
             <RowDefinition Height="67*"/>
-            <RowDefinition Height="67*"/>
+    
         </Grid.RowDefinitions>
-        <ListBox x:Name="lbReminder" Width="Auto" Height="Auto" SelectionChanged="ListBox_SelectionChanged">
+        <ListBox x:Name="lbReminder" Width="Auto" Height="Auto" SelectionChanged="ListBox_SelectionChanged" >
             <ListBox.ItemTemplate>
             <DataTemplate>
                 <Grid>
@@ -35,10 +35,7 @@
             </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="600,0,0,0">
-        <Button x:Name="bnAccept" Content="Accept" HorizontalAlignment="Left"  VerticalAlignment="Center"  Height="26" Width="89" Click="bnAccept_Click"/>
-        <Button x:Name="bnReject" Content="Reject" HorizontalAlignment="Left" Margin="10"  VerticalAlignment="Center"  Height="26" Width="89" Click="bnReject_Click"/>
-        </StackPanel>
-        <Button x:Name="bnOK" Content="OK " HorizontalAlignment="Left" Margin="701,0,0,0" Grid.Row="2" VerticalAlignment="Center" RenderTransformOrigin="1.083,-0.071" Height="26" Width="89" Click="bnOK_Click"/>
+        
+        <Button x:Name="bnOK" Content="Close " HorizontalAlignment="Left" Margin="701,0,0,0" Grid.Row="2" VerticalAlignment="Center" RenderTransformOrigin="1.083,-0.071" Height="26" Width="89" Click="bnOK_Click"/>
     </Grid>
 </Window>

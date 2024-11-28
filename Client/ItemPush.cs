@@ -6,7 +6,7 @@
 		public long ItemId { get; set; }
 		public long ReceiverId { get; set; }
 		public ItemType Type { get; set; }
-
+		public bool HasReminded { get; set; } =false;
 		public enum ItemType
 		{
 			Calendar,
