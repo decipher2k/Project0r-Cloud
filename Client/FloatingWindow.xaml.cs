@@ -101,7 +101,7 @@ namespace ProjectOrganizer
 			while (running)
 			{
                 bool showWindow = false;
-                ItemPushDto itemPushDto = new ItemPushAPI().PullItems();
+                ItemPushDto itemPushDto = new ItemPushAPI().PollItems();
                 foreach (var item in itemPushDto.Items)
                 {
                     if (!itemPushes.Where(a => a.Id == item.Id).Any())

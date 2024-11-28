@@ -13,6 +13,11 @@ namespace Project_Assistant.Dto
 		{
 			public int Id { get; set; }
 			public string FullName { get; set; }
+
+			public override String ToString()
+			{
+				return FullName;
+			}
 		}
 	}
 }

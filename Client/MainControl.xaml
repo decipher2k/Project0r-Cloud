@@ -129,7 +129,7 @@
                                 <MenuItem Click="mnuAddDocument_Click" Name="mnuAddDocument" Header="Add Document"></MenuItem>
                                 <MenuItem Click="mnuEditDocument_Click" Name="mnuEditDocument" Header="Edit Document"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuSendDocument_Click" Name="=mnuSendDocuemntCopy" Header="Send Copy to User"></MenuItem>
+                                <MenuItem Click="mnuSendDocument_Click" Name="mnuSendDocuemntCopy" Header="Send Copy to User"></MenuItem>
                                 <Separator></Separator>
                                 <MenuItem Click="mnuRemoveDocument_Click" Name="mnuRemoveDocument" Header="Remove Document"></MenuItem>
                             </ContextMenu>
