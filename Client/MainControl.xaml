@@ -181,7 +181,7 @@
                                 <MenuItem Click="mnuAddNote_Click" Name="mnuAddNote" Header="Add Note"></MenuItem>
                                 <MenuItem Click="mnuEditNote_Click" Name="mnuEditNote" Header="Edit Note"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuSendNote_Click" Name="=mnuSendNoteCopy" Header="Send Copy to User"></MenuItem>
+                                <MenuItem Click="mnuSendNote_Click" Name="mnuSendNoteCopy" Header="Send Copy to User"></MenuItem>
                                 <Separator></Separator>
                                 <MenuItem Click="mnuRemoveNote_Click" Name="mnuRemoveNote" Header="Remove Note"></MenuItem>
                             </ContextMenu>
@@ -234,7 +234,7 @@
                                     <MenuItem Click="mnuLowToDo_Click" Name="mnuLowToDo" Header="Low"></MenuItem>
                                 </MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuSendTodo_Click" Name="=mnuSendToDo" Header="Send to User"></MenuItem>
+                                <MenuItem Click="mnuSendTodo_Click" Name="mnuSendToDo" Header="Send to User"></MenuItem>
                                 <Separator></Separator>
                                 <MenuItem Click="mnuAddToDo_Click" Name="mnuAddToDo" Header="Add ToDo Item"></MenuItem>
                                 <MenuItem Click="mnuEditToDo_Click" Name="mnuEditToDo" Header="Edit ToDo Item"></MenuItem>
@@ -274,7 +274,7 @@
                                     <MenuItem Click="mnuAddCalendar_Click" Name="mnuAddCalendar" Header="Add Appointment"></MenuItem>
                                     <MenuItem Click="mnuEditCalendar_Click" Name="mnuEditCalendar" Header="Edit Appointment"></MenuItem>
                                     <Separator></Separator>
-                                    <MenuItem Click="mnuSendCalendar_Click" Name="=mnuSendCalendar" Header="Send Invite to User"></MenuItem>
+                                    <MenuItem Click="mnuSendCalendar_Click" Name="mnuSendCalendar" Header="Send Invite to User"></MenuItem>
                                     <Separator></Separator>
                                     <MenuItem Click="mnuRemoveCalendar_Click" Name="mnuRemoveCalendar" Header="Remove Appointment"></MenuItem>
                                 </ContextMenu>
