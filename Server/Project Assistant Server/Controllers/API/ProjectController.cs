@@ -46,13 +46,48 @@ namespace Project_Assistant_Server.Controllers.API
 			}
 		}
 
-	
+		// POST: ProjectController/Create
+		[HttpPost("FetchUsers")]
+		public IActionResult FetchUsers(IFormCollection collection)
+		{
+			UserDto userDto = new UserDto();
 
-	
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+
+				String sProjectName = collection["project"];
+
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
+				{
+					List<UserDataDto.UserData> userDatas = new List<UserDataDto.UserData>();
+					foreach (User projectUser in context.users.Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).ToList())
+					{
+						userDatas.Add(new UserDataDto.UserData() { FullName = projectUser.Fullname, Id=projectUser.Id });
+					}
+
+					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());
+					UserDataDto userDataDto = new UserDataDto();
+					userDataDto.Data = userDatas;
+					userDataDto.session= newSession;
+
+					return Ok(userDataDto);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
+
+
 
 		// POST: ProjectController/Create
 		[HttpPost("Create")]
-		public ActionResult Create(IFormCollection collection)
+		public I	ActionResult Create(IFormCollection collection)
 		{
 			UserDto userDto = new UserDto();
 

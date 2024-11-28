@@ -1158,5 +1158,25 @@ namespace ProjectOrganizer
 				}
 			}
 		}
+
+		private void mnuSendTodo_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void mnuSendDocument_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void mnuSendNote_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void mnuSendCalendar_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }

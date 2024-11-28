@@ -207,5 +207,29 @@ namespace Project_Assistant.API
 				return "ERROR";
 			}
 		}
+
+		protected bool PostProject(String APIEndpoint, String project)
+		{
+			HttpClient client = new HttpClient();
+			Dictionary<string, string> values = new Dictionary<string, string>()
+			{
+				  { "session",Globals.session },
+				  { "project",project }
+			 };
+
+			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				var responseString = response.Content.ReadAsStringAsync().Result;
+				Globals.session = JsonConvert.DeserializeObject<SessionData>(responseString).session;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }

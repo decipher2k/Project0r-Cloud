@@ -102,10 +102,10 @@
                     <ListBox  x:Name="lbApps" Width="Auto" d:ItemsSource="{Binding Apps, Mode=OneWay}" Grid.Column="0" Grid.Row="1" MouseDoubleClick="ListBox_MouseDoubleClick" MouseUp="lbApps_MouseUp" Style="{DynamicResource ItemsSmall}" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,0,382,0" Drop="lbApps_Drop" AllowDrop="True">
                         <ListBox.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="mnuAddApp_Click" Name="mnuAddApp" Header="Add"></MenuItem>
-                                <MenuItem Click="mnuEditApp_Click" Name="mnuEditApp" Header="Edit"></MenuItem>
+                                <MenuItem Click="mnuAddApp_Click" Name="mnuAddApp" Header="Add Application"></MenuItem>
+                                <MenuItem Click="mnuEditApp_Click" Name="mnuEditApp" Header="Edit Application"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuRemoveApp_Click" Name="mnuRemoveApp" Header="Remove"></MenuItem>
+                                <MenuItem Click="mnuRemoveApp_Click" Name="mnuRemoveApp" Header="Remove Application"></MenuItem>
                             </ContextMenu>
                         </ListBox.ContextMenu>
 
@@ -126,10 +126,12 @@
                     <ListBox x:Name="lbFiles" Width="Auto" d:ItemsSource="{Binding Files, Mode=OneWay}" Grid.Row="1" Style="{DynamicResource ItemsSmall}" MouseDoubleClick="lbFiles_MouseDoubleClick" MouseUp="lbFiles_MouseUp" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="378,0,-1,0" Drop="lbFiles_Drop" AllowDrop="True">
                         <ListBox.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="mnuAddDocument_Click" Name="mnuAddDocument" Header="Add"></MenuItem>
-                                <MenuItem Click="mnuEditDocument_Click" Name="mnuEditDocument" Header="Edit"></MenuItem>
+                                <MenuItem Click="mnuAddDocument_Click" Name="mnuAddDocument" Header="Add Document"></MenuItem>
+                                <MenuItem Click="mnuEditDocument_Click" Name="mnuEditDocument" Header="Edit Document"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuRemoveDocument_Click" Name="mnuRemoveDocument" Header="Remove"></MenuItem>
+                                <MenuItem Click="mnuSendDocument_Click" Name="=mnuSendDocuemntCopy" Header="Send Copy to User"></MenuItem>
+                                <Separator></Separator>
+                                <MenuItem Click="mnuRemoveDocument_Click" Name="mnuRemoveDocument" Header="Remove Document"></MenuItem>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>
@@ -176,10 +178,12 @@
                     <ListBox x:Name="lbNotes" d:ItemsSource="{Binding Notes, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" Style="{DynamicResource ItemsLarge}" MouseDoubleClick="lbNotes_MouseDoubleClick" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="mnuAddNote_Click" Name="mnuAddNote" Header="Add"></MenuItem>
-                                <MenuItem Click="mnuEditNote_Click" Name="mnuEditNote" Header="Edit"></MenuItem>
+                                <MenuItem Click="mnuAddNote_Click" Name="mnuAddNote" Header="Add Note"></MenuItem>
+                                <MenuItem Click="mnuEditNote_Click" Name="mnuEditNote" Header="Edit Note"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuRemoveNote_Click" Name="mnuRemoveNote" Header="Remove"></MenuItem>
+                                <MenuItem Click="mnuSendNote_Click" Name="=mnuSendNoteCopy" Header="Send Copy to User"></MenuItem>
+                                <Separator></Separator>
+                                <MenuItem Click="mnuRemoveNote_Click" Name="mnuRemoveNote" Header="Remove Note"></MenuItem>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>
@@ -230,11 +234,13 @@
                                     <MenuItem Click="mnuLowToDo_Click" Name="mnuLowToDo" Header="Low"></MenuItem>
                                 </MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuAddToDo_Click" Name="mnuAddToDo" Header="Add"></MenuItem>
-                                <MenuItem Click="mnuEditToDo_Click" Name="mnuEditToDo" Header="Edit"></MenuItem>
+                                <MenuItem Click="mnuSendTodo_Click" Name="=mnuSendToDo" Header="Send to User"></MenuItem>
                                 <Separator></Separator>
-                                
-                                <MenuItem Click="mnuRemoveToDo_Click" Name="mnuRemoveToDo" Header="Remove"></MenuItem>
+                                <MenuItem Click="mnuAddToDo_Click" Name="mnuAddToDo" Header="Add ToDo Item"></MenuItem>
+                                <MenuItem Click="mnuEditToDo_Click" Name="mnuEditToDo" Header="Edit ToDo Item"></MenuItem>
+                                <Separator></Separator>
+
+                                <MenuItem Click="mnuRemoveToDo_Click" Name="mnuRemoveToDo" Header="Remove ToDo Item"></MenuItem>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>
@@ -265,10 +271,12 @@
                         <ListBox x:Name="lbCalendar" Height="298" Width="771" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Center" Canvas.Top="152" VerticalAlignment="Center" Canvas.Left="9" SelectionChanged="lbCalendar_SelectionChanged">
                             <ListBox.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Click="mnuAddCalendar_Click" Name="mnuAddCalendar" Header="Add"></MenuItem>
-                                    <MenuItem Click="mnuEditCalendar_Click" Name="mnuEditCalendar" Header="Edit"></MenuItem>
+                                    <MenuItem Click="mnuAddCalendar_Click" Name="mnuAddCalendar" Header="Add Appointment"></MenuItem>
+                                    <MenuItem Click="mnuEditCalendar_Click" Name="mnuEditCalendar" Header="Edit Appointment"></MenuItem>
                                     <Separator></Separator>
-                                    <MenuItem Click="mnuRemoveCalendar_Click" Name="mnuRemoveCalendar" Header="Remove"></MenuItem>
+                                    <MenuItem Click="mnuSendCalendar_Click" Name="=mnuSendCalendar" Header="Send Invite to User"></MenuItem>
+                                    <Separator></Separator>
+                                    <MenuItem Click="mnuRemoveCalendar_Click" Name="mnuRemoveCalendar" Header="Remove Appointment"></MenuItem>
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
@@ -312,10 +320,10 @@
                     <ListBox x:Name="lbLog" d:ItemsSource="{Binding Log, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="lbTodo_MouseDoubleClick" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="mnuAddLog_Click" Name="mnuAddLog" Header="Add"></MenuItem>
-                                <MenuItem Click="mnuEditLog_Click" Name="mnuEditLog" Header="Edit"></MenuItem>
+                                <MenuItem Click="mnuAddLog_Click" Name="mnuAddLog" Header="Add Log Entry"></MenuItem>
+                                <MenuItem Click="mnuEditLog_Click" Name="mnuEditLog" Header="Edit Log Entry"></MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Click="mnuRemoveLog_Click" Name="mnuRemoveLog" Header="Remove"></MenuItem>
+                                <MenuItem Click="mnuRemoveLog_Click" Name="mnuRemoveLog" Header="Remove Log Entry"></MenuItem>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>

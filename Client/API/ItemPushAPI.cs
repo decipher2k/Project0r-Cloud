@@ -13,7 +13,7 @@ namespace Project_Assistant.API
 {
 	public class ItemPushAPI:APIBase
 	{
-		public ItemPushDto PullItems()
+		public ItemPushDto PollItems()
 		{
 			String sItems = PostFetchAll("/api/ItemPush/PollItems");
 			return JsonConvert.DeserializeObject<ItemPushDto>(sItems);
@@ -35,9 +35,9 @@ namespace Project_Assistant.API
 			return true;
 		}
 
-		public bool AddItem(int iItemPushId, int contextId, String project, int itemType)
+		public bool AddItem(int iItemId, int receiverId, String project, int itemType)
 		{
-			String sIdSessionDto = PostContextualIDPush(iItemPushId, contextId, "/api/ItemPush/PushItem", project, itemType);
+			String sIdSessionDto = PostContextualIDPush(iItemId, receiverId, "/api/ItemPush/PushItem", project, itemType);
 			IdSessionDto idSessionDto = JsonConvert.DeserializeObject<IdSessionDto>(sIdSessionDto);
 			Globals.session = idSessionDto.session;
 			return true;
