@@ -8,6 +8,8 @@
 		public long SenderId { get; set; }
 		public ItemType Type { get; set; }
 
+		public AcceptedDenied IsAccepted {get;set;} = AcceptedDenied.None;
+
 		public enum ItemType
 		{
 			Calendar,
@@ -17,6 +19,13 @@
 			Program,
 			ToDo,
 			User
+		}
+
+		public enum AcceptedDenied
+		{
+			None,
+			Denied,
+			Accepted
 		}
 	}
 }
