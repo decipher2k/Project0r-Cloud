@@ -328,7 +328,7 @@ namespace Project_Assistant_Server.Controllers.API
 				{
 					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
 					ItemPushDto itemPushDto = new ItemPushDto();
-					foreach(ItemPush itemPush in context.itemPush.Where(a=>a.ReceiverId==user.Id))
+					foreach(ItemPush itemPush in context.itemPush.Where(a=>a.ReceiverId==user.Id && a.IsAccepted==ItemPush.AcceptedDenied.None))
 					{
 						itemPushDto.Items.Add(itemPush);
 					}

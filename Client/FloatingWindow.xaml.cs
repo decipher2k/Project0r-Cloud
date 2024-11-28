@@ -36,6 +36,7 @@ namespace ProjectOrganizer
         public static String currentProject = "";
         public List<ItemPush> itemPushes = new List<ItemPush>();
         Dictionary<String,Reminder> reminders = new Dictionary<string, Reminder>();
+        public bool isItemPushAvailable=false;
 
         public FloatingWindow()
         {
@@ -117,6 +118,15 @@ namespace ProjectOrganizer
 						i.Show();
 					});
 				}
+
+                if(itemPushes.Any())
+                {
+                    isItemPushAvailable = true;
+                }
+                else
+                {
+                    isItemPushAvailable= false;
+                }
 
 				System.Threading.Thread.Sleep(10000);
 			}
