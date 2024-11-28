@@ -39,6 +39,11 @@
                 <ImageBrush ImageSource="/minimize.png"/>
             </Button.Background>
         </Button>
+        <Button x:Name="bnIncomingPush" Width="18" Height="18" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}" Margin="0,0,50,0" Click="bnIncomingPush_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/exclamation.png"/>
+            </Button.Background>
+        </Button>
         <Menu Height="20" Grid.Row="1" >
             <MenuItem Header="File">
                 <MenuItem Name="mnuStartWithWindows" Header="Start with Windows" IsCheckable="True" Click="mnuStartWithWindows_Click"></MenuItem>

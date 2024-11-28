@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="Dto\CreateUserDto.cs" />
+    <Compile Include="Dto\ItemPushDto.cs" />
     <Compile Include="Dto\Project.cs" />
     <Compile Include="Dto\SessionData.cs" />
     <Compile Include="Dto\UserDto.cs" />
@@ -104,6 +105,7 @@
       <DependentUpon>FloatingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="ItemPush.cs" />
     <Compile Include="LicenseCheck.xaml.cs">
       <DependentUpon>LicenseCheck.xaml</DependentUpon>
     </Compile>
@@ -119,6 +121,9 @@
       <DependentUpon>Reminder.xaml</DependentUpon>
     </Compile>
     <Compile Include="ToDo.cs" />
+    <Compile Include="ItemPushWindow.xaml.cs">
+      <DependentUpon>ItemPushWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="AddEditFile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -160,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Reminder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ItemPushWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
