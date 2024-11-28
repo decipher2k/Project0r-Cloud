@@ -87,7 +87,7 @@ namespace Project_Assistant_Server.Controllers.API
 
 		// POST: ProjectController/Create
 		[HttpPost("Create")]
-		public I	ActionResult Create(IFormCollection collection)
+		public IActionResult Create(IFormCollection collection)
 		{
 			UserDto userDto = new UserDto();
 
