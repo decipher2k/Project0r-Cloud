@@ -19,8 +19,8 @@ namespace Project_Assistant_Server.Controllers.API
 		[HttpPost("PushItem")]
 		public IActionResult PushItem(IFormCollection collection)
 		{
-			int iItemId = int.Parse(collection["ItemId"]);
-			int iReceiverId = int.Parse(collection["ReceiverId"]);
+			int iItemId = int.Parse(collection["itemId"]);
+			int iReceiverId = int.Parse(collection["contextId"]);
 			String project = collection["project"];
 			String Session = collection["session"];
 
@@ -33,7 +33,11 @@ namespace Project_Assistant_Server.Controllers.API
 					push.ReceiverId = iReceiverId;
 					context.Add(push);
 					context.SaveChanges();
-					return Ok();
+
+					String newSession = new Session(context).newSession(collection["session"].ToString());
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;
+					return Ok(sessionData);
 				}
 				else
 				{
@@ -49,8 +53,8 @@ namespace Project_Assistant_Server.Controllers.API
 		[HttpPost("AcceptItem")]
 		public IActionResult AcceptItem(IFormCollection collection)
 		{
-			int iItemPushId = int.Parse(collection["ItemPushId"]);
-			int iSenderId = int.Parse(collection["ItemSenderId"]);
+			int iItemPushId = int.Parse(collection["itemId"]);
+			int iSenderId = int.Parse(collection["contextId"]);
 
 			String project = collection["project"];
 			String Session = collection["session"];
@@ -159,7 +163,11 @@ namespace Project_Assistant_Server.Controllers.API
 					}
 					context.Remove(context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault());
 					context.SaveChanges();
-					return Ok();
+
+					String newSession = new Session(context).newSession(collection["session"].ToString());
+					IdSessionDto sessionData = new IdSessionDto();
+					sessionData.session = newSession;					
+					return Ok(sessionData);
 				}
 				else
 				{
@@ -188,6 +196,8 @@ namespace Project_Assistant_Server.Controllers.API
 					{
 						itemPushDto.Items.Add(itemPush);
 					}
+					String newSession = new Session(context).newSession(collection["session"].ToString());
+					itemPushDto.session=newSession;
 					return Ok(itemPushDto);
 				}
 				else

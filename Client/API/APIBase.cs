@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Assistant_Server.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,6 +178,32 @@ namespace Project_Assistant.API
 			else
 			{
 				return false;
+			}
+		}
+
+		protected String PostItemPush(int itemId, int contextId, String APIEndpoint, String project)
+		{
+			HttpClient client = new HttpClient();
+			Dictionary<string, string> values = new Dictionary<string, string>()
+			{
+				  { "session",Globals.session },
+				  { "itemId", itemId.ToString() },
+				  { "contextId", contextId.ToString() },
+				  { "project",project }
+			 };
+
+			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				var responseString = response.Content.ReadAsStringAsync().Result;
+				Globals.session = JsonConvert.DeserializeObject<SessionData>(responseString).session;
+				return responseString;
+			}
+			else
+			{
+				return "ERROR";
 			}
 		}
 	}
