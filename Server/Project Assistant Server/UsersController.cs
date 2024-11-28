@@ -56,10 +56,15 @@ namespace Project_Assistant_Server
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Fullname,Email,Password,Salt,CurrentSession,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Name,Fullname,Email,Password,IsAdmin")] User user)
         {
-            if (ModelState.IsValid)
-            {
+			if (user.Name != "" && user.Fullname != "" && user.Password != "" && user.Email != ""
+				&& user.Name != null && user.Fullname != null && user.Password != null && user.Email != null)
+			{
+				user.Salt = "";
+                user.CurrentSession = "";
+                user.Projects = new List<Project>();
+          
                 user.Salt=Session.RandomString(20);
 				user.Password=GenSha512(user.Password+user.Salt);
                 _context.Add(user);
