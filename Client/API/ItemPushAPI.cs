@@ -25,16 +25,14 @@ namespace Project_Assistant.API
 		public bool AcceptItem(int iItemPushId, String project)
 		{
 			String sIdSessionDto = PostContextualIDPush(iItemPushId, -1, "/api/ItemPush/AcceptItem", project);
-			IdSessionDto idSessionDto = JsonConvert.DeserializeObject<IdSessionDto>(sIdSessionDto);
-			Globals.session=idSessionDto.session;
+			
 			return true;
 		}
 
 		public bool DenyItem(int iItemPushId, String project)
 		{
 			String sIdSessionDto = PostContextualIDPush(iItemPushId, -1, "/api/ItemPush/DenyItem", project);
-			IdSessionDto idSessionDto = JsonConvert.DeserializeObject<IdSessionDto>(sIdSessionDto);
-			Globals.session = idSessionDto.session;
+			
 			return true;
 		}
 

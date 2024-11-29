@@ -8,6 +8,7 @@ namespace Project_Assistant_Server.Models
 		public long ItemId { get; set; }
 		public long ReceiverId { get; set; }
 		public ItemType Type { get; set; }
+		public string Project { get; set; }
 
 		public String Title { get; set; }
 		public String SenderName { get; set; }

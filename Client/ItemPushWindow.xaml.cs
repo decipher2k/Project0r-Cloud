@@ -39,6 +39,7 @@ namespace Project_Assistant
 
 
 			ItemPushDto itemPushDto=new ItemPushAPI().PollItems();
+			Globals.session = itemPushDto.session;
 			foreach(ItemPush item in itemPushDto.Items)
 			{
 				Item newItem = new Item();
@@ -46,7 +47,8 @@ namespace Project_Assistant
 				newItem.Task = item.Title;
 				newItem.Sender = item.SenderName;
 				newItem.Id = item.Id;
-				newItem.ItemType = newItem.ItemType;
+				newItem.ItemType = item.Type;
+				newItem.Project = item.Project;
 
 				lbReminder.Items.Add(newItem);
 			}

@@ -96,7 +96,7 @@ namespace Project_Assistant_Server.Controllers.API
 				
 				String sProjectName = collection["ItemData"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName).Any())
 				{
 					Project project = new Project();
 					project.Name = sProjectName;

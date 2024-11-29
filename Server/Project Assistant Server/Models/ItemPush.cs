@@ -7,7 +7,7 @@
 		public long ReceiverId { get; set; }
 		public long SenderId { get; set; }
 		public ItemType Type { get; set; }
-
+		public string Project { get; set; }
 		public String Title { get; set; }
 		public String SenderName { get; set; }
 

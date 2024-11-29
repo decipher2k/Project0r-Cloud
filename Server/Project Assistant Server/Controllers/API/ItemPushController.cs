@@ -63,6 +63,7 @@ namespace Project_Assistant_Server.Controllers.API
 					push.Type = (ItemPush.ItemType)iItemType;
 					push.SenderId = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Id;
 					push.ReceiverId = iReceiverId;
+					push.Project = project;
 
 					context.Add(push);
 					context.SaveChanges();
@@ -94,16 +95,23 @@ namespace Project_Assistant_Server.Controllers.API
 
 			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				//if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == project).Any())
 				{
-					User newUser = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
+					User newUser = context.users.Where(a => a.CurrentSession == collection["session"].ToString())
+				.Include(a => a.Projects).ThenInclude(a => a.Calendars)
+				.Include(a => a.Projects).ThenInclude(a => a.Files)
+				.Include(a => a.Projects).ThenInclude(a => a.Logs)
+				.Include(a => a.Projects).ThenInclude(a => a.Notes)
+				.Include(a => a.Projects).ThenInclude(a => a.Programs)
+				.Include(a => a.Projects).ThenInclude(a => a.ToDo).First();
+					
 					ItemPush push = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 					switch (push.Type)
 					{
 
 						case (ItemPush.ItemType.Note):
 							{
-								User oldUser=context.users.Where(a=>a.Id==push.SenderId).FirstOrDefault();
+								User oldUser=context.users.Where(a=>a.Id==push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Notes).FirstOrDefault();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
@@ -123,7 +131,7 @@ namespace Project_Assistant_Server.Controllers.API
 							}
 						case (ItemPush.ItemType.File):
 							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
+								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Files).FirstOrDefault();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
@@ -143,7 +151,7 @@ namespace Project_Assistant_Server.Controllers.API
 							}
 						case (ItemPush.ItemType.Calendar):
 							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
+								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Calendars).FirstOrDefault();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
@@ -163,7 +171,7 @@ namespace Project_Assistant_Server.Controllers.API
 							}
 						case (ItemPush.ItemType.Program):
 							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
+								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a=>a.Programs).FirstOrDefault();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
@@ -183,7 +191,7 @@ namespace Project_Assistant_Server.Controllers.API
 							}
 						case (ItemPush.ItemType.ToDo):
 							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
+								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.ToDo).FirstOrDefault();
 								if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
@@ -210,10 +218,10 @@ namespace Project_Assistant_Server.Controllers.API
 					sessionData.session = newSession;					
 					return Ok(sessionData);
 				}
-				else
+				/*else
 				{
 					return BadRequest();
-				}
+				}*/
 			}
 			else
 			{
@@ -242,7 +250,7 @@ namespace Project_Assistant_Server.Controllers.API
 						case (ItemPush.ItemType.Note):
 							{
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+								//if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
@@ -251,16 +259,13 @@ namespace Project_Assistant_Server.Controllers.API
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
-								else
-								{
-									return BadRequest();
-								}
+							
 								break;
 							}
 						case (ItemPush.ItemType.File):
 							{
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									File note = context.files.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
@@ -269,16 +274,13 @@ namespace Project_Assistant_Server.Controllers.API
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
-								else
-								{
-									return BadRequest();
-								}
+								
 								break;
 							}
 						case (ItemPush.ItemType.Calendar):
 							{
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									Calendar note = context.calendars.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
@@ -287,16 +289,13 @@ namespace Project_Assistant_Server.Controllers.API
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
-								else
-								{
-									return BadRequest();
-								}
+							
 								break;
 							}
 						case (ItemPush.ItemType.Program):
 							{
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+						//		if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									Models.Program note = context.program.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
@@ -305,16 +304,13 @@ namespace Project_Assistant_Server.Controllers.API
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
-								else
-								{
-									return BadRequest();
-								}
+							
 								break;
 							}
 						case (ItemPush.ItemType.ToDo):
 							{
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									ToDo note = context.toDo.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
@@ -323,10 +319,7 @@ namespace Project_Assistant_Server.Controllers.API
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
-								else
-								{
-									return BadRequest();
-								}
+								
 								break;
 							}
 					}
