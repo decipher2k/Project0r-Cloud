@@ -159,8 +159,8 @@ namespace ProjectOrganizer
                         Globals.session = sessionData.session;
                         Globals.ServerAddress = server;
                         Globals.isMultiuser = true;
-                        this.DialogResult = true;
-                    }
+						new ProjectAPI().FetchAll();
+					}
                     else
                     {
                         Projects.Load();

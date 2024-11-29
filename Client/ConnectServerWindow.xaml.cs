@@ -51,7 +51,7 @@ namespace Project_Assistant
 				buffer[count] = (char)b;
 				count++;
 			} while (b > 0 && ((char)b) != '$' && count < 250);
-			return new String(buffer);
+			return new String(buffer).Substring(0,count-1);
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
