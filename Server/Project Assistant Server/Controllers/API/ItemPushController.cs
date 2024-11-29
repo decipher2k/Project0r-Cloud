@@ -39,22 +39,22 @@ namespace Project_Assistant_Server.Controllers.API
 					switch(iItemType)
 					{
 						case (int)ItemPush.ItemType.ToDo:
-							title = context.toDo.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.toDo.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 						case (int)ItemPush.ItemType.Calendar:
-							title = context.calendars.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.calendars.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 						case (int)ItemPush.ItemType.Program:
-							title = context.program.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.program.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 						case (int)ItemPush.ItemType.Log:
-							title = context.logs.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.logs.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 						case (int)ItemPush.ItemType.Note:
-							title = context.notes.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.notes.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 						case (int)ItemPush.ItemType.File:
-							title = context.files.Where(a => ((int)a.Id) == iItemType).First().caption;
+							title = context.files.Where(a => ((int)a.Id) == iItemId).First().caption;
 							break;
 					}
 
@@ -62,6 +62,7 @@ namespace Project_Assistant_Server.Controllers.API
 					push.SenderName = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Fullname;
 					push.Type = (ItemPush.ItemType)iItemType;
 					push.SenderId = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Id;
+					push.ReceiverId = iReceiverId;
 
 					context.Add(push);
 					context.SaveChanges();
@@ -356,7 +357,7 @@ namespace Project_Assistant_Server.Controllers.API
 
 			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				//if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
 				{
 					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
 					ItemPushDto itemPushDto = new ItemPushDto();
@@ -368,10 +369,10 @@ namespace Project_Assistant_Server.Controllers.API
 					itemPushDto.session=newSession;
 					return Ok(itemPushDto);
 				}
-				else
-				{ 
-					return BadRequest(); 
-				}
+				//else
+				//{ 
+				//	return BadRequest(); 
+				//}
 			}
 			else
 			{

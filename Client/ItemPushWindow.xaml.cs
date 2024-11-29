@@ -1,8 +1,10 @@
 ﻿using Project_Assistant.API;
+using Project_Assistant_Server.Dto;
 using Project_Assistant_Server.Models;
 using ProjectOrganizer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,18 +36,20 @@ namespace Project_Assistant
 		public ItemPushWindow()
 		{
 			InitializeComponent();
-			Item i1 = new Item();
-			i1.Type = "Type1";
-			i1.Task = "Task1";
-			i1.Sender = "Sender1";
 
-			Item i2 = new Item();
-			i2.Type = "Type2";
-			i2.Task = "Task2";
-			i2.Sender = "Sender2";
 
-			lbReminder.Items.Add(i1);
-			lbReminder.Items.Add(i2);
+			ItemPushDto itemPushDto=new ItemPushAPI().PollItems();
+			foreach(ItemPush item in itemPushDto.Items)
+			{
+				Item newItem = new Item();
+				newItem.Type = item.Type.ToString();
+				newItem.Task = item.Title;
+				newItem.Sender = item.SenderName;
+				newItem.Id = item.Id;
+				newItem.ItemType = newItem.ItemType;
+
+				lbReminder.Items.Add(newItem);
+			}
 		}
 
 		private void bnOK_Click(object sender, RoutedEventArgs e)

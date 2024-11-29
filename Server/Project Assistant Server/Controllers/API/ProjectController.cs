@@ -24,7 +24,7 @@ namespace Project_Assistant_Server.Controllers.API
 			
 			if (context.users.Where(a => a.CurrentSession == session).Any())
 			{
-				
+				//if(context.users.Where(a => a.CurrentSession == session).First().Projects.Any())
 				User user = context.users.Where(a => a.CurrentSession == session)
 					.Include(a => a.Projects).ThenInclude(a => a.Calendars)
 					.Include(a => a.Projects).ThenInclude(a => a.Files)

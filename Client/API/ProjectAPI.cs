@@ -36,7 +36,7 @@ namespace Project_Assistant.API
 		public List<UserDataDto.UserData> FetchUsers(String project)
 		{
 			Projects.Instance.Project.Clear();
-			UserDataDto userDataDto = JsonConvert.DeserializeObject<UserDataDto>(PostFetchAll("/api/Project/FetchUsers/" + Globals.session));
+			UserDataDto userDataDto = JsonConvert.DeserializeObject<UserDataDto>(PostFetchAllUsers("/api/Project/FetchUsers",project));
 			Globals.session = userDataDto.session;
 			return userDataDto.Data;
 		}

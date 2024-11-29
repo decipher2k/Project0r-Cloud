@@ -15,8 +15,11 @@ namespace Project_Assistant.API
 	{
 		public ItemPushDto PollItems()
 		{
-			String sItems = PostFetchAll("/api/ItemPush/PollItems");
-			return JsonConvert.DeserializeObject<ItemPushDto>(sItems);
+			String sItems = PostFetchAllUsers("/api/ItemPush/PollItems","");
+			
+			ItemPushDto itemPushDto = JsonConvert.DeserializeObject<ItemPushDto>(sItems);
+			Globals.session=itemPushDto.session;
+			return itemPushDto;
 		}	
 
 		public bool AcceptItem(int iItemPushId, String project)

@@ -13,14 +13,14 @@ namespace Project_Assistant.API
 		public long Create(Calendar item, String project)
 		{
 			String sItem = JsonConvert.SerializeObject(item);
-			IdSessionDto idSessionDto=PostCreate(sItem, "/api/Calendar/Create", project); return idSessionDto.Id;
-
+			IdSessionDto idSessionDto=PostCreate(sItem, "/api/Calendar/Create", project);
+			return idSessionDto.Id;
 		}
 
-		public ToDo Read(int Id, String project)
+		public Calendar Read(int Id, String project)
 		{
 			String sToDo = PostRead(Id, "/api/Calendar/Read", project);
-			return JsonConvert.DeserializeObject<ToDo>(sToDo);
+			return JsonConvert.DeserializeObject<Calendar>(sToDo);
 		}
 
 		public bool Update(Calendar item, String project)

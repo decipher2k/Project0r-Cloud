@@ -49,7 +49,7 @@ namespace Project_Assistant_Server.Controllers.API
 		}
 
 		//Change to Post if accessed from web
-		[HttpPost( "Register")]
+/*		[HttpPost( "Register")]
 		public IActionResult RegisterUser(IFormCollection collection)
 		{
 			if (!isValidInput(collection["name"]) || !isValidInput(collection["fullname"]) || !isValidInput(collection["email"]))
@@ -77,7 +77,7 @@ namespace Project_Assistant_Server.Controllers.API
 				return Unauthorized();
 			}
 		}
-
+*/
 		private bool isValidInput(String value)
 		{
 			value = value.ToLower();

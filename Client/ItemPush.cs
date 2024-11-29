@@ -1,4 +1,6 @@
-﻿namespace Project_Assistant_Server.Models
+﻿using System;
+
+namespace Project_Assistant_Server.Models
 {
 	public class ItemPush
 	{
@@ -6,14 +8,12 @@
 		public long ItemId { get; set; }
 		public long ReceiverId { get; set; }
 		public ItemType Type { get; set; }
-		public bool HasReminded { get; set; } =false;
 
-		public enum AcceptedDenied
-		{
-			None,
-			Denied,
-			Accepted
-		}
+		public String Title { get; set; }
+		public String SenderName { get; set; }
+
+		public AcceptedDenied IsAccepted { get; set; } = AcceptedDenied.None;
+
 		public enum ItemType
 		{
 			Calendar,
@@ -24,5 +24,14 @@
 			ToDo,
 			User
 		}
+
+		public enum AcceptedDenied
+		{
+			None,
+			Denied,
+			Accepted		
+		}
+		public bool HasReminded { get; set; } =false;
+		
 	}
 }

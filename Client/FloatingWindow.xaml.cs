@@ -95,10 +95,16 @@ namespace ProjectOrganizer
             }            
         }
 
+        public void StartItemPushThread()
+        {
+			new System.Threading.Thread(ItemPushThread).Start();
+
+		}
+
 		[STAThread]
 		private void ItemPushThread()
 		{
-			while (running)
+			while (running && Globals.isMultiuser)
 			{
                 bool showWindow = false;
                 ItemPushDto itemPushDto = new ItemPushAPI().PollItems();

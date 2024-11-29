@@ -75,10 +75,10 @@ namespace ProjectOrganizer
 
         public void loadTabs()
         {
-            
-            if (Projects.Instance.Project.Count > 0)
+			tabMain.Items.Clear();
+			if (Projects.Instance.Project.Count > 0)
             {
-                tabMain.Items.Clear();
+                
                 if(Globals.isMultiuser)
                     new ProjectAPI().FetchAll();
                 var lst = Projects.Instance.Project.OrderBy(project => project.Key);
@@ -265,6 +265,7 @@ namespace ProjectOrganizer
                 {
                     Projects.Load();
 					this.loadTabs();
+                    FloatingWindow.Instance.StartItemPushThread();
 				}
             }
             
