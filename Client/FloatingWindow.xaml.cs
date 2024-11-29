@@ -53,13 +53,17 @@ namespace ProjectOrganizer
                     if (args[1] == "/init" && args.Length == 3)
                     {
                         var client = new NamedPipeClientStream("PAServiceNamedPipe");
-                        client.Connect();
+                        client.Connect(2000);
                         StreamReader reader = new StreamReader(client);
                         StreamWriter writer = new StreamWriter(client);
 
                         writer.WriteLine("INIT");
-                        if (reader.ReadLine() == "SENDMASTERPASS")
+						writer.Flush();
+						if (reader.ReadLine() == "SENDMASTERPASS")
+                        {
                             writer.WriteLine(args[2]);
+							writer.Flush();
+						}
                         if (reader.ReadLine() == "DONE")
                         {
                             Console.WriteLine("Success");
@@ -74,15 +78,21 @@ namespace ProjectOrganizer
                     else if (args[1] == "/changepass" && args.Length == 4)
                     {
                         var client = new NamedPipeClientStream("PAServiceNamedPipe");
-                        client.Connect();
+                        client.Connect(2000);
                         StreamReader reader = new StreamReader(client);
                         StreamWriter writer = new StreamWriter(client);
 
                         writer.WriteLine("CHANGEMASTERPASS");
                         if (reader.ReadLine() == "SENDPASS")
+                        {
                             writer.WriteLine(args[2]);
+							writer.Flush();
+						}
                         if (reader.ReadLine() == "SENDNEWPASS")
+                        {
                             writer.WriteLine(args[3]);
+							writer.Flush();
+						}
                         if (reader.ReadLine() == "DONE")
                         {
                             Console.WriteLine("Success");
@@ -96,45 +106,60 @@ namespace ProjectOrganizer
                 }
             }
             catch (Exception ex)
-            {
-            }
+            {				
+			}
 
             try
             {
                 var client = new NamedPipeClientStream("PAServiceNamedPipe");
-                client.Connect();
+                client.Connect(2000);
                 StreamReader reader = new StreamReader(client);
                 StreamWriter writer = new StreamWriter(client);
 
                 writer.WriteLine("GETAUTH");
+                writer.Flush();
                 String userdata = reader.ReadLine();
-                String username = userdata.Split(";".ToCharArray())[0];
-                String password = userdata.Split(";".ToCharArray())[1];
-                String server = userdata.Split(";".ToCharArray())[2];
-                reader.Close();
-                writer.Close();
-                client.Close();
-
-                String ret = new WebClient().DownloadString(server + "/api/Session/Login/" + HttpUtility.UrlEncode(username) + "/" + HttpUtility.UrlEncode(password));
-                SessionData sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(ret);
-                if (sessionData != null)
+                if (userdata != "ERROR")
                 {
-                    Globals.session = sessionData.session;
-                    Globals.ServerAddress = server;
-                    Globals.isMultiuser = true;
-                    this.DialogResult = true;
+
+
+                    String username = userdata.Split(";".ToCharArray())[0];
+                    String password = userdata.Split(";".ToCharArray())[1];
+                    String server = userdata.Split(";".ToCharArray())[2];
+                    reader.Close();
+                    writer.Close();
+                    client.Close();
+
+                    String ret = new WebClient().DownloadString(server + "/api/Session/Login/" + HttpUtility.UrlEncode(username) + "/" + HttpUtility.UrlEncode(password));
+                    SessionData sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(ret);
+                    if (sessionData != null)
+                    {
+                        Globals.session = sessionData.session;
+                        Globals.ServerAddress = server;
+                        Globals.isMultiuser = true;
+                        this.DialogResult = true;
+                    }
+                    else
+                    {
+                        Projects.Load();
+                    }
                 }
+                else
+                {
+                    Projects.Load();
+				}
             }
             catch (Exception ex)
-            { 
-            }
+            {
+				Projects.Load();
+			}
 
 			Instance = this;
             InitializeComponent();
           //  LicenseCheck licenseCheck = new LicenseCheck();
            // if(licenseCheck.IsInitialized)
              //   licenseCheck.ShowDialog();
-            Projects.Load();
+            
             Left = Projects.Instance.x;
             Top = Projects.Instance.y;
 

@@ -149,6 +149,12 @@ namespace PAService
 								writer.WriteLine(data.username + ";" + data.password+";"+data.server);
 								writer.Flush();
 							}
+							else
+							{
+								writer.WriteLine("ERROR");
+								writer.Flush();
+							}
+
 						}
 					} catch (Exception ex) 
 					{					

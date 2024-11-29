@@ -63,22 +63,37 @@ namespace Project_Assistant
 
 		private void SetAuthData(string username, string password, string server)
 		{
-			var client = new NamedPipeClientStream("PAServiceNamedPipe");
-			client.Connect();
-			StreamReader reader = new StreamReader(client);
-			StreamWriter writer = new StreamWriter(client);
-
-			writer.WriteLine("CHANGEDATA");
-			if (reader.ReadLine() == "SENDUSER")
-				writer.WriteLine(username);
-			if(reader.ReadLine() == "SENDPASS")
-				writer.WriteLine(password);
-			if(reader.ReadLine() == "SENDSERVER")
-				writer.WriteLine(server);
-
-			if (reader.ReadLine() != "DONE")
+			try
 			{
-				MessageBox.Show("Error saving login data.\n Please contact your administrator.");
+				var client = new NamedPipeClientStream("PAServiceNamedPipe");
+				client.Connect(2000);
+				StreamReader reader = new StreamReader(client);
+				StreamWriter writer = new StreamWriter(client);
+
+				writer.WriteLine("CHANGEDATA");
+				writer.Flush();
+				if (reader.ReadLine() == "SENDUSER")
+				{
+					writer.WriteLine(username);
+					writer.Flush();
+				}
+				if (reader.ReadLine() == "SENDPASS")
+				{
+					writer.WriteLine(password);
+					writer.Flush();
+				}
+				if (reader.ReadLine() == "SENDSERVER")
+				{
+					writer.WriteLine(server);
+					writer.Flush();
+				}
+				if (reader.ReadLine() != "DONE")
+				{
+					MessageBox.Show("Error saving login data.\nPlease contact your administrator.");
+				}
+			}catch(Exception ex)
+			{
+				MessageBox.Show("Error saving login data.\nPlease contact your administrator.");
 			}
 		}
 
