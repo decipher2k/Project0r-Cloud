@@ -14,8 +14,8 @@ namespace Project_Assistant.API
 	internal class ProjectAPI : APIBase
 	{
 		public void FetchAll()
-		{
-			Projects.Instance.Project.Clear();
+		{			
+			Projects.Instance=new Projects();
 			UserDto userDto = JsonConvert.DeserializeObject<UserDto>(PostFetchAll("/api/Project/GetAll/" + Globals.session));
 			Globals.session = userDto.session;
 			List<Project> projects = userDto.projects;

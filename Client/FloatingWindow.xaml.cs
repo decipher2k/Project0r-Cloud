@@ -208,7 +208,7 @@ namespace ProjectOrganizer
 				buffer[count] = (char)b;
 				count++;
 			} while (b > 0 && ((char)b) != '$' && count < 250);
-			return new String(buffer);
+			return new String(buffer).Substring(0,count-1);
 		}
 
 
