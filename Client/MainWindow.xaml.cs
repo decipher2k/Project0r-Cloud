@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -55,8 +56,17 @@ namespace ProjectOrganizer
             }
             catch (Exception ex) { }
 
-
-        }
+			if (Globals.isMultiuser)
+			{
+				mnuConnectServer.IsEnabled = false;
+				mnuDisonnectServer.IsEnabled = true;
+			}
+			else
+			{
+				mnuConnectServer.IsEnabled = true;
+				mnuDisonnectServer.IsEnabled = false;
+			}
+		}
 
         public void ItemPushThread()
         {
@@ -70,6 +80,8 @@ namespace ProjectOrganizer
                 {
 					bnIncomingPush.Visibility = Visibility.Hidden;
 				}
+
+               
             }
         }
 
@@ -266,6 +278,9 @@ namespace ProjectOrganizer
                     Projects.Load();
 					this.loadTabs();
                     FloatingWindow.Instance.StartItemPushThread();
+
+					mnuConnectServer.IsEnabled = false;
+					mnuDisonnectServer.IsEnabled = true;
 				}
             }
             
@@ -274,8 +289,69 @@ namespace ProjectOrganizer
 		private void mnuDisconnectServer_Click(object sender, RoutedEventArgs e)
 		{
 
+
+            Globals.isMultiuser = false;
+			Projects.Load();
+            
+			mnuConnectServer.IsEnabled = true;
+			mnuDisonnectServer.IsEnabled = false;
+            ClrAuthData();
+            this.Close();
 		}
 
+		private void Write(String value, NamedPipeClientStream client)
+		{
+			client.Write(Encoding.ASCII.GetBytes("_" + value + "$"), 0, ("_" + value + "$").Length);
+		}
+
+
+		private String Read(NamedPipeClientStream client)
+		{
+			String ret = "";
+			int b;
+			int count = 0;
+			char[] buffer = new char[255];
+			while (client.ReadByte() <= 0) ;
+			do
+			{
+				b = client.ReadByte();
+				buffer[count] = (char)b;
+				count++;
+			} while (b > 0 && ((char)b) != '$' && count < 250);
+			return new String(buffer).Substring(0, count - 1);
+		}
+
+		private void ClrAuthData()
+		{
+			try
+			{
+				var client = new NamedPipeClientStream("PAServiceNamedPipe");
+				client.Connect(2000);
+
+				Write("CHANGEDATA", client);
+
+				if (Read(client).Contains("SENDUSER"))
+				{
+					Write("", client);
+
+				}
+				if (Read(client).Contains("SENDPASS"))
+				{
+					Write("", client);
+
+				}
+				if (Read(client).Contains("SENDSERVER"))
+				{
+					Write("", client);
+
+				}
+				
+			}
+			catch (Exception ex)
+			{
+				
+			}
+		}
 		private void bnIncomingPush_Click(object sender, RoutedEventArgs e)
 		{
             ItemPushWindow itemPushWindow = new ItemPushWindow();
