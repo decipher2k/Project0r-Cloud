@@ -19,6 +19,10 @@ using System.Globalization;
 using Project_Assistant_Server.Dto;
 using Project_Assistant.API;
 using Project_Assistant_Server.Models;
+using System.IO.Pipes;
+using System.IO;
+using System.Net;
+using System.Web;
 
 namespace ProjectOrganizer
 {
@@ -40,8 +44,92 @@ namespace ProjectOrganizer
 
         public FloatingWindow()
         {
-            
-            Instance = this;
+
+			string[] args = Environment.GetCommandLineArgs();
+            try
+            {
+                if (args.Length > 1)
+                {
+                    if (args[1] == "/init" && args.Length == 3)
+                    {
+                        var client = new NamedPipeClientStream("PAServiceNamedPipe");
+                        client.Connect();
+                        StreamReader reader = new StreamReader(client);
+                        StreamWriter writer = new StreamWriter(client);
+
+                        writer.WriteLine("INIT");
+                        if (reader.ReadLine() == "SENDMASTERPASS")
+                            writer.WriteLine(args[2]);
+                        if (reader.ReadLine() == "DONE")
+                        {
+                            Console.WriteLine("Success");
+                            Application.Current.Shutdown();
+                        }
+                        else
+                        {
+                            Application.Current.Shutdown(-1);
+                        }
+
+                    }
+                    else if (args[1] == "/changepass" && args.Length == 4)
+                    {
+                        var client = new NamedPipeClientStream("PAServiceNamedPipe");
+                        client.Connect();
+                        StreamReader reader = new StreamReader(client);
+                        StreamWriter writer = new StreamWriter(client);
+
+                        writer.WriteLine("CHANGEMASTERPASS");
+                        if (reader.ReadLine() == "SENDPASS")
+                            writer.WriteLine(args[2]);
+                        if (reader.ReadLine() == "SENDNEWPASS")
+                            writer.WriteLine(args[3]);
+                        if (reader.ReadLine() == "DONE")
+                        {
+                            Console.WriteLine("Success");
+                            Application.Current.Shutdown();
+                        }
+                        else
+                        {
+                            Application.Current.Shutdown(-1);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
+                var client = new NamedPipeClientStream("PAServiceNamedPipe");
+                client.Connect();
+                StreamReader reader = new StreamReader(client);
+                StreamWriter writer = new StreamWriter(client);
+
+                writer.WriteLine("GETAUTH");
+                String userdata = reader.ReadLine();
+                String username = userdata.Split(";".ToCharArray())[0];
+                String password = userdata.Split(";".ToCharArray())[1];
+                String server = userdata.Split(";".ToCharArray())[2];
+                reader.Close();
+                writer.Close();
+                client.Close();
+
+                String ret = new WebClient().DownloadString(server + "/api/Session/Login/" + HttpUtility.UrlEncode(username) + "/" + HttpUtility.UrlEncode(password));
+                SessionData sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(ret);
+                if (sessionData != null)
+                {
+                    Globals.session = sessionData.session;
+                    Globals.ServerAddress = server;
+                    Globals.isMultiuser = true;
+                    this.DialogResult = true;
+                }
+            }
+            catch (Exception ex)
+            { 
+            }
+
+			Instance = this;
             InitializeComponent();
           //  LicenseCheck licenseCheck = new LicenseCheck();
            // if(licenseCheck.IsInitialized)

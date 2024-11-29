@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Pipes;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -34,8 +36,7 @@ namespace Project_Assistant
 		{
 			try
 			{
-				if (cbSSO.IsChecked == false)
-				{					
+
 					String ret = new WebClient().DownloadString(tbServer.Text + "/api/Session/Login/" + HttpUtility.UrlEncode(tbUsername.Text) + "/" + HttpUtility.UrlEncode(tbPassword.Text));
 					SessionData sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(ret);
 					if (sessionData != null)
@@ -45,15 +46,41 @@ namespace Project_Assistant
 						Globals.isMultiuser = true;
 						this.DialogResult = true;
 						success = true;
+
+						if (cbSaveLogin.IsChecked == true)
+						{
+							SetAuthData(tbUsername.Text, tbPassword.Text, tbServer.Text);
+						}
 						this.Close();
 					}
-				}				
+
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show("Login error.","Error");
 			}
         }
+
+		private void SetAuthData(string username, string password, string server)
+		{
+			var client = new NamedPipeClientStream("PAServiceNamedPipe");
+			client.Connect();
+			StreamReader reader = new StreamReader(client);
+			StreamWriter writer = new StreamWriter(client);
+
+			writer.WriteLine("CHANGEDATA");
+			if (reader.ReadLine() == "SENDUSER")
+				writer.WriteLine(username);
+			if(reader.ReadLine() == "SENDPASS")
+				writer.WriteLine(password);
+			if(reader.ReadLine() == "SENDSERVER")
+				writer.WriteLine(server);
+
+			if (reader.ReadLine() != "DONE")
+			{
+				MessageBox.Show("Error saving login data.\n Please contact your administrator.");
+			}
+		}
 
 		private void bnCancel_Click(object sender, RoutedEventArgs e)
 		{

@@ -13,18 +13,23 @@ using System.Runtime.InteropServices;
 using System.Resources;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace PAService
 {
 	public partial class PAService : ServiceBase
 	{
 		bool running=true;
+
+		[Serializable]
 		class Data
 		{
-			public String masterPass;
-			public String FileMD5 = "";
-			public String username;
-			public String password;
+			public String masterPass="";
+			public String FileMD5  = "";
+			public String username="";
+			public String password="";
+			public String server = "";
 		}
 
 		private Data data;
@@ -47,6 +52,7 @@ namespace PAService
 
 		protected override void OnStart(string[] args)
 		{
+			LoadData();
 			Task.Factory.StartNew(() =>
 			{
 				while (running)
@@ -71,8 +77,12 @@ namespace PAService
 								writer.WriteLine("SENDPASS");
 								writer.Flush();
 								data.password = reader.ReadLine();
+								writer.WriteLine("SENDSERVER");
+								writer.Flush();
+								data.server = reader.ReadLine();
 								writer.WriteLine("DONE");
 								writer.Flush();
+								SaveData();
 							}
 						}
 						if(line=="INIT")
@@ -94,6 +104,7 @@ namespace PAService
 								}
 								writer.WriteLine("DONE");
 								writer.Flush();
+								SaveData();
 							}							
 						}
 						else if(line=="CHANGEMASTERPASS")
@@ -109,24 +120,25 @@ namespace PAService
 
 								writer.WriteLine("DONE");
 								writer.Flush();
+								SaveData();
 							}
 						}
-						else if(line== data.masterPass)
+						else if(line== data.masterPass && data.masterPass!="")
 						{
-							if (data.FileMD5 == "")
+													
+							uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
+							using (var md5 = MD5.Create())
 							{
-								uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
-								using (var md5 = MD5.Create())
+								using (var stream = File.OpenRead(Process.GetProcessById((int)processId).MainModule.FileName))
 								{
-									using (var stream = File.OpenRead(Process.GetProcessById((int)processId).MainModule.FileName))
-									{
-										data.FileMD5 = Base64(md5.ComputeHash(stream));
-									}
+									data.FileMD5 = Base64(md5.ComputeHash(stream));
 								}
-
-								writer.WriteLine("DONE");
-								writer.Flush();
 							}
+
+							writer.WriteLine("DONE");
+							writer.Flush();
+							SaveData();
+
 						}
 						else if (line == "GETAUTH")
 						{
@@ -134,7 +146,7 @@ namespace PAService
 
 							if (checkMD5(Process.GetProcessById((int)processId).MainModule.FileName))
 							{
-								writer.WriteLine(data.username + ";" + data.password);
+								writer.WriteLine(data.username + ";" + data.password+";"+data.server);
 								writer.Flush();
 							}
 						}
@@ -156,11 +168,44 @@ namespace PAService
 
 		private void LoadData()
 		{
+			using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat", FileMode.Open))
+			{
+				var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 
+				data = (Data)binaryFormatter.Deserialize(stream);
+			}
 		}
 
 		private void SaveData()
 		{
+			if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant"))
+			{
+				Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant");
+			}
+
+
+
+			using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat", FileMode.Create))
+			{
+				var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+				binaryFormatter.Serialize(stream, data);
+				stream.Close();
+
+				var fileSecurity = File.GetAccessControl(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat");
+				foreach (FileSystemAccessRule accessRule in fileSecurity.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount)))
+					fileSecurity.RemoveAccessRule(accessRule);
+
+				foreach (FileSystemAccessRule accessRule in fileSecurity.GetAccessRules(true, true, typeof(System.Security.Principal.WindowsIdentity)))
+					fileSecurity.RemoveAccessRule(accessRule);
+
+				var fileAccessRule = new FileSystemAccessRule(new NTAccount("", "SYSTEM"),
+					FileSystemRights.FullControl,
+					AccessControlType.Allow);
+
+				fileSecurity.SetAccessRule(fileAccessRule);
+
+				File.SetAccessControl(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat", fileSecurity);
+			}
 
 		}
 
@@ -170,7 +215,7 @@ namespace PAService
 			{
 				using (var stream = File.OpenRead(path))
 				{
-					return Base64(md5.ComputeHash(stream))==FileMD5;
+					return Base64(md5.ComputeHash(stream))==data.FileMD5;
 				}
 			}
 		}

@@ -19,7 +19,7 @@
         <TextBox Name="tbServer" HorizontalAlignment="Left" Margin="78,76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button Name="bnOK" Content="OK" HorizontalAlignment="Left" Margin="61,137,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.702,-1.082" Width="64" Click="Button_Click"/>
         <Button Name="bnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="138,137,0,0" VerticalAlignment="Top" Width="59" Click="bnCancel_Click"/>
-        <CheckBox Name="cbSSO" Content="SSO" HorizontalAlignment="Left" Margin="159,106,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <CheckBox Name="cbSaveLogin" Content="Save Login Data" HorizontalAlignment="Left" Margin="15,108,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
