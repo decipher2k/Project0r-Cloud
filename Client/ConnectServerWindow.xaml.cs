@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Project_Assistant.Dto;
+using System.Web.UI;
 
 
 
@@ -30,6 +31,27 @@ namespace Project_Assistant
 		public ConnectServerWindow()
 		{
 			InitializeComponent();
+		}
+		private void Write(String value, NamedPipeClientStream client)
+		{
+			client.Write(Encoding.ASCII.GetBytes("_" + value + "$"), 0, ("_" + value + "$").Length);
+		}
+
+
+		private String Read(NamedPipeClientStream client)
+		{
+			String ret = "";
+			int b;
+			int count = 0;
+			char[] buffer = new char[255];
+			while (client.ReadByte() <= 0) ;
+			do
+			{
+				b = client.ReadByte();
+				buffer[count] = (char)b;
+				count++;
+			} while (b > 0 && ((char)b) != '$' && count < 250);
+			return new String(buffer);
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
@@ -67,27 +89,25 @@ namespace Project_Assistant
 			{
 				var client = new NamedPipeClientStream("PAServiceNamedPipe");
 				client.Connect(2000);
-				StreamReader reader = new StreamReader(client);
-				StreamWriter writer = new StreamWriter(client);
-
-				writer.WriteLine("CHANGEDATA");
-				writer.Flush();
-				if (reader.ReadLine() == "SENDUSER")
+				
+				Write("CHANGEDATA",client);
+				
+				if (Read(client).Contains("SENDUSER"))
 				{
-					writer.WriteLine(username);
-					writer.Flush();
+					Write(username,client);
+					
 				}
-				if (reader.ReadLine() == "SENDPASS")
+				if (Read(client).Contains("SENDPASS"))
 				{
-					writer.WriteLine(password);
-					writer.Flush();
+					Write(password,client);
+			
 				}
-				if (reader.ReadLine() == "SENDSERVER")
+				if (Read(client).Contains("SENDSERVER"))
 				{
-					writer.WriteLine(server);
-					writer.Flush();
+					Write(server,client);
+				
 				}
-				if (reader.ReadLine() != "DONE")
+				if (!Read(client).Contains("DONE"))
 				{
 					MessageBox.Show("Error saving login data.\nPlease contact your administrator.");
 				}

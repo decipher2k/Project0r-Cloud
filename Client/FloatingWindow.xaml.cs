@@ -23,6 +23,7 @@ using System.IO.Pipes;
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Security.Policy;
 
 namespace ProjectOrganizer
 {
@@ -50,85 +51,106 @@ namespace ProjectOrganizer
             {
                 if (args.Length > 1)
                 {
-                    if (args[1] == "/init" && args.Length == 3)
+                    if (args.Length == 2)
                     {
                         var client = new NamedPipeClientStream("PAServiceNamedPipe");
                         client.Connect(2000);
-                        StreamReader reader = new StreamReader(client);
-                        StreamWriter writer = new StreamWriter(client);
 
-                        writer.WriteLine("INIT");
-						writer.Flush();
-						if (reader.ReadLine() == "SENDMASTERPASS")
-                        {
-                            writer.WriteLine(args[2]);
-							writer.Flush();
-						}
-                        if (reader.ReadLine() == "DONE")
+
+                        Write(args[1], client);
+
+
+                        if (Read(client).Contains("DONE"))
                         {
                             Console.WriteLine("Success");
                             Application.Current.Shutdown();
                         }
                         else
                         {
+                            Console.WriteLine("Error");
                             Application.Current.Shutdown(-1);
                         }
+                    }
+                    else if (args[1] == "/init" && args.Length == 3)
+                    {
+                        var client = new NamedPipeClientStream("PAServiceNamedPipe");
+                        client.Connect(2000);
+
+                        Write("INIT", client);
+                        {
+
+
+
+                            // Read the incoming message
+                            String ret = Read(client);
+                            if (ret.Contains("SENDMASTERPASS"))
+                                Write(args[2], client);
+
+                            if (Read(client).Contains("DONE"))
+
+                            {
+                                Console.WriteLine("Success");
+								Process.GetCurrentProcess().Kill();
+							}
+                            else
+                            {
+                                Console.WriteLine("Error");
+								Process.GetCurrentProcess().Kill();
+							}
+
+                        }
+
 
                     }
                     else if (args[1] == "/changepass" && args.Length == 4)
                     {
                         var client = new NamedPipeClientStream("PAServiceNamedPipe");
                         client.Connect(2000);
-                        StreamReader reader = new StreamReader(client);
-                        StreamWriter writer = new StreamWriter(client);
 
-                        writer.WriteLine("CHANGEMASTERPASS");
-                        if (reader.ReadLine() == "SENDPASS")
+                        Write("CHANGEMASTERPASS", client);
+                        if (Read(client).Contains("SENDPASS"))
                         {
-                            writer.WriteLine(args[2]);
-							writer.Flush();
-						}
-                        if (reader.ReadLine() == "SENDNEWPASS")
+                            Write(args[2], client);
+
+                        }
+                        if (Read(client).Contains("SENDNEWPASS"))
                         {
-                            writer.WriteLine(args[3]);
-							writer.Flush();
-						}
-                        if (reader.ReadLine() == "DONE")
+                            Write(args[3], client);
+
+                        }
+                        if (Read(client).Contains("DONE"))
                         {
                             Console.WriteLine("Success");
-                            Application.Current.Shutdown();
+                            Process.GetCurrentProcess().Kill(); 
                         }
                         else
                         {
-                            Application.Current.Shutdown(-1);
-                        }
+                            Console.WriteLine("Error");
+							Process.GetCurrentProcess().Kill();
+						}
                     }
                 }
             }
             catch (Exception ex)
-            {				
+            {
+				Console.WriteLine("Error");
+				Application.Current.Shutdown(-1);
 			}
 
             try
             {
                 var client = new NamedPipeClientStream("PAServiceNamedPipe");
                 client.Connect(2000);
-                StreamReader reader = new StreamReader(client);
-                StreamWriter writer = new StreamWriter(client);
-
-                writer.WriteLine("GETAUTH");
-                writer.Flush();
-                String userdata = reader.ReadLine();
+             
+                Write("GETAUTH",client);
+               
+                String userdata = Read(client);
                 if (userdata != "ERROR")
                 {
-
-
                     String username = userdata.Split(";".ToCharArray())[0];
                     String password = userdata.Split(";".ToCharArray())[1];
                     String server = userdata.Split(";".ToCharArray())[2];
-                    reader.Close();
-                    writer.Close();
-                    client.Close();
+                 
 
                     String ret = new WebClient().DownloadString(server + "/api/Session/Login/" + HttpUtility.UrlEncode(username) + "/" + HttpUtility.UrlEncode(password));
                     SessionData sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(ret);
@@ -166,7 +188,32 @@ namespace ProjectOrganizer
             new System.Threading.Thread(ReminderThread).Start();
 			new System.Threading.Thread(ItemPushThread).Start();
 		}
-        public bool running = true;
+
+		private void Write(String value, NamedPipeClientStream client)
+		{
+			client.Write(Encoding.ASCII.GetBytes("_" + value + "$"), 0, ("_" + value + "$").Length);
+		}
+
+
+		private String Read(NamedPipeClientStream client)
+		{
+			String ret = "";
+			int b;
+			int count = 0;
+			char[] buffer = new char[255];
+			while (client.ReadByte() <= 0) ;
+			do
+			{
+				b = client.ReadByte();
+				buffer[count] = (char)b;
+				count++;
+			} while (b > 0 && ((char)b) != '$' && count < 250);
+			return new String(buffer);
+		}
+
+
+
+		public bool running = true;
         [STAThread]
         private void ReminderThread()
         {

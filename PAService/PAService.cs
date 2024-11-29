@@ -32,7 +32,7 @@ namespace PAService
 			public String server = "";
 		}
 
-		private Data data;
+		private Data data=new Data();
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		internal static extern bool GetNamedPipeClientProcessId(IntPtr Pipe, out uint ClientProcessId);
@@ -50,122 +50,149 @@ namespace PAService
 			InitializeComponent();
 		}
 
+		private String Read(NamedPipeServerStream server)
+		{
+			String ret = "";
+			int b;
+			int count = 0;
+			char[] buffer = new char[255];
+			while (server.ReadByte() <= 0) ;
+			do
+			{
+				b = server.ReadByte();
+				buffer[count] = (char)b;
+				count++;
+			} while (b > 0 && ((char)b)!='$' && count<250);
+			return new String(buffer);
+		}
+
+		private void Write(String value, NamedPipeServerStream server)
+		{
+			server.Write(Encoding.ASCII.GetBytes("_" + value + "$"), 0, ("_" + value + "$").Length);
+		}
+
 		protected override void OnStart(string[] args)
 		{
+			
 			LoadData();
 			Task.Factory.StartNew(() =>
 			{
+				
 				while (running)
 				{
 					
-					var server = new NamedPipeServerStream("PAServiceNamedPipe");
+					
+					SecurityIdentifier sid = new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null);
+					PipeAccessRule access = new PipeAccessRule(sid, PipeAccessRights.ReadWrite, AccessControlType.Allow);
+					PipeSecurity pipeSecurity = new PipeSecurity();
+					pipeSecurity.AddAccessRule(access);
+					var server = new NamedPipeServerStream("PAServiceNamedPipe",PipeDirection.InOut,10,PipeTransmissionMode.Byte,PipeOptions.None,5,5, pipeSecurity);
 					server.WaitForConnection();
-					StreamReader reader = new StreamReader(server);
-					StreamWriter writer = new StreamWriter(server);
-
+				
 					try
 					{
-						var line = reader.ReadLine();
-						if(line=="CHANGEDATA")
+						
+						//while (reader.Peek() > 0) ;
 						{
-							uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
-							if (checkMD5(Process.GetProcessById((int)processId).MainModule.FileName))
+							String line = "";
+						
+
+							// Read the incoming message
+							line = Read(server);
+							if (line.Contains("CHANGEDATA"))
 							{
-								writer.WriteLine("SENDUSER");
-								writer.Flush();
-								data.username = reader.ReadLine();
-								writer.WriteLine("SENDPASS");
-								writer.Flush();
-								data.password = reader.ReadLine();
-								writer.WriteLine("SENDSERVER");
-								writer.Flush();
-								data.server = reader.ReadLine();
-								writer.WriteLine("DONE");
-								writer.Flush();
-								SaveData();
+								uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
+								if (checkMD5(Process.GetProcessById((int)processId).MainModule.FileName))
+								{
+									Write("SENDUSER",server);
+
+									
+									data.username = Read(server);
+									Write("SENDPASS", server);
+									data.password = Read(server);
+									Write("SENDSERVER", server); 
+									data.server =  Read(server);
+									Write("DONE", server);
+									
+									SaveData();
+								}
 							}
-						}
-						if(line=="INIT")
-						{
-							if(data.FileMD5 == "")
+							else if (line.Contains("INIT"))	
 							{
-								writer.WriteLine("SENDMASTERPASS");
-								writer.Flush();
-								String mpass = reader.ReadLine();
-								data.masterPass = mpass;
+								
+								if (data.FileMD5 == "")
+								{
+									Write("SENDMASTERPASS",server);
+									String mpass = Read(server);
+									data.masterPass = mpass;
+
+									uint processId = getNamedPipeClientProcID(server);
+									using (var md5 = MD5.Create())
+									{
+										using (var stream = File.OpenRead(Process.GetProcessById((int)processId).MainModule.FileName))
+										{
+											data.FileMD5 = Base64(md5.ComputeHash(stream));
+										}
+									}
+									Write("DONE",server);
+									SaveData();
+								}
+							}
+							else if (line.Contains("CHANGEMASTERPASS"))
+							{
+								Write("SENDPASS",server);
+
+								String oldMasterPass = Read(server);
+								if (oldMasterPass == data.masterPass)
+								{
+									Write("SENDNEWPASS",server);
+									data.masterPass = Read(server);
+
+									Write("DONE",server);		
+									SaveData();
+								}
+							}
+							else if (line.Contains(data.masterPass) && data.masterPass != "")
+							{
 
 								uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
 								using (var md5 = MD5.Create())
 								{
 									using (var stream = File.OpenRead(Process.GetProcessById((int)processId).MainModule.FileName))
 									{
-										data.FileMD5=Base64(md5.ComputeHash(stream));
+										data.FileMD5 = Base64(md5.ComputeHash(stream));
 									}
 								}
-								writer.WriteLine("DONE");
-								writer.Flush();
-								SaveData();
-							}							
-						}
-						else if(line=="CHANGEMASTERPASS")
-						{
-							writer.WriteLine("SENDPASS");
-							writer.Flush();
-							String oldMasterPass=reader.ReadLine();
-							if(oldMasterPass== data.masterPass)
-							{
-								writer.WriteLine("SENDNEWPASS");
-								writer.Flush();
-								data.masterPass = reader.ReadLine();
 
-								writer.WriteLine("DONE");
-								writer.Flush();
+								Write("DONE",server);
+						
 								SaveData();
+
 							}
-						}
-						else if(line== data.masterPass && data.masterPass!="")
-						{
-													
-							uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
-							using (var md5 = MD5.Create())
+							else if (line.Contains("GETAUTH"))
 							{
-								using (var stream = File.OpenRead(Process.GetProcessById((int)processId).MainModule.FileName))
+								uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);
+
+								if (checkMD5(Process.GetProcessById((int)processId).MainModule.FileName))
 								{
-									data.FileMD5 = Base64(md5.ComputeHash(stream));
+									Write(data.username + ";" + data.password + ";" + data.server,server);
+								
 								}
+								else
+								{
+									Write("ERROR",server);
+						
+								}
+
 							}
-
-							writer.WriteLine("DONE");
-							writer.Flush();
-							SaveData();
-
-						}
-						else if (line == "GETAUTH")
-						{
-							uint processId = getNamedPipeClientProcID((NamedPipeServerStream)server);							
-
-							if (checkMD5(Process.GetProcessById((int)processId).MainModule.FileName))
-							{
-								writer.WriteLine(data.username + ";" + data.password+";"+data.server);
-								writer.Flush();
-							}
-							else
-							{
-								writer.WriteLine("ERROR");
-								writer.Flush();
-							}
-
 						}
 					} catch (Exception ex) 
-					{					
-						reader.Close();
-						writer.Close();
+					{
 						server.Close();
 					}
 
 
-					writer.Close();
-					reader.Close();
+
 					server.Close();
 
 				}
@@ -174,11 +201,13 @@ namespace PAService
 
 		private void LoadData()
 		{
-			using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat", FileMode.Open))
+			if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat"))
 			{
-				var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-
-				data = (Data)binaryFormatter.Deserialize(stream);
+				using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Project Assistant\\service.dat", FileMode.Open))
+				{
+					var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+					data = (Data)binaryFormatter.Deserialize(stream);
+				}
 			}
 		}
 
