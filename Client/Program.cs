@@ -22,9 +22,9 @@ namespace ProjectOrganizer
         [NonSerialized]
         public Process process;
 
-        [NonSerialized]
-        public ImageSource picture;
-        public long Id { get; set; }
+     
+        public ImageSource picture { get; set; }
+		public long Id { get; set; }
 
 		public override String ToString()
         {

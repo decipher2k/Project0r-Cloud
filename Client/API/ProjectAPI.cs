@@ -4,10 +4,15 @@ using ProjectOrganizer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Interop;
+using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Project_Assistant.API
 {
@@ -21,6 +26,36 @@ namespace Project_Assistant.API
 			List<Project> projects = userDto.projects;
 			foreach (var item in projects)
 			{
+				for (int i = 0; i < item.Programs.Count; i++)
+				{
+					Program program = item.Programs[i];
+					System.Drawing.Icon result = (System.Drawing.Icon)null;
+
+					result = System.Drawing.Icon.ExtractAssociatedIcon(program.executaleFile);
+					if (result != null)
+					{
+						ImageSource img = ToImageSource(result);
+						program.picture = img;
+						item.Programs[i] = program;
+					}
+					
+				}
+
+				for (int i = 0; i < item.Files.Count; i++)
+				{
+					File file = item.Files[i];
+					System.Drawing.Icon result = (System.Drawing.Icon)null;
+
+					result = System.Drawing.Icon.ExtractAssociatedIcon(file.fileName);
+					if (result != null)
+					{
+						ImageSource img = ToImageSource(result);
+						file.picture = img;
+						item.Files[i] = file;
+					}
+
+				}
+
 				Data data = new Data();
 				data.Calendar = new ObservableCollection<Calendar>(item.Calendars);
 				data.ToDo = new ObservableCollection<ToDo>(item.ToDo);
@@ -32,7 +67,15 @@ namespace Project_Assistant.API
 				Projects.Instance.Project.Add(item.Name, data);
 			}
 		}
+		public static ImageSource ToImageSource(Icon icon)
+		{
+			ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
+				icon.Handle,
+				Int32Rect.Empty,
+				BitmapSizeOptions.FromEmptyOptions());
 
+			return imageSource;
+		}
 		public List<UserDataDto.UserData> FetchUsers(String project)
 		{
 			Projects.Instance.Project.Clear();
