@@ -136,7 +136,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectName = collection["project"];
 				int idUserToInvite = int.Parse(collection["ItemData"].ToString());
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName && a.IsOwner).Any())
 				{
 					Project project = new Project();
 					project.Name = sProjectName;
@@ -145,6 +145,16 @@ namespace Project_Assistant_Server.Controllers.API
 					User user = context.users.Where(a => a.Id == idUserToInvite).Include(a => a.Projects).First();
 					user.Projects.Add(project);
 					context.Update(user);
+
+					ItemPush itemPush = new ItemPush();
+					itemPush.Project = sProjectName;
+					itemPush.SenderName = context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).First().Fullname;
+					itemPush.Title = sProjectName;
+					itemPush.ItemId = -1;
+					itemPush.ReceiverId = idUserToInvite;					
+
+					context.itemPush.Add(itemPush);
+
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());

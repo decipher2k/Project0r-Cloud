@@ -85,7 +85,16 @@ namespace Project_Assistant
 					i--;
 				}
 			}
-			new ItemPushAPI().AcceptItem((int)curItem.Id, curItem.Project);
+
+			if (curItem.ItemType == ItemPush.ItemType.Project)
+			{
+				new ProjectAPI().AccepDenyInvite(true, curItem.Project);
+			}
+			else 
+			{
+				new ItemPushAPI().AcceptItem((int)curItem.Id, curItem.Project);
+			}
+
 			lbReminder.Items.Remove(curItem);
 		}
 
@@ -101,7 +110,15 @@ namespace Project_Assistant
 					i--;
 				}
 			}
-			new ItemPushAPI().DenyItem((int)curItem.Id, curItem.Project);
+			if (curItem.ItemType == ItemPush.ItemType.Project)
+			{
+				new ProjectAPI().AccepDenyInvite(false, curItem.Project);
+			}
+			else
+			{
+				new ItemPushAPI().DenyItem((int)curItem.Id, curItem.Project);
+			}
+
 			lbReminder.Items.Remove(curItem);
 		}
 	}

@@ -23,7 +23,8 @@ namespace Project_Assistant_Server.Models
 			Note,
 			Program,
 			ToDo,
-			User
+			User,
+			Project
 		}
 
 		public enum AcceptedDenied

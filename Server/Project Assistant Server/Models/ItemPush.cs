@@ -21,7 +21,8 @@
 			Note,
 			Program,
 			ToDo,
-			User
+			User,
+			Project
 		}
 
 		public enum AcceptedDenied
