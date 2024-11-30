@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Assistant.Dto;
 using ProjectOrganizer;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Project_Assistant.API
 		public File Read(int Id, String project)
 		{
 			String sItem = PostRead(Id, "/api/File/Read", project);
+			Globals.session = JsonConvert.DeserializeObject<ItemDto>(sItem).session;
 			return JsonConvert.DeserializeObject<File>(sItem);
 		}
 

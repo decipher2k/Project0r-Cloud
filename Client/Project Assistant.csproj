@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="Dto\CreateUserDto.cs" />
+    <Compile Include="Dto\ItemDto.cs" />
     <Compile Include="Dto\ItemPushDto.cs" />
     <Compile Include="Dto\Project.cs" />
     <Compile Include="Dto\SessionData.cs" />

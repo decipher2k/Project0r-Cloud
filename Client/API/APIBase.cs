@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Assistant.Dto;
 using Project_Assistant_Server.Dto;
 using System;
 using System.Collections.Generic;
@@ -99,6 +100,7 @@ namespace Project_Assistant.API
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;
+				Globals.session=JsonConvert.DeserializeObject<ItemDto>(responseString).session;
 				return responseString;
 			}
 			else

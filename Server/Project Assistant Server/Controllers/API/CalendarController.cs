@@ -34,8 +34,11 @@ namespace Project_Assistant_Server.Controllers.API
 					.Include(a => a.Projects).ThenInclude(a => a.Calendars).First()
 					.Projects.Where(a=>a.Name==project).First()
 					.Calendars.Where(a=>a.Id==iItemId).First();		
-				
-				return Ok(calendar);				
+				String calendarStr=JsonConvert.SerializeObject(calendar);
+				ItemDto item=new ItemDto();
+				item.session=new Session(context).newSession(session);
+				item.item=calendarStr;
+				return Ok(item);				
 			}
 			else
 			{

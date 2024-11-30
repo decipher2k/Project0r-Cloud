@@ -9,6 +9,8 @@ namespace Project_Assistant_Server.Models
 		[Key]
 		public long Id { get; set; }
 		public string Name { get; set; }
+		public bool IsInvited { get; set; } = false;
+		public bool IsOwner { get; set; } = false;
 
 		public List<Calendar> Calendars { get; set; }
 		public List<File> Files { get; set; }

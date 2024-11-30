@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Project_Assistant_Server.Dto;
 using Project_Assistant_Server.Models;
+using System.Globalization;
 
 namespace Project_Assistant_Server.Controllers.API
 {
@@ -36,7 +37,11 @@ namespace Project_Assistant_Server.Controllers.API
 					.Projects.Where(a => a.Name == project).First()
 					.ToDo.Where(a => a.Id == iItemId).First();
 
-				return Ok(ToDo);
+				String calendarStr = JsonConvert.SerializeObject(ToDo);
+				ItemDto item = new ItemDto();
+				item.session = new Session(context).newSession(session);
+				item.item = calendarStr;
+				return Ok(item);
 			}
 			else
 			{

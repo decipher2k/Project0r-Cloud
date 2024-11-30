@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project_Assistant.Dto;
 using ProjectOrganizer;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Project_Assistant.API
 		public Calendar Read(int Id, String project)
 		{
 			String sToDo = PostRead(Id, "/api/Calendar/Read", project);
+			Globals.session = JsonConvert.DeserializeObject<ItemDto>(sToDo).session;
 			return JsonConvert.DeserializeObject<Calendar>(sToDo);
 		}
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Project_Assistant_Server.Dto;
 using Project_Assistant_Server.Models;
 using System.Linq;
@@ -26,12 +27,12 @@ namespace Project_Assistant_Server.Controllers.API
 			{
 				//if(context.users.Where(a => a.CurrentSession == session).First().Projects.Any())
 				User user = context.users.Where(a => a.CurrentSession == session)
-					.Include(a => a.Projects).ThenInclude(a => a.Calendars)
-					.Include(a => a.Projects).ThenInclude(a => a.Files)
-					.Include(a => a.Projects).ThenInclude(a => a.Logs)
-					.Include(a => a.Projects).ThenInclude(a => a.Notes)
-					.Include(a => a.Projects).ThenInclude(a => a.Programs)
-					.Include(a => a.Projects).ThenInclude(a => a.ToDo).First();
+					.Include(a => a.Projects.Where(a=>a.IsInvited==false)).ThenInclude(a => a.Calendars)
+					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Files)
+					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Logs)
+					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Notes)
+					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Programs)
+					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.ToDo).First();
 				String newSession = new Session(context).newSession(session);
 				userDto.session = newSession;
 				userDto.projects = new List<Project>();
@@ -57,7 +58,7 @@ namespace Project_Assistant_Server.Controllers.API
 
 				String sProjectName = collection["project"];
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).Any())
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects.Where(a => a.IsInvited == false).Where(a=>a.Name==sProjectName)).Any())
 				{
 					List<UserDataDto.UserData> userDatas = new List<UserDataDto.UserData>();
 					foreach (User projectUser in context.users.Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).ToList())
@@ -96,10 +97,11 @@ namespace Project_Assistant_Server.Controllers.API
 				
 				String sProjectName = collection["ItemData"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName).Any())
+				if (!context.projects.Where(a => a.Name == sProjectName).Any())
 				{
 					Project project = new Project();
 					project.Name = sProjectName;
+					project.IsOwner= true;
 					
 					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First();
 					user.Projects.Add(project);
@@ -122,6 +124,88 @@ namespace Project_Assistant_Server.Controllers.API
 			}
 		}
 
+		// POST: ProjectController/Create
+		[HttpPost("Invite")]
+		public IActionResult Invite(IFormCollection collection)
+		{
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+
+				String sProjectName = collection["project"];
+				int idUserToInvite = int.Parse(collection["ItemData"].ToString());
+
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName).Any())
+				{
+					Project project = new Project();
+					project.Name = sProjectName;
+					project.IsInvited = true;
+
+					User user = context.users.Where(a => a.Id == idUserToInvite).Include(a => a.Projects).First();
+					user.Projects.Add(project);
+					context.Update(user);
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());
+					ItemDto projectData = new ItemDto();
+					projectData.session = newSession;
+					projectData.item = JsonConvert.SerializeObject(project);
+					return Ok(projectData);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
+
+		// POST: ProjectController/Edit/5
+		[HttpPost("AcceptDenyInvite")]
+		public ActionResult AcceptDenyInvite(IFormCollection collection)
+		{
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+				String sProject = collection["project"];
+				String sProjectData = collection["ItemData"];
+				String session = collection["session"];
+				
+
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProject).Any()).Any())
+				{
+					Project p = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProject).First();
+					if (bool.Parse(sProjectData) == true)
+					{
+						p.IsInvited = false;
+						context.projects.Update(p);
+					}
+					else
+					{
+						context.Remove(p);
+					}					
+					context.SaveChanges();
+
+					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());
+					SessionData sessionData = new SessionData();
+					sessionData.session = newSession;
+					return Ok(sessionData);
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
 
 		// POST: ProjectController/Edit/5
 		[HttpPost("Edit")]
@@ -134,7 +218,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["project"];
 				String newProjectName = collection["ItemName"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == newProjectName).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == newProjectName && a.IsOwner).Any()).Any())
 				{
 					Project p = context.projects.Where(a=> a.Name== sProjectData).First();
 					p.Name = newProjectName;

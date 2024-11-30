@@ -13,7 +13,8 @@ namespace Project_Assistant.Dto
 		[Key]
 		public int Id { get; set; }
 		public string Name { get; set; }
-
+		public bool IsInvited { get; set; } = false;
+		public bool IsOwner { get; set; } = false;
 		public List<Calendar> Calendars { get; set; }
 		public List<File> Files { get; set; }
 		public List<Log> Logs { get; set; }
