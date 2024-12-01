@@ -45,7 +45,7 @@ namespace Project_Assistant_Server.Controllers.API
 		public IActionResult PostChatMessage(IFormCollection collection)
 		{
 			String sProject = collection["project"];		
-			String sMessage = collection["message"];
+			String sMessage = collection["ItemData"];
 			String session = collection["session"];
 
 			if (context.users.Where(a => a.CurrentSession == session && a.IsAdmin == false).Any())
