@@ -254,6 +254,8 @@
                                     <MenuItem Click="mnuHighToDo_Click" Name="mnuHighToDo" Header="High"></MenuItem>
                                     <MenuItem Click="mnuMediumToDo_Click" Name="mnuMediumToDo" Header="Medium"></MenuItem>
                                     <MenuItem Click="mnuLowToDo_Click" Name="mnuLowToDo" Header="Low"></MenuItem>
+                                    <Separator></Separator>
+                                    <MenuItem Click="mnuIdeaToDo_Click" Name="mnuIdeaToDo" Header="Idea"></MenuItem>
                                 </MenuItem>
                                 <Separator></Separator>
                                 <MenuItem Click="mnuSendTodo_Click" Name="mnuSendToDo" Header="Send to User"></MenuItem>

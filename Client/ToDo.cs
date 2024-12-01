@@ -23,7 +23,9 @@ namespace ProjectOrganizer
                 token = "[M] ";
             else if (priority == 3)
                 token = "[L] ";
-            return token+caption;
+			else if (priority == 4)
+				token = "[I] ";
+			return token+caption;
         }
     }
 }

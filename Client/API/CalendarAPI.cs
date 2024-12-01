@@ -18,7 +18,7 @@ namespace Project_Assistant.API
 			return idSessionDto.Id;
 		}
 
-		public Calendar Read(int Id, String project)
+		public Calendar Read(long Id, String project)
 		{
 			String sToDo = PostRead(Id, "/api/Calendar/Read", project);
 			Globals.session = JsonConvert.DeserializeObject<ItemDto>(sToDo).session;
@@ -31,7 +31,7 @@ namespace Project_Assistant.API
 			return PostUpdate(sItem, "/api/Calendar/Update", project);
 		}
 
-		public bool Delete(int Id, String project)
+		public bool Delete(long Id, String project)
 		{			
 			return PostDelete(Id, "/api/Calendar/Delete", project);
 		}

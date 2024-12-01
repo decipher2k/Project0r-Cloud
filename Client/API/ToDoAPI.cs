@@ -18,7 +18,7 @@ namespace Project_Assistant.API
 			IdSessionDto idSessionDto = PostCreate( sItem, "/api/ToDo/Create", project); return idSessionDto.Id;				
 		}
 
-		public ToDo Read(int Id, String project)
+		public ToDo Read(long Id, String project)
 		{
 			String sToDo = PostRead(Id, "/api/ToDo/Read", project);
 			Globals.session = JsonConvert.DeserializeObject<ItemDto>(sToDo).session;
@@ -31,7 +31,7 @@ namespace Project_Assistant.API
 			return PostUpdate(sItem, "/api/ToDo/Update", project);
 		}
 
-		public bool Delete(int Id, String project)
+		public bool Delete(long Id, String project)
 		{
 			return PostDelete(Id, "/api/ToDo/Delete", project);
 		}

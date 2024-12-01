@@ -18,7 +18,7 @@ namespace Project_Assistant.API
 
 		}
 
-		public Program Read(int Id, String project)
+		public Program Read(long Id, String project)
 		{
 			String sItem = PostRead(Id, "/api/Program/Read", project);
 			Globals.session = JsonConvert.DeserializeObject<ItemDto>(sItem).session;
@@ -31,7 +31,7 @@ namespace Project_Assistant.API
 			return PostUpdate(sItem, "/api/Program/Update", project);
 		}
 
-		public bool Delete(int Id, String project)
+		public bool Delete(long Id, String project)
 		{
 			return PostDelete(Id, "/api/Program/Delete", project);
 		}

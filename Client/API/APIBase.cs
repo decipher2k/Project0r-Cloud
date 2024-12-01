@@ -107,7 +107,7 @@ namespace Project_Assistant.API
 		}
 
 
-		protected String PostRead(int itemId, String APIEndpoint, String project)
+		protected String PostRead(long itemId, String APIEndpoint, String project)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()
@@ -181,7 +181,7 @@ namespace Project_Assistant.API
 			}
 		}
 
-		protected bool PostDelete(int itemId, String APIEndpoint, String project)
+		protected bool PostDelete(long itemId, String APIEndpoint, String project)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()
@@ -231,7 +231,7 @@ namespace Project_Assistant.API
 			}
 		}
 
-		protected String PostContextualIDPush(int itemId, int contextId,String APIEndpoint, String project, int itemType=-1)
+		protected String PostContextualIDPush(long itemId, int contextId,String APIEndpoint, String project, int itemType=-1)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()

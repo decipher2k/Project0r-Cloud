@@ -11,7 +11,7 @@ namespace Project_Assistant.Dto
 		public List<UserData> Data { get; set; }
 		public class UserData
 		{
-			public int Id { get; set; }
+			public long Id { get; set; }
 			public string FullName { get; set; }
 
 			public override String ToString()

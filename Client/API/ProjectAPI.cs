@@ -114,7 +114,7 @@ namespace Project_Assistant.API
 			return PostDelete(name, "/api/Project/Delete", project);
 		}
 
-		public bool InviteUser(int idUser, String project)
+		public bool InviteUser(long idUser, String project)
 		{
 			return PostCreate(idUser.ToString(), "/api/Project/Invite",project)!=null;
 		}

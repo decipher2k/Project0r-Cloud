@@ -111,9 +111,9 @@ namespace ProjectOrganizer
             catch (Exception) { }
         }
 
-        public void setTab(int idx)
+        public void setTab(long idx)
         {
-            tabMain.SelectedIndex = idx;
+            tabMain.SelectedIndex = (int)idx;
         }
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -627,7 +627,9 @@ namespace ProjectOrganizer
             if (lbTodo.SelectedItems.Count > 0)
             {
                 ToDo p = lbTodo.SelectedItem as ToDo;
-                if (MessageBox.Show("Move to Log?", "Move to Log", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                MessageBoxResult result = MessageBox.Show("Move to Log?", "Move to Log", MessageBoxButton.YesNoCancel);
+
+				if (result == MessageBoxResult.Yes)
                 {                          
                     Log log = new Log();
                     log.caption = p.caption;                    
@@ -647,14 +649,18 @@ namespace ProjectOrganizer
 					Projects.Instance.Project[project].Log.Add(log);                
                 }
 
-				if (Globals.isMultiuser)
-				{
-					new ToDoAPI().Delete((int)p.Id, project);
-				}
+                if (result != MessageBoxResult.Cancel)
+                {
 
-				Projects.Instance.Project[project].ToDo.Remove(p);
-                Projects.Save();
-                reloadItems();
+                    if (Globals.isMultiuser)
+                    {
+                        new ToDoAPI().Delete((int)p.Id, project);
+                    }
+
+                    Projects.Instance.Project[project].ToDo.Remove(p);
+                    Projects.Save();
+                    reloadItems();
+                }
             }
         }
 
@@ -1232,6 +1238,32 @@ namespace ProjectOrganizer
                     MessageBox.Show("No users selected. Aborting.", "Cancel");
                 }
             }
+		}
+
+		private void mnuIdeaToDo_Click(object sender, RoutedEventArgs e)
+		{
+			ToDo note = lbTodo.SelectedItem as ToDo;
+			if (note != null)
+			{
+				for (int i = 0; i < Projects.Instance.Project[project].ToDo.Count; i++)
+				{
+					if (Projects.Instance.Project[project].ToDo[i].Id == note.Id)
+					{
+
+						Projects.Instance.Project[project].ToDo[i].priority = 4;
+
+
+						if (Globals.isMultiuser)
+						{
+							new ToDoAPI().Update(Projects.Instance.Project[project].ToDo[i], project);
+						}
+
+						Projects.Save();
+						reloadItems();
+						break;
+					}
+				}
+			}
 		}
 	}
 }
