@@ -5,11 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Assistant"
         mc:Ignorable="d"
-        Title="Connect to Server" Height="200" Width="221" WindowStyle="ToolWindow">
+        Title="Connect to Server" Height="200" Width="230" WindowStyle="ToolWindow">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="727*"/>
-            <ColumnDefinition Width="73*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="Username" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
