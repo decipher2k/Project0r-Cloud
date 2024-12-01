@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Assistant"
         mc:Ignorable="d"
-        Title="Requests" Height="469" Width="829" Topmost="True" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" >
+        Title="Requests" Height="469" Width="829" Topmost="True" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
     <Grid Margin="0,0,0,2">
         <Grid.RowDefinitions>
             <RowDefinition Height="367*"/>

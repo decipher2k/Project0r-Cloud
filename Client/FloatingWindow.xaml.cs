@@ -24,6 +24,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 using System.Security.Policy;
+using System.Diagnostics.Eventing.Reader;
 
 namespace ProjectOrganizer
 {
@@ -264,6 +265,7 @@ namespace ProjectOrganizer
 		[STAThread]
 		private void ItemPushThread()
 		{
+            bool isWindowVisible = false;
 			while (running && Globals.isMultiuser)
 			{
                 bool showWindow = false;
@@ -280,22 +282,33 @@ namespace ProjectOrganizer
                 if (showWindow)
                 {
 					Instance.Dispatcher.Invoke(() => {
-                        ItemPushWindow i = new ItemPushWindow();
-						i.Show();
+                        if (!isWindowVisible)
+                        {
+                            isWindowVisible = true;
+                            ItemPushWindow i = new ItemPushWindow();
+                            i.ShowDialog();
+                            isWindowVisible=false;
+                        }
 					});
 				}
 
                 if(itemPushes.Any())
                 {
                     isItemPushAvailable = true;
-                }
+					MainWindow.Instance.Dispatcher.Invoke(()=>
+					    MainWindow.Instance.bnIncomingPush.Visibility= Visibility.Visible);
+
+				}
                 else
                 {
                     isItemPushAvailable= false;
-                }
+                    MainWindow.Instance.Dispatcher.Invoke(() =>
+                        MainWindow.Instance.bnIncomingPush.Visibility = Visibility.Hidden);
+				}
 
 				System.Threading.Thread.Sleep(10000);
 			}
+            
 		}
 
 

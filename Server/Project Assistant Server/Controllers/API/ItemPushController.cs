@@ -97,137 +97,145 @@ namespace Project_Assistant_Server.Controllers.API
 			{
 				//if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == project).Any())
 				{
-					User newUser = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString())
+					User newUser = context.users.Where(a => a.IsAdmin == false && a.CurrentSession == collection["session"].ToString())
 				.Include(a => a.Projects).ThenInclude(a => a.Calendars)
 				.Include(a => a.Projects).ThenInclude(a => a.Files)
 				.Include(a => a.Projects).ThenInclude(a => a.Logs)
 				.Include(a => a.Projects).ThenInclude(a => a.Notes)
 				.Include(a => a.Projects).ThenInclude(a => a.Programs)
 				.Include(a => a.Projects).ThenInclude(a => a.ToDo).First();
-					
+
 					ItemPush push = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-					switch (push.Type)
+
+					if (newUser.Projects.Where(a => a.Name == project).Any())
 					{
 
-						case (ItemPush.ItemType.Note):
-							{
-								User oldUser=context.users.Where(a=>a.Id==push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Notes).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
-								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+						context.Remove(context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault());
+						context.SaveChanges();
 
-									Note newNote = new Note();
-									newNote.caption = note.caption;
-									newNote.text = note.text;
-									newNote.description = note.description;
-									newNote.name = note.name;									
-									newUser.Projects.Where(a => a.Name == project).First().Notes.Add(newNote);
+						switch (push.Type)
+						{
 
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-									context.Update(itemPush);
-									context.Update(newUser);
-									context.Update(oldUser);
-								}
-								else
+							case (ItemPush.ItemType.Note):
 								{
-									return BadRequest();
+									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Notes).FirstOrDefault();
+									if (newUser.Projects.Where(a => a.Name == project).Any())
+									{
+										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
+										Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+
+										Note newNote = new Note();
+										newNote.caption = note.caption;
+										newNote.text = note.text;
+										newNote.description = note.description;
+										newNote.name = note.name;
+										newUser.Projects.Where(a => a.Name == project).First().Notes.Add(newNote);
+
+										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(itemPush);
+										context.Update(newUser);
+										context.Update(oldUser);
+									}
+									else
+									{
+										return BadRequest();
+									}
+									break;
 								}
-								break;
-							}
-						case (ItemPush.ItemType.File):
-							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Files).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+							case (ItemPush.ItemType.File):
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									File note = context.files.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									oldUser.Projects.Where(a => a.Name == project).First().Files.Remove(note);
-									newUser.Projects.Where(a => a.Name == project).First().Files.Add(note);
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-									context.Update(itemPush);
-									context.Update(newUser);
-									context.Update(oldUser);
+									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Files).FirstOrDefault();
+									if (newUser.Projects.Where(a => a.Name == project).Any())
+									{
+										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
+										File note = context.files.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										oldUser.Projects.Where(a => a.Name == project).First().Files.Remove(note);
+										newUser.Projects.Where(a => a.Name == project).First().Files.Add(note);
+										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(itemPush);
+										context.Update(newUser);
+										context.Update(oldUser);
+									}
+									else
+									{
+										return BadRequest();
+									}
+									break;
 								}
-								else
+							case (ItemPush.ItemType.Calendar):
 								{
-									return BadRequest();
+									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Calendars).FirstOrDefault();
+									if (newUser.Projects.Where(a => a.Name == project).Any())
+									{
+										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
+										Calendar note = context.calendars.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										oldUser.Projects.Where(a => a.Name == project).First().Calendars.Remove(note);
+										newUser.Projects.Where(a => a.Name == project).First().Calendars.Add(note);
+										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(itemPush);
+										context.Update(newUser);
+										context.Update(oldUser);
+									}
+									else
+									{
+										return BadRequest();
+									}
+									break;
 								}
-								break;
-							}
-						case (ItemPush.ItemType.Calendar):
-							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Calendars).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
+							case (ItemPush.ItemType.Program):
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Calendar note = context.calendars.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									oldUser.Projects.Where(a => a.Name == project).First().Calendars.Remove(note);
-									newUser.Projects.Where(a => a.Name == project).First().Calendars.Add(note);
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-									context.Update(itemPush);
-									context.Update(newUser);
-									context.Update(oldUser);
+									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Programs).FirstOrDefault();
+									if (newUser.Projects.Where(a => a.Name == project).Any())
+									{
+										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
+										Models.Program note = context.program.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										oldUser.Projects.Where(a => a.Name == project).First().Programs.Remove(note);
+										newUser.Projects.Where(a => a.Name == project).First().Programs.Add(note);
+										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(itemPush);
+										context.Update(newUser);
+										context.Update(oldUser);
+									}
+									else
+									{
+										return BadRequest();
+									}
+									break;
 								}
-								else
+							case (ItemPush.ItemType.ToDo):
 								{
-									return BadRequest();
+									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.ToDo).FirstOrDefault();
+									if (newUser.Projects.Where(a => a.Name == project).Any())
+									{
+										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
+										ToDo note = context.toDo.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										oldUser.Projects.Where(a => a.Name == project).First().ToDo.Remove(note);
+										newUser.Projects.Where(a => a.Name == project).First().ToDo.Add(note);
+										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(itemPush);
+										context.Update(newUser);
+										context.Update(oldUser);
+									}
+									else
+									{
+										return BadRequest();
+									}
+									break;
 								}
-								break;
-							}
-						case (ItemPush.ItemType.Program):
-							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a=>a.Programs).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
-								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Models.Program note = context.program.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									oldUser.Projects.Where(a => a.Name == project).First().Programs.Remove(note);
-									newUser.Projects.Where(a => a.Name == project).First().Programs.Add(note);
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-									context.Update(itemPush);
-									context.Update(newUser);
-									context.Update(oldUser);
-								}
-								else
-								{
-									return BadRequest();
-								}
-								break;
-							}
-						case (ItemPush.ItemType.ToDo):
-							{
-								User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.ToDo).FirstOrDefault();
-								if (newUser.Projects.Where(a => a.Name == project).Any())
-								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									ToDo note = context.toDo.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									oldUser.Projects.Where(a => a.Name == project).First().ToDo.Remove(note);
-									newUser.Projects.Where(a => a.Name == project).First().ToDo.Add(note);
-									itemPush.IsAccepted=ItemPush.AcceptedDenied.Accepted;
-									context.Update(itemPush);
-									context.Update(newUser);
-									context.Update(oldUser);
-								}
-								else
-								{
-									return BadRequest();
-								}
-								break;
-							}
+						}
+						context.SaveChanges();
+
+						String newSession = new Session(context).newSession(collection["session"].ToString());
+						IdSessionDto sessionData = new IdSessionDto();
+						sessionData.session = newSession;
+						return Ok(sessionData);
+
 					}
-					context.Remove(context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault());
-					context.SaveChanges();
-
-					String newSession = new Session(context).newSession(collection["session"].ToString());
-					IdSessionDto sessionData = new IdSessionDto();
-					sessionData.session = newSession;					
-					return Ok(sessionData);
+					else
+					{
+						return BadRequest();
+					}
 				}
-				/*else
-				{
-					return BadRequest();
-				}*/
 			}
 			else
 			{
