@@ -116,8 +116,14 @@ namespace Project_Assistant_Server.Controllers.API
 								{
 									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 									Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									oldUser.Projects.Where(a => a.Name == project).First().Notes.Remove(note);
-									newUser.Projects.Where(a => a.Name == project).First().Notes.Add(note);
+
+									Note newNote = new Note();
+									newNote.caption = note.caption;
+									newNote.text = note.text;
+									newNote.description = note.description;
+									newNote.name = note.name;									
+									newUser.Projects.Where(a => a.Name == project).First().Notes.Add(newNote);
+
 									itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
 									context.Update(itemPush);
 									context.Update(newUser);

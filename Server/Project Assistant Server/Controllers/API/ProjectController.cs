@@ -167,7 +167,7 @@ namespace Project_Assistant_Server.Controllers.API
 			{
 
 				String sProjectName = collection["project"];
-				int idUserToInvite = int.Parse(collection["ItemData"].ToString());
+				long idUserToInvite = long.Parse(collection["ItemData"].ToString());
 
 				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName && a.IsOwner).Any())
 				{

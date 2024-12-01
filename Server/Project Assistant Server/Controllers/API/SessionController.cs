@@ -22,7 +22,7 @@ namespace Project_Assistant_Server.Controllers.API
 		[HttpGet("Login/{Username}/{Password}")]
 		public IActionResult Login(String Username, String Password)
 		{
-			if(context.users.Where(a=>a.Name==Username).Any())
+			if(context.users.Where(a=>a.Name==Username && a.IsAdmin==false).Any())
 			{
 				User user = context.users.Where(a => a.Name == Username).First();
 				String salt = user.Salt;
