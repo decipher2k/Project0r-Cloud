@@ -1164,62 +1164,74 @@ namespace ProjectOrganizer
 
 		private void mnuSendTodo_Click(object sender, RoutedEventArgs e)
 		{
-            ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
-            if(itemSendUserSelect.ShowDialog()==true)
+            if (lbTodo.SelectedItem != null)
             {
-                long idUser = itemSendUserSelect.userId;
-                long idItem = ((ToDo)lbTodo.SelectedItem).Id;
-                new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.ToDo);
-            }
-            else
-            {
-                MessageBox.Show("No users selected. Aborting.", "Cancel");
+                ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
+                if (itemSendUserSelect.ShowDialog() == true)
+                {
+                    long idUser = itemSendUserSelect.userId;
+                    long idItem = ((ToDo)lbTodo.SelectedItem).Id;
+                    new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.ToDo);
+                }
+                else
+                {
+                    MessageBox.Show("No users selected. Aborting.", "Cancel");
+                }
             }
 		}
 
 		private void mnuSendDocument_Click(object sender, RoutedEventArgs e)
 		{
-			ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
-			if (itemSendUserSelect.ShowDialog() == true)
-			{
-				long idUser = itemSendUserSelect.userId;
-				long idItem = ((File)lbFiles.SelectedItem).Id;
-				new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.File);
-			}
-			else
-			{
-				MessageBox.Show("No users selected. Aborting.", "Cancel");
-			}
+            if (lbFiles.SelectedItem != null)
+            {
+                ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
+                if (itemSendUserSelect.ShowDialog() == true)
+                {
+                    long idUser = itemSendUserSelect.userId;
+                    long idItem = ((File)lbFiles.SelectedItem).Id;
+                    new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.File);
+                }
+                else
+                {
+                    MessageBox.Show("No users selected. Aborting.", "Cancel");
+                }
+            }
 		}
 
 		private void mnuSendNote_Click(object sender, RoutedEventArgs e)
 		{
-			ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
-			if (itemSendUserSelect.ShowDialog() == true)
-			{
-				long idUser = itemSendUserSelect.userId;
-				long idItem = ((Note)lbNotes.SelectedItem).Id;
-				new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.Note);
-			}
-			else
-			{
-				MessageBox.Show("No users selected. Aborting.", "Cancel");
-			}
+            if (lbNotes.SelectedItem != null)
+            {
+                ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
+                if (itemSendUserSelect.ShowDialog() == true)
+                {
+                    long idUser = itemSendUserSelect.userId;
+                    long idItem = ((Note)lbNotes.SelectedItem).Id;
+                    new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.Note);
+                }
+                else
+                {
+                    MessageBox.Show("No users selected. Aborting.", "Cancel");
+                }
+            }
 		}
 
 		private void mnuSendCalendar_Click(object sender, RoutedEventArgs e)
 		{
-			ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
-			if (itemSendUserSelect.ShowDialog() == true)
-			{
-				long idUser = itemSendUserSelect.userId;
-				long idItem = ((Calendar)lbCalendar.SelectedItem).Id;
-				new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.Calendar);
-			}
-			else
-			{
-				MessageBox.Show("No users selected. Aborting.", "Cancel");
-			}
+            if (lbCalendar.SelectedItem != null)
+            {
+                ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
+                if (itemSendUserSelect.ShowDialog() == true)
+                {
+                    long idUser = itemSendUserSelect.userId;
+                    long idItem = ((Calendar)lbCalendar.SelectedItem).Id;
+                    new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.Calendar);
+                }
+                else
+                {
+                    MessageBox.Show("No users selected. Aborting.", "Cancel");
+                }
+            }
 		}
 	}
 }
