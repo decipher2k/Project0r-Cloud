@@ -59,6 +59,8 @@
                 <MenuItem x:Name="mnuProject" Header="Add Project" Click="mnuProject_Click"/>
                 <MenuItem x:Name="mnuRenameProject" Header="Rename Project" Click="mnuRenameProject_Click"/>
                 <Separator/>
+                <MenuItem x:Name="mnuInviteToProject" Header="Invite to Project" Click="mnuInviteToProject_Click"/>
+                <Separator/>
                 <MenuItem x:Name="mnuRemoveProject" Header="Remove Project" Click="mnuRemoveProject_Click"/>
             </MenuItem>
             <MenuItem Header="Server">

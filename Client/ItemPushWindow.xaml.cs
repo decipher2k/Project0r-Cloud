@@ -50,6 +50,9 @@ namespace Project_Assistant
 				newItem.ItemType = item.Type;
 				newItem.Project = item.Project;
 
+				if (!FloatingWindow.Instance.itemPushes.Contains(item))
+					FloatingWindow.Instance.itemPushes.Add(item);
+
 				lbReminder.Items.Add(newItem);
 			}
 		}
@@ -96,6 +99,8 @@ namespace Project_Assistant
 			}
 
 			lbReminder.Items.Remove(curItem);
+
+			MainWindow.Instance.loadTabs();
 		}
 
 		private void ButtonDeny_Click(object sender, RoutedEventArgs e)

@@ -357,5 +357,16 @@ namespace ProjectOrganizer
             ItemPushWindow itemPushWindow = new ItemPushWindow();
             itemPushWindow.ShowDialog();
 		}
+
+		private void mnuInviteToProject_Click(object sender, RoutedEventArgs e)
+		{
+            ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(((TabItem)tabMain.SelectedItem).Header.ToString(),true);
+            if (itemSendUserSelect.ShowDialog() == true)
+            {
+                long lUserId = itemSendUserSelect.userId;
+                new ProjectAPI().InviteUser((int)lUserId, ((TabItem)tabMain.SelectedItem).Header.ToString());
+
+            }
+		}
 	}
 }

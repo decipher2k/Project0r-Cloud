@@ -79,10 +79,19 @@ namespace Project_Assistant.API
 		public List<UserDataDto.UserData> FetchUsers(String project)
 		{
 			Projects.Instance.Project.Clear();
-			UserDataDto userDataDto = JsonConvert.DeserializeObject<UserDataDto>(PostFetchAllUsers("/api/Project/FetchUsers",project));
+			UserDataDto userDataDto = JsonConvert.DeserializeObject<UserDataDto>(PostFetchProjectUsers("/api/Project/FetchUsers",project));
 			Globals.session = userDataDto.session;
 			return userDataDto.Data;
 		}
+
+		public List<UserDataDto.UserData> FetchAllUsers()
+		{
+			Projects.Instance.Project.Clear();
+			UserDataDto userDataDto = JsonConvert.DeserializeObject<UserDataDto>(PostFetchAllUsers("/api/Project/FetchProjectUsers"));
+			Globals.session = userDataDto.session;
+			return userDataDto.Data;
+		}
+
 
 		public long Create(String item)
 		{		

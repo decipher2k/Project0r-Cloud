@@ -84,6 +84,39 @@ namespace Project_Assistant_Server.Controllers.API
 			}
 		}
 
+		// POST: ProjectController/Create
+		[HttpPost("FetchProjectUsers")]
+		public IActionResult FetchProjectUsers(IFormCollection collection)
+		{
+			UserDto userDto = new UserDto();
+
+			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+
+				
+
+			
+				{
+					List<UserDataDto.UserData> userDatas = new List<UserDataDto.UserData>();
+					foreach (User projectUser in context.users.ToList())
+					{
+						userDatas.Add(new UserDataDto.UserData() { FullName = projectUser.Fullname, Id = projectUser.Id });
+					}
+
+					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());
+					UserDataDto userDataDto = new UserDataDto();
+					userDataDto.Data = userDatas;
+					userDataDto.session = newSession;
+
+					return Ok(userDataDto);
+				}
+				
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
 
 
 		// POST: ProjectController/Create
@@ -152,6 +185,7 @@ namespace Project_Assistant_Server.Controllers.API
 					itemPush.Title = sProjectName;
 					itemPush.ItemId = -1;
 					itemPush.ReceiverId = idUserToInvite;					
+					itemPush.Type=ItemPush.ItemType.Project;
 
 					context.itemPush.Add(itemPush);
 
@@ -187,18 +221,23 @@ namespace Project_Assistant_Server.Controllers.API
 				String session = collection["session"];
 				
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == sProject).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a=>a.Name==sProject && a.IsInvited==false).Any())
 				{
-					Project p = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProject).First();
+					User receiver = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
+					Project p = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProject && a.IsInvited == true).First();
 					if (bool.Parse(sProjectData) == true)
 					{
 						p.IsInvited = false;
-						context.projects.Update(p);
+						context.projects.Update(p);						
 					}
 					else
 					{
 						context.Remove(p);
-					}					
+					}
+					ItemPush itemPush = context.itemPush.Where(a => a.Project == sProject && a.ReceiverId == receiver.Id).FirstOrDefault();
+					context.Remove(itemPush);
+
+
 					context.SaveChanges();
 
 					String newSession = new Session(context).newSession(collection["session"].ToString().ToString());

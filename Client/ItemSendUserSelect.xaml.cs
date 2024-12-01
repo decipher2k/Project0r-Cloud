@@ -23,14 +23,25 @@ namespace Project_Assistant
 	{
 		private String project="";
 		public long userId=-1;
-		public ItemSendUserSelect(String _project)
+		public ItemSendUserSelect(String _project, bool invite = false)
 		{
 			InitializeComponent();
 			this.project = _project;
 
-			List<UserDataDto.UserData> userDatas=new ProjectAPI().FetchUsers(project);
-			foreach(UserDataDto.UserData userData in userDatas)
-				lbReminder.Items.Add(userData);
+			if (invite)
+			{
+				List<UserDataDto.UserData> userDatas = new ProjectAPI().FetchAllUsers();
+				foreach (UserDataDto.UserData userData in userDatas)
+					lbReminder.Items.Add(userData);
+
+			}
+			else
+			{
+				List<UserDataDto.UserData> userDatas = new ProjectAPI().FetchUsers(project);
+				foreach (UserDataDto.UserData userData in userDatas)
+					lbReminder.Items.Add(userData);
+
+			}
 		}
 
 		private void bnOK_Click(object sender, RoutedEventArgs e)
