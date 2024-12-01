@@ -91,11 +91,16 @@ namespace Project_Assistant
 				client.Connect(2000);
 				
 				Write("CHANGEDATA",client);
-				
-				if (Read(client).Contains("SENDUSER"))
+				String ret = Read(client);
+				if (ret.Contains("SENDUSER"))
 				{
 					Write(username,client);
-					
+				}
+				else if(ret.Contains("ERROR"))
+				{
+					MessageBox.Show("Error saving login data.\nPlease contact your administrator.");
+					client.Close();
+					this.Close();
 				}
 				if (Read(client).Contains("SENDPASS"))
 				{
