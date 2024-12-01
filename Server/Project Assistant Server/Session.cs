@@ -13,7 +13,7 @@ namespace Project_Assistant_Server
 		{
 			if (context.users.Where(a => a.CurrentSession == session && a.IsAdmin==isAdmin).Count() > 0)
 			{
-				User user = context.users.Where(a => a.CurrentSession == session && a.IsAdmin==false).First();
+				User user = context.users.Where(a => a.CurrentSession == session && a.IsAdmin==isAdmin).First();
 				String newSession = "";
 
 				do {
