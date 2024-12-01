@@ -82,7 +82,7 @@ namespace Project_Assistant.API
 			}
 		}
 
-		protected String PostFetchProjectUsers(String APIEndpoint, String project)
+		protected String PostFetchProjectContextual(String APIEndpoint, String project)
 		{
 			HttpClient client = new HttpClient();
 			Dictionary<string, string> values = new Dictionary<string, string>()

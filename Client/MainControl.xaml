@@ -433,11 +433,11 @@
 -->
         <TabItem Header="Chat" VerticalContentAlignment="Top">
                 <StackPanel>
-                <TextBox x:Name="ChatHistory" VerticalAlignment="Top" IsReadOnly="True" Width="738"  HorizontalAlignment="Stretch" Height="345">
+                <TextBox x:Name="tbChatHistory" VerticalAlignment="Top" IsReadOnly="True" Width="738"  HorizontalAlignment="Stretch" Height="345">
                 </TextBox>
                     <StackPanel Orientation="Horizontal">
-                        <TextBox x:Name="ChatInput" Width="670" Margin="10,0,0,0" HorizontalAlignment="Stretch"></TextBox>
-                        <Button x:Name="bnSendChat" Width="67">Send</Button>
+                        <TextBox x:Name="tbChatInput" Width="670" Margin="10,0,0,0" HorizontalAlignment="Stretch"></TextBox>
+                        <Button x:Name="bnSendChat" Click="bnSendChat_Click" Width="67">Send</Button>
                     </StackPanel>
                 </StackPanel>
             </TabItem>

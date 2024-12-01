@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Project_Assistant;
 using Project_Assistant.API;
+using Project_Assistant.Dto;
 using Project_Assistant_Server.Models;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace ProjectOrganizer
             InitializeComponent();
 
             reloadItems();
+            new System.Threading.Thread(ChatThread).Start();
         }
 
         private void reloadItems()
@@ -1265,5 +1267,25 @@ namespace ProjectOrganizer
 				}
 			}
 		}
+
+		private void bnSendChat_Click(object sender, RoutedEventArgs e)
+		{
+            if(tbChatInput.Text!="")
+                new ChatAPI().SendMessage(tbChatInput.Text, project);
+		}
+
+        private void ChatThread()
+        {
+            while (FloatingWindow.Instance.running)
+            {
+                tbChatHistory.Clear();
+                ChatDto chatDto = new ChatAPI().GetMessages(project);
+                foreach (ChatMessageDto message in chatDto.chatMessages)
+                {
+                    tbChatHistory.Text += "\r\n\r\n" + message.timestamp.ToShortDateString() + " " + message.timestamp.ToShortTimeString() + ": " + message.userName + "\r\n" + message.message;
+                }
+                System.Threading.Thread.Sleep(5000);
+            }
+        }
 	}
 }

@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="API\APIBase.cs" />
     <Compile Include="API\CalendarAPI.cs" />
+    <Compile Include="API\ChatAPI.cs" />
     <Compile Include="API\FileAPI.cs" />
     <Compile Include="API\IdSessionDto.cs" />
     <Compile Include="API\ItemPushAPI.cs" />
@@ -96,6 +97,8 @@
       <DependentUpon>ConnectServerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
+    <Compile Include="Dto\ChatDto.cs" />
+    <Compile Include="Dto\ChatMessageDto.cs" />
     <Compile Include="Dto\CreateUserDto.cs" />
     <Compile Include="Dto\ItemDto.cs" />
     <Compile Include="Dto\ItemPushDto.cs" />

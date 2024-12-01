@@ -25,15 +25,20 @@ namespace Project_Assistant_Server.Controllers.API
 
 				long lProject = context.projects.Where(a => a.Name.Equals(sProject)).First().Id;
 
-				ChatMessageDto chatMessageDto = new ChatMessageDto();
+				ChatDto chatDto = new ChatDto();
 
 				var messages = context.chatMessages.Where(a => a.idProject == lProject);
-				for (int i = messages.Count(); i > (messages.Count()>50? messages.Count() - 50 : 0); i--)
+				for (int i = messages.Count(); i > (messages.Count() > 50 ? messages.Count() - 50 : 0); i--)
 				{
-					chatMessageDto.messages.Add(messages.ElementAt(i));
+					chatDto.messages.Add(new ChatMessageDto()
+					{
+						message = messages.ElementAt(i).Message,
+						timestamp = messages.ElementAt(i).timestamp,
+						userName = messages.ElementAt(i).User.Fullname
+					});
 				}
 
-				return Ok(chatMessageDto);
+				return Ok(chatDto);
 			}
 			else
 			{
@@ -45,7 +50,7 @@ namespace Project_Assistant_Server.Controllers.API
 		public IActionResult PostChatMessage(IFormCollection collection)
 		{
 			String sProject = collection["project"];		
-			String sMessage = collection["ItemData"];
+			String sMessage = collection["message"];
 			String session = collection["session"];
 
 			if (context.users.Where(a => a.CurrentSession == session && a.IsAdmin == false).Any())

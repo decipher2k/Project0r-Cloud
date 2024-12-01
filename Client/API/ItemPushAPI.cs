@@ -15,7 +15,7 @@ namespace Project_Assistant.API
 	{
 		public ItemPushDto PollItems()
 		{
-			String sItems = PostFetchProjectUsers("/api/ItemPush/PollItems","");
+			String sItems = PostFetchProjectContextual("/api/ItemPush/PollItems","");
 			
 			ItemPushDto itemPushDto = JsonConvert.DeserializeObject<ItemPushDto>(sItems);
 			Globals.session=itemPushDto.session;
