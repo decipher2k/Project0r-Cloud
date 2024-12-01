@@ -225,7 +225,7 @@
                             </Button.Background>
                         </Button>
                     </ToolBar>
-                    <ListBox x:Name="lbTodo" d:ItemsSource="{Binding ToDo, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="lbTodo_MouseDoubleClick" Grid.RowSpan="2">
+                    <ListBox x:Name="lbTodo" d:ItemsSource="{Binding ToDo, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="mnuEditToDo_Click" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Priority">

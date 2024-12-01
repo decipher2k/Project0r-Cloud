@@ -307,8 +307,10 @@ namespace ProjectOrganizer
 
 				Projects.Instance.Project[project].ToDo.Add(toDo);
                 Projects.Save();
-                lbTodo.ItemsSource = Projects.Instance.Project[project].ToDo;
-            }
+
+                reloadItems();
+                
+			};
 
         }
 

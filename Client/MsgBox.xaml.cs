@@ -41,7 +41,12 @@ namespace Project_Assistant
 
         private void tbValue_KeyUp(object sender, KeyEventArgs e)
         {
-           
+            if (e.Key == Key.Enter)
+            {
+				ret = tbValue.Text;
+				this.DialogResult = true;
+				this.Close();
+			}
         }
 
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
