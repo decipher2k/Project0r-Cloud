@@ -9,11 +9,11 @@ namespace Project_Assistant_Server
 		{
 			context = _context;
 		}
-		public String newSession(String session)
+		public String newSession(String session, bool isAdmin=false)
 		{
-			if (context.users.Where(a => a.CurrentSession == session).Count() > 0)
+			if (context.users.Where(a => a.CurrentSession == session && a.IsAdmin==isAdmin).Count() > 0)
 			{
-				User user = context.users.Where(a => a.CurrentSession == session).First();
+				User user = context.users.Where(a => a.CurrentSession == session && a.IsAdmin==false).First();
 				String newSession = "";
 
 				do {

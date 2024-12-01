@@ -35,7 +35,7 @@ namespace Project_Assistant_Server.Controllers
 		{
 			if (context.users.Where(a => a.Name == user.Name).Any())
 			{
-				User userData = context.users.Where(a => a.Name == user.Name).FirstOrDefault();
+				User userData = context.users.Where(a => a.Name == user.Name && a.IsAdmin==true).FirstOrDefault();
 				String salt = userData.Salt;
 				String passwordEnc=GenSha512(user.Password+salt);
 				if (userData.Password == passwordEnc)

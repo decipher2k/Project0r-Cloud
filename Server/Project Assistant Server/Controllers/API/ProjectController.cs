@@ -23,10 +23,10 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 			
-			if (context.users.Where(a => a.CurrentSession == session).Any())
+			if (context.users.Where(a => a.CurrentSession == session && a.IsAdmin==false).Any())
 			{
-				//if(context.users.Where(a => a.CurrentSession == session).First().Projects.Any())
-				User user = context.users.Where(a => a.CurrentSession == session)
+				//if(context.users.Where(a => a.CurrentSession == session && a.IsAdmin==false).First().Projects.Any())
+				User user = context.users.Where(a => a.CurrentSession == session && a.IsAdmin==false)
 					.Include(a => a.Projects.Where(a=>a.IsInvited==false)).ThenInclude(a => a.Calendars)
 					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Files)
 					.Include(a => a.Projects.Where(a => a.IsInvited == false)).ThenInclude(a => a.Logs)
@@ -53,12 +53,12 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				String sProjectName = collection["project"];
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects.Where(a => a.IsInvited == false).Where(a=>a.Name==sProjectName)).Any())
+				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects.Where(a => a.IsInvited == false).Where(a=>a.Name==sProjectName)).Any())
 				{
 					List<UserDataDto.UserData> userDatas = new List<UserDataDto.UserData>();
 					foreach (User projectUser in context.users.Where(a => a.Projects.Where(a => a.Name == sProjectName).Any()).ToList())
@@ -90,7 +90,7 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				
@@ -125,7 +125,7 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 				
 				String sProjectName = collection["ItemData"];
@@ -136,7 +136,7 @@ namespace Project_Assistant_Server.Controllers.API
 					project.Name = sProjectName;
 					project.IsOwner= true;
 					
-					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First();
+					User user = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First();
 					user.Projects.Add(project);
 					context.Update(user);
 					context.SaveChanges();
@@ -163,13 +163,13 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 
 				String sProjectName = collection["project"];
 				int idUserToInvite = int.Parse(collection["ItemData"].ToString());
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName && a.IsOwner).Any())
+				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString().ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProjectName && a.IsOwner).Any())
 				{
 					Project project = new Project();
 					project.Name = sProjectName;
@@ -181,7 +181,7 @@ namespace Project_Assistant_Server.Controllers.API
 
 					ItemPush itemPush = new ItemPush();
 					itemPush.Project = sProjectName;
-					itemPush.SenderName = context.users.Where(a => a.CurrentSession == collection["session"].ToString().ToString()).First().Fullname;
+					itemPush.SenderName = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString().ToString()).First().Fullname;
 					itemPush.Title = sProjectName;
 					itemPush.ItemId = -1;
 					itemPush.ReceiverId = idUserToInvite;					
@@ -214,17 +214,17 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 				String sProject = collection["project"];
 				String sProjectData = collection["ItemData"];
 				String session = collection["session"];
 				
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a=>a.Name==sProject && a.IsInvited==false).Any())
+				if (!context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a=>a.Name==sProject && a.IsInvited==false).Any())
 				{
-					User receiver = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
-					Project p = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProject && a.IsInvited == true).First();
+					User receiver = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).First();
+					Project p = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == sProject && a.IsInvited == true).First();
 					if (bool.Parse(sProjectData) == true)
 					{
 						p.IsInvited = false;
@@ -262,12 +262,12 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
 				String sProjectData = collection["project"];
 				String newProjectName = collection["ItemName"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == newProjectName && a.IsOwner).Any())
+				if (!context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == newProjectName && a.IsOwner).Any())
 				{
 					Project p = context.projects.Where(a=> a.Name== sProjectData).First();
 					p.Name = newProjectName;
@@ -296,13 +296,13 @@ namespace Project_Assistant_Server.Controllers.API
 		{
 			UserDto userDto = new UserDto();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{				
 				
 				String sProjectName = collection["project"];
 				String session = collection["session"].ToString();
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name==sProjectName).Any()) 
+				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name==sProjectName).Any()) 
 				{
 					Project project = context.users.Where(a=>a.CurrentSession==session).First().Projects.Where(a => a.Name==sProjectName).First();
 					context.projects.Remove(project);

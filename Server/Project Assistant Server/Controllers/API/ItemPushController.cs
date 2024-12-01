@@ -25,9 +25,9 @@ namespace Project_Assistant_Server.Controllers.API
 			String project = collection["project"];
 			String Session = collection["session"];
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
 				{
 					ItemPush push = new ItemPush();
 					push.ItemId = iItemId;
@@ -59,9 +59,9 @@ namespace Project_Assistant_Server.Controllers.API
 					}
 
 					push.Title=title;					
-					push.SenderName = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Fullname;
+					push.SenderName = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).First().Fullname;
 					push.Type = (ItemPush.ItemType)iItemType;
-					push.SenderId = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First().Id;
+					push.SenderId = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).First().Id;
 					push.ReceiverId = iReceiverId;
 					push.Project = project;
 
@@ -93,11 +93,11 @@ namespace Project_Assistant_Server.Controllers.API
 			String project = collection["project"];
 			String Session = collection["session"];
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				//if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == project).Any())
+				//if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == project).Any())
 				{
-					User newUser = context.users.Where(a => a.CurrentSession == collection["session"].ToString())
+					User newUser = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString())
 				.Include(a => a.Projects).ThenInclude(a => a.Calendars)
 				.Include(a => a.Projects).ThenInclude(a => a.Files)
 				.Include(a => a.Projects).ThenInclude(a => a.Logs)
@@ -238,11 +238,11 @@ namespace Project_Assistant_Server.Controllers.API
 			String project = collection["project"];
 			String Session = collection["session"];
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
 				{
-					User newUser = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
+					User newUser = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).First();
 					ItemPush push = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
 					switch (push.Type)
 					{
@@ -348,11 +348,11 @@ namespace Project_Assistant_Server.Controllers.API
 			String project = collection["project"];
 			String Session = collection["session"];
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
 			{
-				//if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				//if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
 				{
-					User user = context.users.Where(a => a.CurrentSession == collection["session"].ToString()).First();
+					User user = context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).First();
 					ItemPushDto itemPushDto = new ItemPushDto();
 					foreach(ItemPush itemPush in context.itemPush.Where(a=>a.ReceiverId==user.Id && a.IsAccepted==ItemPush.AcceptedDenied.None))
 					{

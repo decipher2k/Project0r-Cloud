@@ -55,7 +55,7 @@ namespace Project_Assistant_Server.Controllers.API
 			if (!isValidInput(collection["name"]) || !isValidInput(collection["fullname"]) || !isValidInput(collection["email"]))
 					return BadRequest();
 
-			if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Any())
+			if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Any())
 			{
 				User user = new User();
 				user.Salt=Session.RandomString(20);

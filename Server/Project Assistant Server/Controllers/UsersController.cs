@@ -32,10 +32,10 @@ namespace Project_Assistant_Server.Controllers
 			String session = _httpContextAccessor.HttpContext.Request.Cookies["SESSION"];
 			if (session != null)
 			{
-				if (_context.users.Where(a => a.CurrentSession == session).Any())
+				if (_context.users.Where(a => a.CurrentSession == session && a.IsAdmin==true).Any())
 				{
-					User user = _context.users.Where(a => a.CurrentSession == session).FirstOrDefault();
-					user.CurrentSession=new Session(_context).newSession(session);
+					User user = _context.users.Where(a => a.CurrentSession == session && a.IsAdmin==true).FirstOrDefault();
+					user.CurrentSession=new Session(_context).newSession(session, true);
 
 					CookieOptions options = new CookieOptions();
 					options.Expires = DateTime.Now.AddMinutes(10);			
