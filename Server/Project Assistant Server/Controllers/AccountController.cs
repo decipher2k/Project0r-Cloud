@@ -43,7 +43,12 @@ namespace Project_Assistant_Server.Controllers
 					CookieOptions options = new CookieOptions();
 					options.Expires = DateTime.Now.AddMinutes(10);
 
-					String session = Session.RandomString(20);
+					String session = "";
+					do
+					{
+						session = Session.RandomString(20);
+					} while (context.users.Where(a => a.CurrentSession == session).Count() > 0);
+			
 					userData.CurrentSession = session;
 					context.Update(userData);
 					context.SaveChanges();

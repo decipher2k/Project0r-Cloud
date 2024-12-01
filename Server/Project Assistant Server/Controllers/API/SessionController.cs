@@ -29,7 +29,14 @@ namespace Project_Assistant_Server.Controllers.API
 				if (context.users.Where(a => a.Name == Username && a.Password == GenSha512(Password + salt)).Any())
 				{
 					SessionData sessionData = new SessionData();
-					sessionData.session = Session.RandomString(20);
+
+					String session = "";
+					do
+					{
+						session = Session.RandomString(20);
+					} while (context.users.Where(a => a.CurrentSession == session).Count() > 0);
+
+					sessionData.session = session;
 
 					user.CurrentSession	= sessionData.session;
 					context.users.Update(user);
