@@ -16,6 +16,7 @@ namespace Project_Assistant_Server.Controllers.API
 
 		public IActionResult Index()
 		{
+			
 			User user = new User();
 			user.Email = "admin@example.com";
 			user.Salt = "12345";

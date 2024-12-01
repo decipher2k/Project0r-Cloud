@@ -94,7 +94,7 @@ namespace Project_Assistant.API
 
 			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+		var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;

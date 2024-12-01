@@ -267,7 +267,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectData = collection["project"];
 				String newProjectName = collection["ItemName"];
 
-				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == newProjectName && a.IsOwner).Any()).Any())
+				if (!context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name == newProjectName && a.IsOwner).Any())
 				{
 					Project p = context.projects.Where(a=> a.Name== sProjectData).First();
 					p.Name = newProjectName;
@@ -302,7 +302,7 @@ namespace Project_Assistant_Server.Controllers.API
 				String sProjectName = collection["project"];
 				String session = collection["session"].ToString();
 
-				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name==sProjectName).Any()).Any()) 
+				if (context.users.Where(a => a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).First().Projects.Where(a => a.Name==sProjectName).Any()) 
 				{
 					Project project = context.users.Where(a=>a.CurrentSession==session).First().Projects.Where(a => a.Name==sProjectName).First();
 					context.projects.Remove(project);

@@ -18,6 +18,22 @@ namespace Project_Assistant_Server
 
 			builder.Services.AddDbContext<DatabaseContext>(options =>
 				options.UseMySql(connectionstring,ServerVersion.AutoDetect(connectionstring)));
+			builder.Services.AddHttpContextAccessor();
+
+         
+
+			builder.Services.Configure<CookiePolicyOptions>(options =>
+			{
+				options.CheckConsentNeeded = context => false; // consent required
+				options.MinimumSameSitePolicy = SameSiteMode.Strict;
+			});
+
+			builder.Services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromMinutes(10);
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
 
 			var app = builder.Build();
 
@@ -29,7 +45,9 @@ namespace Project_Assistant_Server
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+			app.UseSession();
+
+			app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
