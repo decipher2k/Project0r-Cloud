@@ -63,6 +63,7 @@ namespace PAService
 				b = server.ReadByte();
 				buffer[count] = (char)b;
 				count++;
+				//replace "$" with \0 as a stop sign
 			} while (b > 0 && ((char)b)!='$' && count<250);
 			return new String(buffer).Substring(0,count-1);
 		}
