@@ -218,6 +218,7 @@ namespace ProjectOrganizer
         [STAThread]
         private void ReminderThread()
         {
+            bool windowVisible=false;
             while (running)
             {
                 foreach (String p in Projects.Instance.Project.Keys)
@@ -241,14 +242,18 @@ namespace ProjectOrganizer
                                     }
                                 }
                             });
-                            
-                            Instance.Dispatcher.Invoke(()=> { 
-                                Reminder r = new Reminder(Projects.Instance.Project[p], p, action);
-                                reminders.Add(p, r);
-                                r.Show();
-                            });
-                            
-                            
+
+                            if (windowVisible == false)
+                            {
+                                Instance.Dispatcher.Invoke(() =>
+                                {
+                                    windowVisible = true;
+                                    Reminder r = new Reminder(Projects.Instance.Project[p], p, action);
+                                    reminders.Add(p, r);
+                                    r.ShowDialog();
+                                    windowVisible = false;
+                                });
+                            }                            
                         }
                     }
                 }
