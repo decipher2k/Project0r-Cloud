@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Project_Assistant.Dto
 {
-	public class ChatDto
+	[Serializable]
+	public class ChatDto:SessionData
 	{
-		public List<ChatMessageDto> chatMessages { get; set; }
+		public List<ChatMessageDto> chatMessages { get; set; } = new List<ChatMessageDto>();
 	}
 }

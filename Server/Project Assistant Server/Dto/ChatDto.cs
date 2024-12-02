@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Project_Assistant_Server.Dto
 {
-	public class ChatDto
+	public class ChatDto:SessionData
 	{
-		public List<ChatMessageDto> messages = new List<ChatMessageDto>();
+		public List<ChatMessageDto> messages { get; set; } = new List<ChatMessageDto>();
 	}
 }

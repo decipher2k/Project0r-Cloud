@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.AspNet.SignalR.Infrastructure;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Win32;
 using Project_Assistant;
 using Project_Assistant.API;
 using Project_Assistant.Dto;
@@ -112,16 +114,48 @@ namespace ProjectOrganizer
             }
             catch (Exception) { }
         }
-
+        HubConnection hubConnection;
+        IDisposable handler;
         public void setTab(long idx)
         {
             tabMain.SelectedIndex = (int)idx;
         }
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             MainWindow.Instance.VerticalTab = tabMain.SelectedIndex;
+            if(((TabItem)tabMain.SelectedItem).Header.ToString()=="Chat")
+            {
+                hubConnection = new HubConnectionBuilder().WithUrl(Globals.ServerAddress + "/messagehub").Build();
+                
 
+				hubConnection.Closed += async (error) =>
+				{
+					await Task.Delay(new Random().Next(0, 5) * 1000);
+					await hubConnection.StartAsync();
+					await hubConnection.SendAsync("SendUser", Globals.session, hubConnection.ConnectionId, project);
+
+				};
+
+                
+
+				handler=hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+				{
+					this.Dispatcher.Invoke(() =>
+					{
+						var newMessage = $"{user}: {message}";
+						tbChatHistory.Text += "\r\n\r\n" + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + ": " + user + "\r\n" + message;
+					});
+				});
+               
+				await hubConnection.StartAsync();
+				await hubConnection.SendAsync("SendUser",Globals.session,hubConnection.ConnectionId, project);
+
+			}
+			else
+            {
+
+            }
 
         }
 
@@ -1268,24 +1302,44 @@ namespace ProjectOrganizer
 			}
 		}
 
-		private void bnSendChat_Click(object sender, RoutedEventArgs e)
+		private async void bnSendChat_Click(object sender, RoutedEventArgs e)
 		{
-            if(tbChatInput.Text!="")
-                new ChatAPI().SendMessage(tbChatInput.Text, project);
+            if (tbChatInput.Text != "")
+            {
+				await hubConnection.InvokeAsync("SendMessage",  Globals.session, project, tbChatInput.Text);
+			}
+            tbChatInput.Text = "";
 		}
 
         private void ChatThread()
         {
-            while (FloatingWindow.Instance.running)
+            /*while (FloatingWindow.Instance.running)
             {
-                tbChatHistory.Clear();
-                ChatDto chatDto = new ChatAPI().GetMessages(project);
-                foreach (ChatMessageDto message in chatDto.chatMessages)
+                if (Globals.isMultiuser)
                 {
-                    tbChatHistory.Text += "\r\n\r\n" + message.timestamp.ToShortDateString() + " " + message.timestamp.ToShortTimeString() + ": " + message.userName + "\r\n" + message.message;
+                 
+
+
+                    MainWindow.Instance.tabMain.Dispatcher.Invoke(() =>
+                    {
+						tbChatHistory.Clear();
+						List<ChatMessageDto> chatDto = new ChatAPI().GetMessages(((TabItem)MainWindow.Instance.tabMain.SelectedItem).Header.ToString());
+                        if (chatDto != null)
+                        {
+                            foreach (ChatMessageDto message in chatDto)
+                            {
+                             //   tbChatHistory.Dispatcher.Invoke(() =>
+                                //{
+                                    tbChatHistory.Text += "\r\n\r\n" + message.timestamp.ToShortDateString() + " " + message.timestamp.ToShortTimeString() + ": " + message.userName + "\r\n" + message.message;
+                              //  });
+                            }
+                        }
+                        tbChatHistory.CaretIndex=tbChatHistory.Text.Length;
+                        tbChatHistory.ScrollToEnd();
+                    });
                 }
                 System.Threading.Thread.Sleep(5000);
-            }
+            }*/
         }
 	}
 }

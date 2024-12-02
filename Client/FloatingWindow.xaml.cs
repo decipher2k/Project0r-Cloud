@@ -275,42 +275,46 @@ namespace ProjectOrganizer
 			{
                 bool showWindow = false;
                 ItemPushDto itemPushDto = new ItemPushAPI().PollItems();
-                foreach (var item in itemPushDto.Items)
+
+                if (itemPushDto != null)
                 {
-                    if (!itemPushes.Where(a => a.Id == item.Id).Any())
+                    foreach (var item in itemPushDto.Items)
                     {
-                        showWindow = true;
-                        itemPushes.Add(item);
+                        if (!itemPushes.Where(a => a.Id == item.Id).Any())
+                        {
+                            showWindow = true;
+                            itemPushes.Add(item);
+                        }
+                    }
+
+                    if (showWindow)
+                    {
+                        Instance.Dispatcher.Invoke(() =>
+                        {
+                            if (!isWindowVisible)
+                            {
+                                isWindowVisible = true;
+                                ItemPushWindow i = new ItemPushWindow();
+                                i.ShowDialog();
+                                isWindowVisible = false;
+                            }
+                        });
+                    }
+
+                    if (itemPushes.Any())
+                    {
+                        isItemPushAvailable = true;
+                        MainWindow.Instance.Dispatcher.Invoke(() =>
+                            MainWindow.Instance.bnIncomingPush.Visibility = Visibility.Visible);
+
+                    }
+                    else
+                    {
+                        isItemPushAvailable = false;
+                        MainWindow.Instance.Dispatcher.Invoke(() =>
+                            MainWindow.Instance.bnIncomingPush.Visibility = Visibility.Hidden);
                     }
                 }
-
-                if (showWindow)
-                {
-					Instance.Dispatcher.Invoke(() => {
-                        if (!isWindowVisible)
-                        {
-                            isWindowVisible = true;
-                            ItemPushWindow i = new ItemPushWindow();
-                            i.ShowDialog();
-                            isWindowVisible=false;
-                        }
-					});
-				}
-
-                if(itemPushes.Any())
-                {
-                    isItemPushAvailable = true;
-					MainWindow.Instance.Dispatcher.Invoke(()=>
-					    MainWindow.Instance.bnIncomingPush.Visibility= Visibility.Visible);
-
-				}
-                else
-                {
-                    isItemPushAvailable= false;
-                    MainWindow.Instance.Dispatcher.Invoke(() =>
-                        MainWindow.Instance.bnIncomingPush.Visibility = Visibility.Hidden);
-				}
-
 				System.Threading.Thread.Sleep(10000);
 			}
             

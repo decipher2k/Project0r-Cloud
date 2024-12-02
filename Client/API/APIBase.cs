@@ -28,7 +28,8 @@ namespace Project_Assistant.API
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;
-				Globals.session = JsonConvert.DeserializeObject<IdSessionDto>(responseString).session;
+				if(responseString!="")
+					Globals.session = JsonConvert.DeserializeObject<IdSessionDto>(responseString).session;
 				return JsonConvert.DeserializeObject<IdSessionDto>(responseString);
 			}
 			else
@@ -94,7 +95,7 @@ namespace Project_Assistant.API
 
 			FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-		var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
+			var response = client.PostAsync(Globals.ServerAddress + APIEndpoint, content).Result;
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				var responseString = response.Content.ReadAsStringAsync().Result;

@@ -12,14 +12,38 @@ namespace Project_Assistant.API
 	{
 		public bool SendMessage(String message, String project)
 		{
-			return PostCreate(message, "/api/Chat/PostChatMessage", project)!=null;
+			IdSessionDto idSessionDto= PostCreate(message, "/api/Chat/PostChatMessage", project);
+			if (idSessionDto != null)
+			{
+			//	Globals.session = idSessionDto.session;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
 		}
 
-		public ChatDto GetMessages(String project)
+		public List<ChatMessageDto> GetMessages(String project)
 		{
-			String sChat=PostFetchProjectContextual("/api/Chat/GetChatMessages",project);
-			ChatDto chatDto=JsonConvert.DeserializeObject<ChatDto>(sChat);
-			return chatDto;
+			if (project != null && project!="")
+			{
+				String sChat = PostFetchProjectContextual("/api/Chat/GetChatMessages", project);
+				if (sChat != "ERROR")
+				{
+					List<ChatMessageDto> chatDto= JsonConvert.DeserializeObject<List<ChatMessageDto>>(sChat);
+					return chatDto;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return null;	
+			}
 		}
 	}
 }

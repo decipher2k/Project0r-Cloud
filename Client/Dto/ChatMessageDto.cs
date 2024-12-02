@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project_Assistant.Dto
 {
+	[Serializable]
 	public class ChatMessageDto
 	{
 		public string message { get; set; }
