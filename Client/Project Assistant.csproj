@@ -75,6 +75,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddEditFile.xaml.cs">
+      <DependentUpon>AddEditFile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AddEditNote.xaml.cs">
+      <DependentUpon>AddEditNote.xaml</DependentUpon>
+    </Compile>
     <Compile Include="API\APIBase.cs" />
     <Compile Include="API\CalendarAPI.cs" />
     <Compile Include="API\ChatAPI.cs" />
@@ -87,6 +93,9 @@
     <Compile Include="API\ProjectAPI.cs" />
     <Compile Include="API\SessionData.cs" />
     <Compile Include="API\ToDoAPI.cs" />
+    <Compile Include="ConnectServerWindow.xaml.cs">
+      <DependentUpon>ConnectServerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dto\ChatDto.cs" />
     <Compile Include="Dto\ChatMessageDto.cs" />
     <Compile Include="Dto\CreateUserDto.cs" />
@@ -96,7 +105,25 @@
     <Compile Include="Dto\SessionData.cs" />
     <Compile Include="Dto\UserDataDto.cs" />
     <Compile Include="Dto\UserDto.cs" />
+    <Compile Include="FloatingWindow.xaml.cs">
+      <DependentUpon>FloatingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="ItemPushWindow.xaml.cs">
+      <DependentUpon>ItemPushWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ItemSendUserSelect.xaml.cs">
+      <DependentUpon>ItemSendUserSelect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LicenseCheck.xaml.cs">
+      <DependentUpon>LicenseCheck.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainControl.xaml.cs">
+      <DependentUpon>MainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Calendar.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\File.cs" />
@@ -106,84 +133,57 @@
     <Compile Include="Model\Program.cs" />
     <Compile Include="Model\Projects.cs" />
     <Compile Include="Model\ToDo.cs" />
-    <Compile Include="Windows\AddEditFile.xaml.cs">
-      <DependentUpon>AddEditFile.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\AddEditNote.xaml.cs">
-      <DependentUpon>AddEditNote.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\ConnectServerWindow.xaml.cs">
-      <DependentUpon>ConnectServerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\FloatingWindow.xaml.cs">
-      <DependentUpon>FloatingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\ItemPushWindow.xaml.cs">
-      <DependentUpon>ItemPushWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\ItemSendUserSelect.xaml.cs">
-      <DependentUpon>ItemSendUserSelect.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\LicenseCheck.xaml.cs">
-      <DependentUpon>LicenseCheck.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MainControl.xaml.cs">
-      <DependentUpon>MainControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MsgBox.xaml.cs">
+    <Compile Include="MsgBox.xaml.cs">
       <DependentUpon>MsgBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Reminder.xaml.cs">
+    <Compile Include="Reminder.xaml.cs">
       <DependentUpon>Reminder.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Windows\AddEditFile.xaml">
+    <Page Include="AddEditFile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\AddEditNote.xaml">
+    <Page Include="AddEditNote.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\ConnectServerWindow.xaml">
+    <Page Include="ConnectServerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\FloatingWindow.xaml">
+    <Page Include="FloatingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\ItemPushWindow.xaml">
+    <Page Include="ItemPushWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\ItemSendUserSelect.xaml">
+    <Page Include="ItemSendUserSelect.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\LicenseCheck.xaml">
+    <Page Include="LicenseCheck.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\MainControl.xaml">
+    <Page Include="MainControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\MainWindow.xaml">
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\MsgBox.xaml">
+    <Page Include="MsgBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\Reminder.xaml">
+    <Page Include="Reminder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -219,29 +219,29 @@
   <ItemGroup>
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
-    <Resource Include="Images\application.png" />
-    <Resource Include="Images\bin.png" />
-    <Resource Include="Images\delete.png" />
-    <Resource Include="Images\development.png" />
-    <Resource Include="Images\document.png" />
-    <Resource Include="Images\exclamation.png" />
-    <Resource Include="Images\file.png" />
-    <Resource Include="Images\folder.png" />
-    <Resource Include="Images\icon.png" />
-    <Resource Include="Images\icon_final-Photoroom %281%29 %281%29.ico" />
-    <Resource Include="Images\icon_final-Photoroom %281%29.ico" />
-    <Resource Include="Images\icon_final-Photoroom %281%29.png" />
-    <Resource Include="Images\icon_new.png" />
-    <Resource Include="Images\icon_new1.png" />
-    <Resource Include="Images\icon_new2.png" />
-    <Resource Include="Images\icon_new3.png" />
-    <Resource Include="Images\icon_new4-Photoroom.ico" />
-    <Resource Include="Images\icon_new4-Photoroom.png" />
-    <Resource Include="Images\icon_new4.png" />
-    <Resource Include="Images\minimize.png" />
-    <Resource Include="Images\monitor.png" />
-    <Resource Include="Images\project-management%281%29.png" />
-    <Resource Include="Images\schreiben.png" />
+    <Resource Include="minimize.png" />
+    <Resource Include="monitor.png" />
+    <Resource Include="project-management%281%29.png" />
+    <Resource Include="schreiben.png" />
+    <Resource Include="application.png" />
+    <Resource Include="bin.png" />
+    <Resource Include="delete.png" />
+    <Resource Include="development.png" />
+    <Resource Include="document.png" />
+    <Resource Include="exclamation.png" />
+    <Resource Include="file.png" />
+    <Resource Include="folder.png" />
+    <Resource Include="icon.png" />
+    <Resource Include="icon_final-Photoroom %281%29 %281%29.ico" />
+    <Resource Include="icon_final-Photoroom %281%29.ico" />
+    <Resource Include="icon_final-Photoroom %281%29.png" />
+    <Resource Include="icon_new.png" />
+    <Resource Include="icon_new1.png" />
+    <Resource Include="icon_new2.png" />
+    <Resource Include="icon_new3.png" />
+    <Resource Include="icon_new4-Photoroom.ico" />
+    <Resource Include="icon_new4-Photoroom.png" />
+    <Resource Include="icon_new4.png" />
     <Content Include="License.dll" />
   </ItemGroup>
   <ItemGroup>
