@@ -160,7 +160,7 @@ namespace ProjectOrganizer
                         Globals.session = sessionData.session;
                         Globals.ServerAddress = server;
                         Globals.isMultiuser = true;
-						new ProjectAPI().FetchAll();
+						new ProjectAPI().FetchAll();            
 					}
                     else
                     {

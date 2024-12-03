@@ -10,13 +10,13 @@ namespace ProjectOrganizer
     [Serializable]
     public class Data
     {
-        private ObservableCollection<File> files;
-        public ObservableCollection<File> Files
+        private List<File> files = new List<File>();
+        public List<File> Files
         {
             get
             {
                 if (files == null)
-                    files = new ObservableCollection<File>();
+                    files = new List<File>();
                 return files;
             }
 			set
@@ -25,13 +25,13 @@ namespace ProjectOrganizer
 			}
 		}
         
-        private ObservableCollection<Program> apps;
-        public ObservableCollection<Program> Apps
+        private List<Program> apps = new List<Program>();
+        public List<Program> Apps
         {
             get
             {
                 if (apps == null)
-                    apps = new ObservableCollection<Program>();
+                    apps = new List<Program>();
                 return apps;
             }
 			set
@@ -39,15 +39,15 @@ namespace ProjectOrganizer
 				apps = value;
 			}
 		}
-	
 
-        private ObservableCollection<Note> notes;
-        public ObservableCollection<Note> Notes
+
+        private List<Note> notes = new List<Note>();
+        public List<Note> Notes
         {
             get
             {
                 if (notes == null)
-                    notes = new ObservableCollection<Note>();
+                    notes = new List<Note>();
                 return notes;
             }
 	        set
@@ -56,13 +56,13 @@ namespace ProjectOrganizer
 	        }
         }
 
-        private ObservableCollection<ToDo> todo;
-        public ObservableCollection<ToDo> ToDo
+        private List<ToDo> todo = new List<ToDo>();
+        public List<ToDo> ToDo
         {
             get
             {
                 if (todo == null)
-                    todo = new ObservableCollection<ToDo>();
+                    todo = new List<ToDo>();
                 return todo;
             }
 			set
@@ -71,13 +71,13 @@ namespace ProjectOrganizer
 			}
 		}
 
-        private ObservableCollection<Calendar> calendar;
-        public ObservableCollection<Calendar> Calendar
+        private List<Calendar> calendar = new List<Calendar>();
+        public List<Calendar> Calendar
         {
             get
             {
                 if (calendar == null)
-                    calendar = new ObservableCollection<Calendar>();
+                    calendar = new List<Calendar>();
                 return calendar;
             }
             set
@@ -86,18 +86,18 @@ namespace ProjectOrganizer
             }
         }
 
-        private ObservableCollection<Log> log;
-        public ObservableCollection<Log> Log
+        private List<Log> log = new List<Log>();
+        public List<Log> Log
         {
             get
             {
                 if (log == null)
-                    log = new ObservableCollection<Log>();
+                    log = new List<Log>();
                 return log;
             }
             set
             {
-                log=(ObservableCollection<Log>)value;
+                log=(List<Log>)value;
             }
         }
 

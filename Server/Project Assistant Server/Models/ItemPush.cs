@@ -22,7 +22,7 @@
 			Program,
 			ToDo,
 			User,
-			Project
+			Project	
 		}
 
 		public enum AcceptedDenied

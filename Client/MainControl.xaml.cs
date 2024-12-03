@@ -18,6 +18,7 @@ using System.Management.Instrumentation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Security;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -44,27 +45,180 @@ namespace ProjectOrganizer
         {
             project = _project;
             InitializeComponent();
-
+			lbTodo.LayoutUpdated += LbTodo_LayoutUpdated;
+			lbTodo.TargetUpdated += LbTodo_TargetUpdated;
             reloadItems();
-            new System.Threading.Thread(ChatThread).Start();
+   
         }
 
-        private void reloadItems()
-        {
-            lbApps.ItemsSource = null;
-            lbFiles.ItemsSource = null;
-            lbNotes.ItemsSource = null;
-            lbTodo.ItemsSource = null;
-            lbCalendar.ItemsSource = null;
-            lbLog.ItemsSource = null;
+		private void LbTodo_TargetUpdated(object sender, DataTransferEventArgs e)
+		{
 
-            lbApps.ItemsSource = Projects.Instance.Project[project].Apps;
-            lbFiles.ItemsSource = Projects.Instance.Project[project].Files;
-            lbNotes.ItemsSource = Projects.Instance.Project[project].Notes;
-            lbTodo.ItemsSource = Projects.Instance.Project[project].ToDo.OrderBy(a=>a.priority).AsEnumerable();
-            lbCalendar.ItemsSource = Projects.Instance.Project[project].Calendar;
-            lbLog.ItemsSource = Projects.Instance.Project[project].Log;
+			if (Projects.Instance.Project.ContainsKey(project))
+			{
+				for (int i = 0; i < lbTodo.Items.Count; i++)
+				{
+					ToDo item = (ToDo)lbTodo.Items[i];
+					if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+					{
+						lbTodo.Items.Remove(item);
+						i--;
+					}
+				}
+			}
+		}
+
+		private void LbTodo_LayoutUpdated(object sender, EventArgs e)
+		{
+            if (Projects.Instance.Project.ContainsKey(project))
+            {
+                for (int i = 0; i < lbTodo.Items.Count; i++)
+                {
+                    ToDo item = (ToDo)lbTodo.Items[i];
+                    if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+                    {
+                        lbTodo.Items.Remove(item);
+                        i--;
+                    }
+                }
+            }
+		}
+
+		private void reloadItems()
+        {
+            /*
             
+
+                if (Projects.Instance.Project.ContainsKey(project))
+                {
+                    foreach (Program program in Projects.Instance.Project[project].Apps)
+                    {
+                        if (!lbApps.Items.Contains(program))
+                            lbApps.Items.Add(program);
+                    }
+
+                    for (int i = 0; i < lbApps.Items.Count; i++)
+                    {
+                        if (!Projects.Instance.Project[project].Apps.Contains(lbApps.Items[i]))
+                        {
+                            lbApps.Items.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    foreach (File program in Projects.Instance.Project[project].Files)
+                    {
+                        if (!lbFiles.Items.Contains(program))
+                            lbFiles.Items.Add(program);
+                    }
+
+                    for (int i = 0; i < lbFiles.Items.Count; i++)
+                    {
+                        if (!Projects.Instance.Project[project].Files.Contains(lbFiles.Items[i]))
+                        {
+                            lbFiles.Items.RemoveAt(i);
+							i--;
+                        }
+                    }
+            */
+
+            lbTodo.Dispatcher.Invoke(new Action(() =>
+            {
+                if (Projects.Instance.Project.ContainsKey(project))
+                {
+                    foreach (ToDo program in Projects.Instance.Project[project].ToDo)
+                    {
+                        bool found = false;
+                        for (int i = 0; i < lbTodo.Items.Count; i++)
+                        {
+                            ToDo todo = (ToDo)lbTodo.Items[i];
+                            if (program.Id == todo.Id)
+                            {
+                                found = true;
+                            }
+
+                        }
+                        if (!found)
+                            lbTodo.Items.Add(program);
+                    }
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbTodo.Items.Count; i++)
+						{
+							ToDo item = (ToDo)lbTodo.Items[i];
+							if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+							{
+								lbTodo.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					lbTodo.UpdateLayout();
+                }
+            }));
+/*
+					foreach (Note program in Projects.Instance.Project[project].Notes)
+                    {
+                        if (!lbNotes.Items.Contains(program))
+                            lbNotes.Items.Add(program);
+                    }
+
+                    for (int i = 0; i < lbNotes.Items.Count; i++)
+                    {
+                        if (!Projects.Instance.Project[project].Notes.Contains(lbNotes.Items[i]))
+                        {
+                            lbNotes.Items.RemoveAt(i);
+							i--;
+                        }
+                    }
+
+
+                    
+
+
+
+
+
+
+
+					foreach (Calendar program in Projects.Instance.Project[project].Calendar)
+                    {
+                        if (!lbCalendar.Items.Contains(program))
+                            lbCalendar.Items.Add(program);
+                    }
+
+                    for (int i = 0; i < lbCalendar.Items.Count; i++)
+                    {
+                        if (!Projects.Instance.Project[project].Calendar.Contains(lbCalendar.Items[i]))
+                        {
+                            lbCalendar.Items.RemoveAt(i);
+							i--;
+                        }
+                    }
+
+
+
+
+
+                    foreach (Log program in Projects.Instance.Project[project].Log)
+                    {
+                        if (!lbLog.Items.Contains(program))
+                            lbLog.Items.Add(program);
+                    }
+
+                    for (int i = 0; i < lbLog.Items.Count; i++)
+                    {
+                        if (!Projects.Instance.Project[project].Log.Contains(lbLog.Items[i]))
+                        {
+                            lbLog.Items.RemoveAt(i);
+							i--;
+                        }
+                    }
+
+                }
+           */
         }
 
         public static class WindowHelper
@@ -122,7 +276,8 @@ namespace ProjectOrganizer
         }
         private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (tabMain.SelectedItem == null)
+                tabMain.SelectedIndex = 0;
             MainWindow.Instance.VerticalTab = tabMain.SelectedIndex;
             if(((TabItem)tabMain.SelectedItem).Header.ToString()=="Chat")
             {
@@ -151,12 +306,7 @@ namespace ProjectOrganizer
 				await hubConnection.StartAsync();
 				await hubConnection.SendAsync("SendUser",Globals.session,hubConnection.ConnectionId, project);
 
-			}
-			else
-            {
-
-            }
-
+			}		
         }
 
 
@@ -372,7 +522,7 @@ namespace ProjectOrganizer
 
                 Projects.Instance.Project[project].Log.Insert(0,log);                           
                 Projects.Save();
-                lbLog.ItemsSource = Projects.Instance.Project[project].Log;
+                
             }
 
         }
@@ -1208,12 +1358,16 @@ namespace ProjectOrganizer
 		{
             if (lbTodo.SelectedItem != null)
             {
+
                 ItemSendUserSelect itemSendUserSelect = new ItemSendUserSelect(project);
                 if (itemSendUserSelect.ShowDialog() == true)
                 {
                     long idUser = itemSendUserSelect.userId;
-                    long idItem = ((ToDo)lbTodo.SelectedItem).Id;
-                    new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.ToDo);
+                    if (lbTodo.SelectedItem != null)
+                    {
+                        long idItem = ((ToDo)lbTodo.SelectedItem).Id;
+                        new ItemPushAPI().AddItem((int)idItem, (int)idUser, project, (int)ItemPush.ItemType.ToDo);
+                    }
                 }
                 else
                 {
@@ -1311,35 +1465,25 @@ namespace ProjectOrganizer
             tbChatInput.Text = "";
 		}
 
-        private void ChatThread()
+        public void startItemUpdateThread()
         {
-            /*while (FloatingWindow.Instance.running)
+            new System.Threading.Thread(ItemUpdateThread).Start();
+
+		}
+
+        public void ItemUpdateThread()
+        {
+            while (FloatingWindow.Instance.running)
             {
                 if (Globals.isMultiuser)
                 {
                  
-
-
-                    MainWindow.Instance.tabMain.Dispatcher.Invoke(() =>
-                    {
-						tbChatHistory.Clear();
-						List<ChatMessageDto> chatDto = new ChatAPI().GetMessages(((TabItem)MainWindow.Instance.tabMain.SelectedItem).Header.ToString());
-                        if (chatDto != null)
-                        {
-                            foreach (ChatMessageDto message in chatDto)
-                            {
-                             //   tbChatHistory.Dispatcher.Invoke(() =>
-                                //{
-                                    tbChatHistory.Text += "\r\n\r\n" + message.timestamp.ToShortDateString() + " " + message.timestamp.ToShortTimeString() + ": " + message.userName + "\r\n" + message.message;
-                              //  });
-                            }
-                        }
-                        tbChatHistory.CaretIndex=tbChatHistory.Text.Length;
-                        tbChatHistory.ScrollToEnd();
-                    });
+                            new ProjectAPI().FetchAll();
+							reloadItems();
+					
                 }
                 System.Threading.Thread.Sleep(5000);
-            }*/
+            }
         }
 	}
 }

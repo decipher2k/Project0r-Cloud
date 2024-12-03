@@ -99,7 +99,7 @@
                             </Button.Background>
                         </Button>
                     </ToolBar>
-                    <ListBox  x:Name="lbApps" Width="Auto" d:ItemsSource="{Binding Apps, Mode=OneWay}" Grid.Column="0" Grid.Row="1" MouseDoubleClick="ListBox_MouseDoubleClick" MouseUp="lbApps_MouseUp" Style="{DynamicResource ItemsSmall}" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,0,382,0" Drop="lbApps_Drop" AllowDrop="True">
+                    <ListBox  x:Name="lbApps" Width="Auto"  Grid.Column="0" Grid.Row="1" MouseDoubleClick="ListBox_MouseDoubleClick" MouseUp="lbApps_MouseUp" Style="{DynamicResource ItemsSmall}" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,0,382,0" Drop="lbApps_Drop" AllowDrop="True">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Click="mnuAddApp_Click" Name="mnuAddApp" Header="Add Application"></MenuItem>
@@ -145,7 +145,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ListBox x:Name="lbFiles" Width="Auto" d:ItemsSource="{Binding Files, Mode=OneWay}" Grid.Row="1" Style="{DynamicResource ItemsSmall}" MouseDoubleClick="lbFiles_MouseDoubleClick" MouseUp="lbFiles_MouseUp" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="378,0,-1,0" Drop="lbFiles_Drop" AllowDrop="True">
+                    <ListBox x:Name="lbFiles" Width="Auto" Grid.Row="1" Style="{DynamicResource ItemsSmall}" MouseDoubleClick="lbFiles_MouseDoubleClick" MouseUp="lbFiles_MouseUp" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="378,0,-1,0" Drop="lbFiles_Drop" AllowDrop="True">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Click="mnuAddDocument_Click" Name="mnuAddDocument" Header="Add Document"></MenuItem>
@@ -197,7 +197,7 @@
                             </Button.Background>
                         </Button>
                     </ToolBar>
-                    <ListBox x:Name="lbNotes" d:ItemsSource="{Binding Notes, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" Style="{DynamicResource ItemsLarge}" MouseDoubleClick="lbNotes_MouseDoubleClick" Grid.RowSpan="2">
+                    <ListBox x:Name="lbNotes"  Width="Auto" Height="Auto" Margin="0,24,-9,-9" Style="{DynamicResource ItemsLarge}" MouseDoubleClick="lbNotes_MouseDoubleClick" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Click="mnuAddNote_Click" Name="mnuAddNote" Header="Add Note"></MenuItem>
@@ -271,7 +271,7 @@
                             </Button.Background>
                         </Button>
                     </ToolBar>
-                    <ListBox x:Name="lbTodo" d:ItemsSource="{Binding ToDo, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="mnuEditToDo_Click" Grid.RowSpan="2">
+                    <ListBox x:Name="lbTodo"  Width="Auto" Height="Auto" Margin="0,24,-9,-9" VirtualizingStackPanel.IsVirtualizing="False" MouseDoubleClick="mnuEditToDo_Click" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Priority">
@@ -316,7 +316,7 @@
                         <Calendar x:Name="calCalendar" HorizontalAlignment="Center" VerticalAlignment="Top" Height="166" Width="179" Canvas.Top="-9" Canvas.Left="9"/>
                         <Rectangle Height="159" Canvas.Left="188" Stroke="LightGray" Width="593" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="-6"/>
 
-                        <ListBox x:Name="lbCalendar" Height="298" Width="771" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Center" Canvas.Top="152" VerticalAlignment="Center" Canvas.Left="9" SelectionChanged="lbCalendar_SelectionChanged">
+                        <ListBox x:Name="lbCalendar" Height="298" Width="771" HorizontalAlignment="Center" Canvas.Top="152" VerticalAlignment="Center" Canvas.Left="9" SelectionChanged="lbCalendar_SelectionChanged">
                             <ListBox.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Click="mnuAddCalendar_Click" Name="mnuAddCalendar" Header="Add Appointment"></MenuItem>
@@ -365,7 +365,7 @@
                             </Button.Background>
                         </Button>
                     </ToolBar>
-                    <ListBox x:Name="lbLog" d:ItemsSource="{Binding Log, Mode=OneWay}" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="lbTodo_MouseDoubleClick" Grid.RowSpan="2">
+                    <ListBox x:Name="lbLog" Width="Auto" Height="Auto" Margin="0,24,-9,-9" MouseDoubleClick="lbTodo_MouseDoubleClick" Grid.RowSpan="2">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Click="mnuAddLog_Click" Name="mnuAddLog" Header="Add Log Entry"></MenuItem>

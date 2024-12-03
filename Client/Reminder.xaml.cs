@@ -33,7 +33,7 @@ namespace Project_Assistant
             _calendar = cal;
             _callback = callback;
             _title = project;
-            lbReminder.ItemsSource = _calendar.Calendar;
+            
 
             this.Title="Reminder: "+project;
         }
@@ -41,7 +41,7 @@ namespace Project_Assistant
         public void UpdateItems(Data cal)
         {
             _calendar = cal;
-            lbReminder.ItemsSource= _calendar.Calendar.Where(a=>a.date>DateTime.Now);
+      
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

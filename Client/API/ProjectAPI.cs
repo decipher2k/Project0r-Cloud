@@ -19,52 +19,68 @@ namespace Project_Assistant.API
 	internal class ProjectAPI : APIBase
 	{
 		public void FetchAll()
-		{			
-			Projects.Instance=new Projects();
-			UserDto userDto = JsonConvert.DeserializeObject<UserDto>(PostFetchAll("/api/Project/GetAll/" + Globals.session));
-			Globals.session = userDto.session;
-			List<Project> projects = userDto.projects;
-			foreach (var item in projects)
+		{
+			String sUserDto = PostFetchAll("/api/Project/GetAll/" + Globals.session);
+			if (sUserDto != "ERROR")
 			{
-				for (int i = 0; i < item.Programs.Count; i++)
+				
+				UserDto userDto = JsonConvert.DeserializeObject<UserDto>(sUserDto);
+				Globals.session = userDto.session;
+				Projects.Instance = new Projects(); 
+
+
+				
+			
+
+				List<Project> projects = userDto.projects;
+				foreach (var item in projects)
 				{
-					Program program = item.Programs[i];
-					System.Drawing.Icon result = (System.Drawing.Icon)null;
-
-					result = System.Drawing.Icon.ExtractAssociatedIcon(program.executaleFile);
-					if (result != null)
+					for (int i = 0; i < item.Programs.Count; i++)
 					{
-						ImageSource img = ToImageSource(result);
-						program.picture = img;
-						item.Programs[i] = program;
-					}
-					
-				}
+						try
+						{
+							Program program = item.Programs[i];
+							System.Drawing.Icon result = (System.Drawing.Icon)null;
 
-				for (int i = 0; i < item.Files.Count; i++)
-				{
-					File file = item.Files[i];
-					System.Drawing.Icon result = (System.Drawing.Icon)null;
-
-					result = System.Drawing.Icon.ExtractAssociatedIcon(file.fileName);
-					if (result != null)
-					{
-						ImageSource img = ToImageSource(result);
-						file.picture = img;
-						item.Files[i] = file;
+							result = System.Drawing.Icon.ExtractAssociatedIcon(program.executaleFile);
+							if (result != null)
+							{
+								ImageSource img = ToImageSource(result);
+								program.picture = img;
+								item.Programs[i] = program;
+							}
+						}
+						catch (Exception ex) { }
 					}
 
+					for (int i = 0; i < item.Files.Count; i++)
+					{
+						try
+						{
+							File file = item.Files[i];
+							System.Drawing.Icon result = (System.Drawing.Icon)null;
+
+							result = System.Drawing.Icon.ExtractAssociatedIcon(file.fileName);
+							if (result != null)
+							{
+								ImageSource img = ToImageSource(result);
+								file.picture = img;
+								item.Files[i] = file;
+							}
+						}
+						catch (Exception ex) { }
+					}
+
+					Data data = new Data();
+					data.Calendar = new List<Calendar>(item.Calendars);
+					data.ToDo = new List<ToDo>(item.ToDo);
+					data.Apps = new List<Program>(item.Programs);
+					data.Notes = new List<Note>(item.Notes);
+					data.Files = new List<File>(item.Files);
+					data.Log = new List<Log>(item.Logs);
+
+					Projects.Instance.Project.Add(item.Name, data);
 				}
-
-				Data data = new Data();
-				data.Calendar = new ObservableCollection<Calendar>(item.Calendars);
-				data.ToDo = new ObservableCollection<ToDo>(item.ToDo);
-				data.Apps = new ObservableCollection<Program>(item.Programs);
-				data.Notes = new ObservableCollection<Note>(item.Notes);
-				data.Files = new ObservableCollection<File>(item.Files);
-				data.Log = new ObservableCollection<Log>(item.Logs);
-
-				Projects.Instance.Project.Add(item.Name, data);
 			}
 		}
 		public static ImageSource ToImageSource(Icon icon)

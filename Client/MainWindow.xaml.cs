@@ -87,6 +87,7 @@ namespace ProjectOrganizer
 
         public void loadTabs()
         {
+            
 			tabMain.Items.Clear();
 			if (Projects.Instance.Project.Count > 0)
             {
@@ -101,6 +102,7 @@ namespace ProjectOrganizer
                     tabItem.Header = key.Key;
                     tabItem.Content = new MainControl(key.Key) { Name="mainContent" };
                     tabMain.Items.Add(tabItem);
+                    
                     tabMain.SelectedIndex = 0;
                 }
             }
@@ -175,7 +177,7 @@ namespace ProjectOrganizer
             {
                 foreach (TabItem item in tabMain.Items)
                 {
-                    if(item.Header.ToString() ==FloatingWindow.currentProject)
+                    if(item.Header.ToString() == FloatingWindow.currentProject)
                     {
                         tabMain.SelectedItem = item;
                         break;
@@ -278,9 +280,11 @@ namespace ProjectOrganizer
                     Projects.Load();
 					this.loadTabs();
                     FloatingWindow.Instance.StartItemPushThread();
+					((MainControl)((TabItem)tabMain.SelectedItem).Content).startItemUpdateThread();
 
 					mnuConnectServer.IsEnabled = false;
 					mnuDisonnectServer.IsEnabled = true;
+					
 				}
             }
             

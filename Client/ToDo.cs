@@ -9,7 +9,8 @@ namespace ProjectOrganizer
 {
     public class ToDo
     {
-        public String caption;
+
+		public String caption;
         public String description;
         public int priority = 99;
         public int weight = 0;

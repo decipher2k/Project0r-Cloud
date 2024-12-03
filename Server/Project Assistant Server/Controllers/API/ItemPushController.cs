@@ -110,9 +110,7 @@ namespace Project_Assistant_Server.Controllers.API
 					if (newUser.Projects.Where(a => a.Name == project).Any())
 					{
 
-						context.Remove(context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault());
-						context.SaveChanges();
-
+				
 						switch (push.Type)
 						{
 
@@ -121,8 +119,8 @@ namespace Project_Assistant_Server.Controllers.API
 									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Notes).FirstOrDefault();
 									if (newUser.Projects.Where(a => a.Name == project).Any())
 									{
-										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-										Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										
+										Note note = context.notes.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 
 										Note newNote = new Note();
 										newNote.caption = note.caption;
@@ -131,8 +129,8 @@ namespace Project_Assistant_Server.Controllers.API
 										newNote.name = note.name;
 										newUser.Projects.Where(a => a.Name == project).First().Notes.Add(newNote);
 
-										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-										context.Update(itemPush);
+										push.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(push);
 										context.Update(newUser);
 										context.Update(oldUser);
 									}
@@ -147,12 +145,12 @@ namespace Project_Assistant_Server.Controllers.API
 									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Files).FirstOrDefault();
 									if (newUser.Projects.Where(a => a.Name == project).Any())
 									{
-										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-										File note = context.files.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										
+										File note = context.files.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 										oldUser.Projects.Where(a => a.Name == project).First().Files.Remove(note);
 										newUser.Projects.Where(a => a.Name == project).First().Files.Add(note);
-										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-										context.Update(itemPush);
+										push.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(push);
 										context.Update(newUser);
 										context.Update(oldUser);
 									}
@@ -167,12 +165,12 @@ namespace Project_Assistant_Server.Controllers.API
 									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Calendars).FirstOrDefault();
 									if (newUser.Projects.Where(a => a.Name == project).Any())
 									{
-										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-										Calendar note = context.calendars.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										
+										Calendar note = context.calendars.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 										oldUser.Projects.Where(a => a.Name == project).First().Calendars.Remove(note);
 										newUser.Projects.Where(a => a.Name == project).First().Calendars.Add(note);
-										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-										context.Update(itemPush);
+										push.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(push);
 										context.Update(newUser);
 										context.Update(oldUser);
 									}
@@ -187,12 +185,12 @@ namespace Project_Assistant_Server.Controllers.API
 									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.Programs).FirstOrDefault();
 									if (newUser.Projects.Where(a => a.Name == project).Any())
 									{
-										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-										Models.Program note = context.program.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										
+										Models.Program note = context.program.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 										oldUser.Projects.Where(a => a.Name == project).First().Programs.Remove(note);
 										newUser.Projects.Where(a => a.Name == project).First().Programs.Add(note);
-										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-										context.Update(itemPush);
+										push.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(push);
 										context.Update(newUser);
 										context.Update(oldUser);
 									}
@@ -207,12 +205,12 @@ namespace Project_Assistant_Server.Controllers.API
 									User oldUser = context.users.Where(a => a.Id == push.SenderId).Include(a => a.Projects).ThenInclude(a => a.ToDo).FirstOrDefault();
 									if (newUser.Projects.Where(a => a.Name == project).Any())
 									{
-										ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-										ToDo note = context.toDo.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
+										
+										ToDo note = context.toDo.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 										oldUser.Projects.Where(a => a.Name == project).First().ToDo.Remove(note);
 										newUser.Projects.Where(a => a.Name == project).First().ToDo.Add(note);
-										itemPush.IsAccepted = ItemPush.AcceptedDenied.Accepted;
-										context.Update(itemPush);
+										push.IsAccepted = ItemPush.AcceptedDenied.Accepted;
+										context.Update(push);
 										context.Update(newUser);
 										context.Update(oldUser);
 									}
@@ -266,10 +264,10 @@ namespace Project_Assistant_Server.Controllers.API
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
 								//if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Note note = context.notes.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Denied;
-									context.Update(itemPush);
+									
+									Note note = context.notes.Where(a => a.Id ==push.ItemId).FirstOrDefault();
+									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
@@ -281,10 +279,10 @@ namespace Project_Assistant_Server.Controllers.API
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
 							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									File note = context.files.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Denied;
-									context.Update(itemPush);
+									
+									File note = context.files.Where(a => a.Id ==push.ItemId).FirstOrDefault();
+									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
@@ -296,10 +294,10 @@ namespace Project_Assistant_Server.Controllers.API
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
 							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Calendar note = context.calendars.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Denied;
-									context.Update(itemPush);
+									
+									Calendar note = context.calendars.Where(a => a.Id ==push.ItemId).FirstOrDefault();
+									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
@@ -311,10 +309,10 @@ namespace Project_Assistant_Server.Controllers.API
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
 						//		if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									Models.Program note = context.program.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Denied;
-									context.Update(itemPush);
+									
+									Models.Program note = context.program.Where(a => a.Id ==push.ItemId).FirstOrDefault();
+									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
@@ -326,10 +324,10 @@ namespace Project_Assistant_Server.Controllers.API
 								User oldUser = context.users.Where(a => a.Id == push.SenderId).FirstOrDefault();
 							//	if (newUser.Projects.Where(a => a.Name == project).Any())
 								{
-									ItemPush itemPush = context.itemPush.Where(a => a.Id == iItemPushId).FirstOrDefault();
-									ToDo note = context.toDo.Where(a => a.Id == itemPush.ItemId).FirstOrDefault();
-									itemPush.IsAccepted = ItemPush.AcceptedDenied.Denied;
-									context.Update(itemPush);
+									
+									ToDo note = context.toDo.Where(a => a.Id ==push.ItemId).FirstOrDefault();
+									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
 								}
