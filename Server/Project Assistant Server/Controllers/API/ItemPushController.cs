@@ -267,6 +267,7 @@ namespace Project_Assistant_Server.Controllers.API
 									
 									Note note = context.notes.Where(a => a.Id ==push.ItemId).FirstOrDefault();
 									push.IsAccepted = ItemPush.AcceptedDenied.Denied;
+
 									context.Update(push);
 									context.Update(newUser);
 									context.Update(oldUser);
@@ -372,6 +373,72 @@ namespace Project_Assistant_Server.Controllers.API
 					}
 					String newSession = new Session(context).newSession(collection["session"].ToString());
 					itemPushDto.session=newSession;
+					return Ok(itemPushDto);
+				}
+				//else
+				//{ 
+				//	return BadRequest(); 
+				//}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
+
+		[HttpPost("GetItemPushStatus")]
+		public IActionResult GetItemPushStatus(IFormCollection collection)
+		{
+			String project = collection["project"];
+			String Session = collection["session"];
+
+			if (context.users.Where(a => a.IsAdmin == false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+				//if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				{
+					User user = context.users.Where(a => a.IsAdmin == false && a.CurrentSession == collection["session"].ToString()).First();
+					ItemPushDto itemPushDto = new ItemPushDto();
+					foreach (ItemPush itemPush in context.itemPush.Where(a => a.SenderId == user.Id && a.IsActive==true))
+					{
+						itemPushDto.Items.Add(itemPush);
+					}
+					String newSession = new Session(context).newSession(collection["session"].ToString());
+					itemPushDto.session = newSession;
+					return Ok(itemPushDto);
+				}
+				//else
+				//{ 
+				//	return BadRequest(); 
+				//}
+			}
+			else
+			{
+				return Unauthorized();
+			}
+		}
+
+		[HttpPost("UpdateItemPushStatus")]
+		public IActionResult UpdateItemPushStatus(IFormCollection collection)
+		{
+			String project = collection["project"];
+			String Session = collection["session"];
+
+			if (context.users.Where(a => a.IsAdmin == false && a.CurrentSession == collection["session"].ToString()).Count() > 0)
+			{
+				//if (context.users.Where(a => a.IsAdmin==false && a.CurrentSession == collection["session"].ToString()).Include(a => a.Projects).Where(a => a.Projects.Where(a => a.Name == project).Any()).Any())
+				{
+					User user = context.users.Where(a => a.IsAdmin == false && a.CurrentSession == collection["session"].ToString()).First();
+					
+					foreach (ItemPush itemPush in context.itemPush.Where(a => a.SenderId == user.Id && a.IsActive == true))
+					{
+						itemPush.IsActive = false;
+						context.Update(itemPush);
+					}
+					context.SaveChanges();
+
+					IdSessionDto itemPushDto = new IdSessionDto();
+					String newSession = new Session(context).newSession(collection["session"].ToString());
+					itemPushDto.session = newSession;
 					return Ok(itemPushDto);
 				}
 				//else

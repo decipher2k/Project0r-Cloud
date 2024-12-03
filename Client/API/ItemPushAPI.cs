@@ -45,9 +45,17 @@ namespace Project_Assistant.API
 		public bool AddItem(int iItemId, int receiverId, String project, int itemType)
 		{
 			String sIdSessionDto = PostContextualIDPush(iItemId, receiverId, "/api/ItemPush/PushItem", project, itemType);
+			if (sIdSessionDto != "ERROR")
+			{
 				IdSessionDto idSessionDto = JsonConvert.DeserializeObject<IdSessionDto>(sIdSessionDto);
-			Globals.session = idSessionDto.session;
-			return true;
+				Globals.session = idSessionDto.session;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
 		}
 	}	
 }

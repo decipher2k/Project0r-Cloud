@@ -10,6 +10,7 @@
 		public string Project { get; set; }
 		public String Title { get; set; }
 		public String SenderName { get; set; }
+		public bool IsActive { get; set; } = true;
 
 		public AcceptedDenied IsAccepted {get;set;} = AcceptedDenied.None;
 

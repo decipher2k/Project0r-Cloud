@@ -53,77 +53,554 @@ namespace ProjectOrganizer
 
 		private void LbTodo_TargetUpdated(object sender, DataTransferEventArgs e)
 		{
-
-			if (Projects.Instance.Project.ContainsKey(project))
+			lbApps.Dispatcher.Invoke(new Action(() =>
 			{
-				for (int i = 0; i < lbTodo.Items.Count; i++)
+				if (Projects.Instance.Project.ContainsKey(project))
 				{
-					ToDo item = (ToDo)lbTodo.Items[i];
-					if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+					foreach (Program program in Projects.Instance.Project[project].Apps)
 					{
-						lbTodo.Items.Remove(item);
-						i--;
+						bool found = false;
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program todo = (Program)lbApps.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbApps.Items.Add(program);
 					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program item = (Program)lbApps.Items[i];
+							if (!Projects.Instance.Project[project].Apps.Where(a => a.Id == item.Id).Any())
+							{
+								lbApps.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+
 				}
-			}
+			}));
+
+			lbFiles.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (File program in Projects.Instance.Project[project].Files)
+					{
+						bool found = false;
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File todo = (File)lbFiles.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbFiles.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File item = (File)lbFiles.Items[i];
+							if (!Projects.Instance.Project[project].Files.Where(a => a.Id == item.Id).Any())
+							{
+								lbFiles.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+
+				}
+			}));
+
+			lbTodo.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (ToDo program in Projects.Instance.Project[project].ToDo)
+					{
+						bool found = false;
+						for (int i = 0; i < lbTodo.Items.Count; i++)
+						{
+							ToDo todo = (ToDo)lbTodo.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbTodo.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbTodo.Items.Count; i++)
+						{
+							ToDo item = (ToDo)lbTodo.Items[i];
+							if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+							{
+								lbTodo.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+				}
+			}));
+
+
+
+			lbNotes.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Note program in Projects.Instance.Project[project].Notes)
+					{
+						bool found = false;
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note todo = (Note)lbNotes.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbNotes.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note item = (Note)lbNotes.Items[i];
+							if (!Projects.Instance.Project[project].Notes.Where(a => a.Id == item.Id).Any())
+							{
+								lbNotes.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+
+				}
+			}));
+
+
+			lbCalendar.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Calendar program in Projects.Instance.Project[project].Calendar)
+					{
+						bool found = false;
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar todo = (Calendar)lbCalendar.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbCalendar.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar item = (Calendar)lbCalendar.Items[i];
+							if (!Projects.Instance.Project[project].Calendar.Where(a => a.Id == item.Id).Any())
+							{
+								lbCalendar.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+
+				}
+			}));
+
+
+
+			lbLog.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Log program in Projects.Instance.Project[project].Log)
+					{
+						bool found = false;
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log todo = (Log)lbLog.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbLog.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log item = (Log)lbLog.Items[i];
+							if (!Projects.Instance.Project[project].Log.Where(a => a.Id == item.Id).Any())
+							{
+								lbLog.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+
+				}
+			}));
 		}
 
 		private void LbTodo_LayoutUpdated(object sender, EventArgs e)
 		{
-            if (Projects.Instance.Project.ContainsKey(project))
-            {
-                for (int i = 0; i < lbTodo.Items.Count; i++)
-                {
-                    ToDo item = (ToDo)lbTodo.Items[i];
-                    if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
-                    {
-                        lbTodo.Items.Remove(item);
-                        i--;
-                    }
-                }
-            }
+			lbApps.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Program program in Projects.Instance.Project[project].Apps)
+					{
+						bool found = false;
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program todo = (Program)lbApps.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbApps.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program item = (Program)lbApps.Items[i];
+							if (!Projects.Instance.Project[project].Apps.Where(a => a.Id == item.Id).Any())
+							{
+								lbApps.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+				
+				}
+			}));
+
+			lbFiles.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (File program in Projects.Instance.Project[project].Files)
+					{
+						bool found = false;
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File todo = (File)lbFiles.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbFiles.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File item = (File)lbFiles.Items[i];
+							if (!Projects.Instance.Project[project].Files.Where(a => a.Id == item.Id).Any())
+							{
+								lbFiles.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+				
+				}
+			}));
+
+			lbTodo.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (ToDo program in Projects.Instance.Project[project].ToDo)
+					{
+						bool found = false;
+						for (int i = 0; i < lbTodo.Items.Count; i++)
+						{
+							ToDo todo = (ToDo)lbTodo.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbTodo.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbTodo.Items.Count; i++)
+						{
+							ToDo item = (ToDo)lbTodo.Items[i];
+							if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+							{
+								lbTodo.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+				}
+			}));
+
+
+
+			lbNotes.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Note program in Projects.Instance.Project[project].Notes)
+					{
+						bool found = false;
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note todo = (Note)lbNotes.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbNotes.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note item = (Note)lbNotes.Items[i];
+							if (!Projects.Instance.Project[project].Notes.Where(a => a.Id == item.Id).Any())
+							{
+								lbNotes.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+				
+				}
+			}));
+
+
+			lbCalendar.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Calendar program in Projects.Instance.Project[project].Calendar)
+					{
+						bool found = false;
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar todo = (Calendar)lbCalendar.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbCalendar.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar item = (Calendar)lbCalendar.Items[i];
+							if (!Projects.Instance.Project[project].Calendar.Where(a => a.Id == item.Id).Any())
+							{
+								lbCalendar.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					
+				}
+			}));
+
+
+
+			lbLog.Dispatcher.Invoke(new Action(() =>
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Log program in Projects.Instance.Project[project].Log)
+					{
+						bool found = false;
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log todo = (Log)lbLog.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbLog.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log item = (Log)lbLog.Items[i];
+							if (!Projects.Instance.Project[project].Log.Where(a => a.Id == item.Id).Any())
+							{
+								lbLog.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					
+				}
+			}));
+
+			/*            if (Projects.Instance.Project.ContainsKey(project))
+						{
+							for (int i = 0; i < lbTodo.Items.Count; i++)
+							{
+								ToDo item = (ToDo)lbTodo.Items[i];
+								if (!Projects.Instance.Project[project].ToDo.Where(a => a.Id == item.Id).Any())
+								{
+									lbTodo.Items.Remove(item);
+									i--;
+								}
+							}
+						}*/
 		}
 
 		private void reloadItems()
         {
-            /*
-            
 
-                if (Projects.Instance.Project.ContainsKey(project))
-                {
-                    foreach (Program program in Projects.Instance.Project[project].Apps)
-                    {
-                        if (!lbApps.Items.Contains(program))
-                            lbApps.Items.Add(program);
-                    }
+			lbApps.Dispatcher.Invoke(new Action(delegate ()
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Program program in Projects.Instance.Project[project].Apps)
+					{
+						bool found = false;
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program todo = (Program)lbApps.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
 
-                    for (int i = 0; i < lbApps.Items.Count; i++)
-                    {
-                        if (!Projects.Instance.Project[project].Apps.Contains(lbApps.Items[i]))
-                        {
-                            lbApps.Items.RemoveAt(i);
-                            i--;
-                        }
-                    }
+						}
+						if (!found)
+							lbApps.Items.Add(program);
+					}
 
-                    foreach (File program in Projects.Instance.Project[project].Files)
-                    {
-                        if (!lbFiles.Items.Contains(program))
-                            lbFiles.Items.Add(program);
-                    }
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbApps.Items.Count; i++)
+						{
+							Program item = (Program)lbApps.Items[i];
+							if (!Projects.Instance.Project[project].Apps.Where(a => a.Id == item.Id).Any())
+							{
+								lbApps.Items.Remove(item);
+								i--;
+							}
+						}
+					}
 
-                    for (int i = 0; i < lbFiles.Items.Count; i++)
-                    {
-                        if (!Projects.Instance.Project[project].Files.Contains(lbFiles.Items[i]))
-                        {
-                            lbFiles.Items.RemoveAt(i);
-							i--;
-                        }
-                    }
-            */
+					lbApps.UpdateLayout();
+				}
+			}));
 
-            lbTodo.Dispatcher.Invoke(new Action(() =>
-            {
+			lbFiles.Dispatcher.Invoke(new Action(delegate ()
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (File program in Projects.Instance.Project[project].Files)
+					{
+						bool found = false;
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File todo = (File)lbFiles.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
+
+						}
+						if (!found)
+							lbFiles.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbFiles.Items.Count; i++)
+						{
+							File item = (File)lbFiles.Items[i];
+							if (!Projects.Instance.Project[project].Files.Where(a => a.Id == item.Id).Any())
+							{
+								lbFiles.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					lbFiles.UpdateLayout();
+				}
+			}));
+		
+			lbTodo.Dispatcher.Invoke(new Action(delegate ()
+			{
                 if (Projects.Instance.Project.ContainsKey(project))
                 {
                     foreach (ToDo program in Projects.Instance.Project[project].ToDo)
@@ -158,68 +635,124 @@ namespace ProjectOrganizer
 					lbTodo.UpdateLayout();
                 }
             }));
-/*
+
+
+
+			lbNotes.Dispatcher.Invoke(new Action(delegate ()
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
 					foreach (Note program in Projects.Instance.Project[project].Notes)
-                    {
-                        if (!lbNotes.Items.Contains(program))
-                            lbNotes.Items.Add(program);
-                    }
+					{
+						bool found = false;
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note todo = (Note)lbNotes.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
 
-                    for (int i = 0; i < lbNotes.Items.Count; i++)
-                    {
-                        if (!Projects.Instance.Project[project].Notes.Contains(lbNotes.Items[i]))
-                        {
-                            lbNotes.Items.RemoveAt(i);
-							i--;
-                        }
-                    }
+						}
+						if (!found)
+							lbNotes.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbNotes.Items.Count; i++)
+						{
+							Note item = (Note)lbNotes.Items[i];
+							if (!Projects.Instance.Project[project].Notes.Where(a => a.Id == item.Id).Any())
+							{
+								lbNotes.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					lbNotes.UpdateLayout();
+				}
+			}));
 
 
-                    
-
-
-
-
-
-
-
+			lbCalendar.Dispatcher.Invoke(new Action(delegate ()
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
 					foreach (Calendar program in Projects.Instance.Project[project].Calendar)
-                    {
-                        if (!lbCalendar.Items.Contains(program))
-                            lbCalendar.Items.Add(program);
-                    }
+					{
+						bool found = false;
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar todo = (Calendar)lbCalendar.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
 
-                    for (int i = 0; i < lbCalendar.Items.Count; i++)
-                    {
-                        if (!Projects.Instance.Project[project].Calendar.Contains(lbCalendar.Items[i]))
-                        {
-                            lbCalendar.Items.RemoveAt(i);
-							i--;
-                        }
-                    }
+						}
+						if (!found)
+							lbCalendar.Items.Add(program);
+					}
+
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbCalendar.Items.Count; i++)
+						{
+							Calendar item = (Calendar)lbCalendar.Items[i];
+							if (!Projects.Instance.Project[project].Calendar.Where(a => a.Id == item.Id).Any())
+							{
+								lbCalendar.Items.Remove(item);
+								i--;
+							}
+						}
+					}
+
+					lbCalendar.UpdateLayout();
+				}
+			}));
 
 
 
+			lbLog.Dispatcher.Invoke(new Action(delegate ()
+			{
+				if (Projects.Instance.Project.ContainsKey(project))
+				{
+					foreach (Log program in Projects.Instance.Project[project].Log)
+					{
+						bool found = false;
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log todo = (Log)lbLog.Items[i];
+							if (program.Id == todo.Id)
+							{
+								found = true;
+							}
 
+						}
+						if (!found)
+							lbLog.Items.Add(program);
+					}
 
-                    foreach (Log program in Projects.Instance.Project[project].Log)
-                    {
-                        if (!lbLog.Items.Contains(program))
-                            lbLog.Items.Add(program);
-                    }
+					if (Projects.Instance.Project.ContainsKey(project))
+					{
+						for (int i = 0; i < lbLog.Items.Count; i++)
+						{
+							Log item = (Log)lbLog.Items[i];
+							if (!Projects.Instance.Project[project].Log.Where(a => a.Id == item.Id).Any())
+							{
+								lbLog.Items.Remove(item);
+								i--;
+							}
+						}
+					}
 
-                    for (int i = 0; i < lbLog.Items.Count; i++)
-                    {
-                        if (!Projects.Instance.Project[project].Log.Contains(lbLog.Items[i]))
-                        {
-                            lbLog.Items.RemoveAt(i);
-							i--;
-                        }
-                    }
-
-                }
-           */
-        }
+					lbLog.UpdateLayout();
+				}
+			}));
+		
+		}
 
         public static class WindowHelper
         {
